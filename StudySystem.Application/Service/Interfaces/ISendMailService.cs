@@ -1,0 +1,15 @@
+﻿using StudySystem.Data.Models.Request;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StudySystem.Application.Service.Interfaces
+{
+    public interface ISendMailService
+    {
+        Task<bool> SendMailAsync(string username, string verificationCode);
+        bool VerificationCode(string code, string verifyCode, DateTime expireCode);
+    }
+}
