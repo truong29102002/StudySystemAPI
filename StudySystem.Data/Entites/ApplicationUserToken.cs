@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.Entites
 {
-    public class VerificationOTP
+    public class ApplicationUserToken
     {
         [Key]
         public string UserID { get; set; } = null!;
         [Required]
-        public string Code { get; set; } = null!;
+        public string Token { get; set; } = null!;
         [Required]
         public DateTime ExpireTime { get; set; }
+        public DateTime ExpireTimeOnline { get; set; }
     }
 }

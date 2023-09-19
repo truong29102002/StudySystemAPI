@@ -10,7 +10,7 @@ namespace StudySystem.Data.Models.Request
     public class UserRegisterRequestModel
     {
         [MaxLength(12)]
-        public string Username { get; set; } = null!;
+        public string UserID { get; set; } = null!;
         [Required]
         public string FullName { get; set; } = null!;
         [Required, EmailAddress]

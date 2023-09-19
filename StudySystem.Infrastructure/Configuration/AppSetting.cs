@@ -17,6 +17,10 @@ namespace StudySystem.Infrastructure.Configuration
             get { return configuration["ConnectionStrings:DefaultConnection"]; }
         }
         #region configuration for jwt
+        public static string JwtSub
+        {
+            get { return configuration["Jwt:Sub"]; }
+        }
         public static string Salt
         {
             get { return configuration["Salt"]; }
@@ -32,6 +36,10 @@ namespace StudySystem.Infrastructure.Configuration
         public static string SecretKey
         {
             get { return configuration["Jwt:SecretKey"]; }
+        }
+        public static int JwtExpireTime
+        {
+            get { return Convert.ToInt32(configuration["Jwt:ExpireTime"]); }
         }
         #endregion
 

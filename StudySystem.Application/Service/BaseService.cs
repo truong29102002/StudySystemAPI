@@ -10,14 +10,14 @@ namespace StudySystem.Application.Service
 {
     public class BaseService : IBaseService
     {
-        protected IUnitOfWork _unitOfWork { get; set; }
+        protected IUnitOfWork UnitOfWork { get; set; }
         /// <summary>
         /// Baseservice
         /// </summary>
         /// <param name="unitOfWork"></param>
         protected BaseService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            UnitOfWork = unitOfWork;
         }
     }
 }

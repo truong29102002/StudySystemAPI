@@ -13,6 +13,7 @@ namespace StudySystem.Data.EF
         private readonly AppDbContext _context;
         private UserRegisterRepository _userRegisterRepository;
         private LoginUserRepository _loginUserRepository;
+        private UserTokenRepository _userTokenRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRegisterRepository UserRegisterRepository
@@ -23,6 +24,11 @@ namespace StudySystem.Data.EF
         public ILoginUserRepository LoginUserRepository
         {
             get { return _loginUserRepository ?? (_loginUserRepository = new LoginUserRepository(_context)); }
+        }
+
+        public IUserTokenRepository UserTokenRepository
+        {
+            get { return _userTokenRepository ?? (_userTokenRepository = new UserTokenRepository(_context)); }
         }
 
         public async Task<bool> CommitAsync()

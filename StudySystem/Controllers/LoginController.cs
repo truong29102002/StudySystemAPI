@@ -6,13 +6,18 @@ using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using MimeKit.Text;
 using StudySystem.Application.Service.Interfaces;
+using StudySystem.Data.EF;
+using StudySystem.Data.Entites;
+using StudySystem.Data.Models.Data;
 using StudySystem.Data.Models.Request;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
 using StudySystem.Infrastructure.Configuration;
+using StudySystem.Infrastructure.Resources;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace StudySystem.Controllers
 {
@@ -21,10 +26,15 @@ namespace StudySystem.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IUserRegisterService _userRegisterService;
-       
-        public LoginController(IUserRegisterService userRegisterService)
+        private readonly ILoginUserService _loginUserService;
+        private readonly IUserTokenService _userTokenService;
+        private readonly ILogger<LoginController> _logger;
+        public LoginController(IUserRegisterService userRegisterService, ILoginUserService loginUserService, IUserTokenService userTokenService, ILogger<LoginController> logger)
         {
             _userRegisterService = userRegisterService;
+            _loginUserService = loginUserService;
+            _userTokenService = userTokenService;
+            _logger = logger;
         }
         /// <summary>
         /// RegisterUser
@@ -32,7 +42,7 @@ namespace StudySystem.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost(Router.RegisterUser)]
-        public async Task<ActionResult<StudySystemAPIResponse<object>>> RegisterUser([FromBody]UserRegisterRequestModel request)
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> RegisterUser([FromBody] UserRegisterRequestModel request)
         {
             var result = await _userRegisterService.RegisterUserDetail(request);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
@@ -40,23 +50,75 @@ namespace StudySystem.Controllers
 
 
         [HttpPost(Router.LoginUser)]
-        public IActionResult Login([FromBody]LoginRequestModel request)
+        public async Task<ActionResult<StudySystemAPIResponse<LoginResponseModel>>> Login([FromBody] LoginRequestModel request)
         {
-            return Unauthorized();
+            var user = await _loginUserService.DoLogin(request);
+            if (user != null)
+            {
+                if (await _userTokenService.IsUserOnl(user.UserID).ConfigureAwait(false))
+                {
+                    _logger.LogInformation("User Onl");
+                    throw new BadHttpRequestException(Message.UserLogined);
+                }
+                var expireTime = DateTime.UtcNow.AddHours(AppSetting.JwtExpireTime);
+                var expireTimeOnl = DateTime.UtcNow.AddMinutes(2);
+                var claimUser = CeateClaim(user.UserID, user.UserFullName);
+                var token = GenerateJwtToken(claimUser, expireTime);
+                // delete user in UserToken
+                await _userTokenService.Delete(user.UserID).ConfigureAwait(false);
+                _logger.LogInformation($"Delete {user.UserID} from table UserToken");
+                // insert user to table usertoken
+                await _userTokenService.Insert(new Data.Entites.ApplicationUserToken { UserID = user.UserID, Token = token, ExpireTime = expireTime, ExpireTimeOnline = expireTimeOnl }).ConfigureAwait(false);
+                _logger.LogInformation($"Insert {user.UserID} from table UserToken");
+                var userInfor = CreateUserInformation(user);
+
+                return new StudySystemAPIResponse<LoginResponseModel>(StatusCodes.Status200OK, new Response<LoginResponseModel>(true, new LoginResponseModel(user.IsActive, token + "." + userInfor)));
+            }
+            _logger.LogInformation("Fail");
+            throw new BadHttpRequestException(Message.Unauthorize);
         }
 
-        private string GenerateJwtToken(string username)
+        [HttpPost(Router.LogOut)]
+        [Authorize]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> Logout()
+        {
+            await _userTokenService.Delete("").ConfigureAwait(false);
+            _logger.LogInformation(Message.Logout);
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, data: Message.Logout));
+        }
+
+        private string CreateUserInformation(UserDetail user)
+        {
+            var userInfor = new UserInformationDataModel(user.UserID, user.UserFullName);
+            var jsonString = JsonSerializer.Serialize(userInfor);
+            var textBytes = Encoding.UTF8.GetBytes(jsonString);
+            return Convert.ToBase64String(textBytes);
+        }
+
+        private Claim[] CeateClaim(string userID = "", string userName = "")
+        {
+            var claims = new Claim[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, AppSetting.JwtSub),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.AddHours(8).ToString()),
+                    new Claim("UserID", userID),
+                    new Claim("UserName", userName),
+                };
+            return claims;
+        }
+
+        private string GenerateJwtToken(Claim[] claims, DateTime expireTime)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(AppSetting.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                new Claim(ClaimTypes.Name, username),
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Subject = new ClaimsIdentity(claims),
+                Expires = expireTime,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = AppSetting.Issuer,
+                Audience = AppSetting.Audience,
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);

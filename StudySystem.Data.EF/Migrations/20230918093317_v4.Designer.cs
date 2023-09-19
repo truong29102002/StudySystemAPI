@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudySystem.Data.EF;
@@ -11,9 +12,10 @@ using StudySystem.Data.EF;
 namespace StudySystem.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230918093317_v4")]
+    partial class v4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +26,7 @@ namespace StudySystem.Data.EF.Migrations
 
             modelBuilder.Entity("StudySystem.Data.Entites.ApplicationUserToken", b =>
                 {
-                    b.Property<string>("UserID")
+                    b.Property<string>("Username")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("ExpireTime")
@@ -37,14 +39,14 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("UserID");
+                    b.HasKey("Username");
 
                     b.ToTable("UserTokens");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.UserDetail", b =>
                 {
-                    b.Property<string>("UserID")
+                    b.Property<string>("Username")
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
 
@@ -53,6 +55,10 @@ namespace StudySystem.Data.EF.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -73,18 +79,14 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserFullName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("UserID");
+                    b.HasKey("Username");
 
                     b.ToTable("UserDetails");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.VerificationOTP", b =>
                 {
-                    b.Property<string>("UserID")
+                    b.Property<string>("Username")
                         .HasColumnType("text");
 
                     b.Property<string>("Code")
@@ -94,7 +96,7 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<DateTime>("ExpireTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("UserID");
+                    b.HasKey("Username");
 
                     b.ToTable("VerificationOTPs");
                 });

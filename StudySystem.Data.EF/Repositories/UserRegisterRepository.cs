@@ -21,7 +21,7 @@ namespace StudySystem.Data.EF.Repositories
 
         public async Task InsertUserDetails(UserDetail userDetail)
         {
-            var check = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.Username.Equals(userDetail.Username.ToLower()) && x.IsActive == false).ConfigureAwait(false);
+            var check = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userDetail.UserID.ToLower()) && x.IsActive == false).ConfigureAwait(false);
             if (check != null)
             {
                 _context.Set<UserDetail>().Remove(check);
@@ -31,9 +31,9 @@ namespace StudySystem.Data.EF.Repositories
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<bool> IsUserExists(string userName)
+        public async Task<bool> IsUserExists(string userId)
         {
-            var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.Username.Equals(userName.ToLower()) && x.IsActive == true).ConfigureAwait(false);
+            var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userId.ToLower()) && x.IsActive == true).ConfigureAwait(false);
             return query != null;
         }
     }

@@ -46,6 +46,7 @@ builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddTransient<IUserRegisterService, UserRegisterService>();
 builder.Services.AddTransient<ISendMailService, SendMailService>();
 builder.Services.AddTransient<ILoginUserService, LoginUserService>();
+builder.Services.AddTransient<IUserTokenService, UserTokenService>();
 #endregion
 
 #region configure connect to db
@@ -73,6 +74,9 @@ app.UseCors("StudySystemPolicy");
 #endregion
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+
+
 
 app.UseAuthorization();
 

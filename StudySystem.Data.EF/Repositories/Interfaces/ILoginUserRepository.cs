@@ -9,6 +9,6 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
 {
     public interface ILoginUserRepository : IRepository<UserDetail>
     {
-        Task<UserDetail> GetUser(string username);
+        
     }
 }

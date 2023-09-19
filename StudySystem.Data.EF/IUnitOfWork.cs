@@ -11,6 +11,7 @@ namespace StudySystem.Data.EF
     {
         IUserRegisterRepository UserRegisterRepository { get; }
         ILoginUserRepository LoginUserRepository { get; }
+        IUserTokenRepository UserTokenRepository { get; }
         Task<bool> CommitAsync();
     }
 }

@@ -11,5 +11,6 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string RegisterUser = "~/api/register-user";
         public const string LoginUser = "~/api/login";
         public const string SendMail = "~/api/send-mail";
+        public const string LogOut = "~/api/logout";
     }
 }

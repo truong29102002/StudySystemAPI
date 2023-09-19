@@ -27,18 +27,18 @@ namespace StudySystem.Application.Service
         {
             try
             {
-                var isUserExists = await _userRegisterRepository.IsUserExists(request.Username);
+                var isUserExists = await _userRegisterRepository.IsUserExists(request.UserID);
                 if (!isUserExists)
                 {
                     UserDetail userDetail = new UserDetail();
-                    userDetail.Username = request.Username.ToLower();
+                    userDetail.UserID = request.UserID.ToLower();
                     userDetail.Password = PasswordHasher.HashPassword(request.Password);
                     userDetail.Email = request.Email.ToLower();
                     userDetail.Address = request.Address;
                     userDetail.PhoneNumber = request.PhoneNumber;
                     userDetail.Gender = request.Gender;
                     userDetail.Role = 0;
-                    userDetail.FullName = request.FullName.ToLower();
+                    userDetail.UserFullName = request.FullName.ToLower();
                     userDetail.IsActive = false;
                     await _userRegisterRepository.InsertUserDetails(userDetail);
                     return true;

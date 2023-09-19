@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StudySystem.Data.EF.Repositories.Interfaces;
+﻿using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using System;
 using System.Collections.Generic;
@@ -9,13 +8,16 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.EF.Repositories
 {
-    public class LoginUserRepository : Repository<UserDetail>, ILoginUserRepository
+    public class UserTokenRepository : Repository<ApplicationUserToken>,IUserTokenRepository
     {
         private readonly AppDbContext _context;
-        public LoginUserRepository(AppDbContext context) : base(context)
+        public UserTokenRepository(AppDbContext context) : base(context) 
         {
+
             _context = context;
+
         }
+
        
     }
 }
