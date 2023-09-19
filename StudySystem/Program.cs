@@ -16,7 +16,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-#region config jwt
+#region config jwt, AppDbContext
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<UserResoveSerive>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -76,7 +79,11 @@ app.UseCors("StudySystemPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 
+app.Use(async (context, next) =>
+{
+    await next();
 
+});
 
 app.UseAuthorization();
 

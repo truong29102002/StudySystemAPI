@@ -29,12 +29,14 @@ namespace StudySystem.Controllers
         private readonly ILoginUserService _loginUserService;
         private readonly IUserTokenService _userTokenService;
         private readonly ILogger<LoginController> _logger;
-        public LoginController(IUserRegisterService userRegisterService, ILoginUserService loginUserService, IUserTokenService userTokenService, ILogger<LoginController> logger)
+        private readonly string _user;
+        public LoginController(IUserRegisterService userRegisterService, ILoginUserService loginUserService, IUserTokenService userTokenService, ILogger<LoginController> logger, UserResoveSerive user)
         {
             _userRegisterService = userRegisterService;
             _loginUserService = loginUserService;
             _userTokenService = userTokenService;
             _logger = logger;
+            _user = user.GetUser();
         }
         /// <summary>
         /// RegisterUser
@@ -48,7 +50,12 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
 
-
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="BadHttpRequestException"></exception>
         [HttpPost(Router.LoginUser)]
         public async Task<ActionResult<StudySystemAPIResponse<LoginResponseModel>>> Login([FromBody] LoginRequestModel request)
         {
@@ -82,7 +89,7 @@ namespace StudySystem.Controllers
         [Authorize]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> Logout()
         {
-            await _userTokenService.Delete("").ConfigureAwait(false);
+            await _userTokenService.Delete(_user).ConfigureAwait(false);
             _logger.LogInformation(Message.Logout);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, data: Message.Logout));
         }
