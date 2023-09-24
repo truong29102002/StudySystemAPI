@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StudySystem.Application.Service;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
+using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.Configuration;
+using StudySystem.Infrastructure.Resources;
+using StudySystem.Middlewares;
 using System.Net;
 using System.Text;
 
@@ -46,9 +49,8 @@ builder.Services.AddCors(cors => cors.AddPolicy(name: "StudySystemPolicy", polic
 #region register service Add Transient
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
-builder.Services.AddTransient<IUserRegisterService, UserRegisterService>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ISendMailService, SendMailService>();
-builder.Services.AddTransient<ILoginUserService, LoginUserService>();
 builder.Services.AddTransient<IUserTokenService, UserTokenService>();
 #endregion
 
@@ -78,12 +80,77 @@ app.UseCors("StudySystemPolicy");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
-
+app.UseMiddleware<AuthTokenMiddleware>();
+#region config status codes error response
 app.Use(async (context, next) =>
 {
-    await next();
+    try
+    {
+        await next();
+        if (context.Response.StatusCode == (int)HttpStatusCode.BadRequest) // 400
+        {
+            await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+            {
+                Code = (int)HttpStatusCode.BadRequest,
+                Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status400BadRequest, Message._400))
+            });
+        }
 
+        if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized) // 401
+        {
+            await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+            {
+                Code = (int)HttpStatusCode.Unauthorized,
+                Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status401Unauthorized, Message.Unauthorize))
+            });
+        }
+
+        if (context.Response.StatusCode == (int)HttpStatusCode.Forbidden) // 403
+        {
+            await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+            {
+                Code = (int)HttpStatusCode.Forbidden,
+                Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status403Forbidden, Message._403))
+            });
+        }
+
+        if (context.Response.StatusCode == (int)HttpStatusCode.NotFound) // 404
+        {
+            await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+            {
+                Code = (int)HttpStatusCode.NotFound,
+                Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status404NotFound, Message._404))
+            });
+        }
+
+        if (context.Response.StatusCode == (int)HttpStatusCode.MethodNotAllowed) // 405
+        {
+            await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+            {
+                Code = (int)HttpStatusCode.MethodNotAllowed,
+                Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status405MethodNotAllowed, Message._405))
+            });
+        }
+
+        if (context.Response.StatusCode == (int)HttpStatusCode.InternalServerError) // 405
+        {
+            await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+            {
+                Code = (int)HttpStatusCode.InternalServerError,
+                Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status500InternalServerError, Message._500))
+            });
+        }
+    }
+    catch (BadHttpRequestException ex)
+    {
+        await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+        {
+            Code = (int)HttpStatusCode.BadRequest,
+            Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status400BadRequest, ex.Message))
+        });
+    }
 });
+#endregion
 
 app.UseAuthorization();
 

@@ -21,6 +21,16 @@ namespace StudySystem.Application.Service
             _userTokenRepository = unitOfWork.UserTokenRepository;
         }
 
+        public async Task<bool> AuthToken(string token)
+        {
+            var userAuth = await _userTokenRepository.FindAsync(x => x.Token.Equals(token) && x.ExpireTime > DateTime.UtcNow).ConfigureAwait(false);
+            if (userAuth != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task Delete(string userId)
         {
             var userToken = await _userTokenRepository.GetAsync(userId).ConfigureAwait(false);

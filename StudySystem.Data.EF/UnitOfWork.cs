@@ -11,20 +11,15 @@ namespace StudySystem.Data.EF
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;
-        private UserRegisterRepository _userRegisterRepository;
-        private LoginUserRepository _loginUserRepository;
+        private UserRepository _userRegisterRepository;
         private UserTokenRepository _userTokenRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
-        public IUserRegisterRepository UserRegisterRepository
+        public IUserRepository UserRepository
         {
-            get { return _userRegisterRepository ?? (_userRegisterRepository = new UserRegisterRepository(_context)); }
+            get { return _userRegisterRepository ?? (_userRegisterRepository = new UserRepository(_context)); }
         }
 
-        public ILoginUserRepository LoginUserRepository
-        {
-            get { return _loginUserRepository ?? (_loginUserRepository = new LoginUserRepository(_context)); }
-        }
 
         public IUserTokenRepository UserTokenRepository
         {

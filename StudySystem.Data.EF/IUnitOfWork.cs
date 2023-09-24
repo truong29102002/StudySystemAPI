@@ -9,8 +9,7 @@ namespace StudySystem.Data.EF
 {
     public interface IUnitOfWork
     {
-        IUserRegisterRepository UserRegisterRepository { get; }
-        ILoginUserRepository LoginUserRepository { get; }
+        IUserRepository UserRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
         Task<bool> CommitAsync();
     }

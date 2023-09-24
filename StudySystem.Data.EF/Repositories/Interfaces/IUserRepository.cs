@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.EF.Repositories.Interfaces
 {
-    public interface IUserRegisterRepository : IRepository<UserDetail>
+    public interface IUserRepository : IRepository<UserDetail>
     {
         Task<bool> IsUserExists(string userId);
         Task InsertUserDetails(UserDetail userDetail);

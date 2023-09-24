@@ -25,15 +25,13 @@ namespace StudySystem.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IUserRegisterService _userRegisterService;
-        private readonly ILoginUserService _loginUserService;
+        private readonly IUserService _userRegisterService;
         private readonly IUserTokenService _userTokenService;
         private readonly ILogger<LoginController> _logger;
         private readonly string _user;
-        public LoginController(IUserRegisterService userRegisterService, ILoginUserService loginUserService, IUserTokenService userTokenService, ILogger<LoginController> logger, UserResoveSerive user)
+        public LoginController(IUserService userRegisterService, IUserTokenService userTokenService, ILogger<LoginController> logger, UserResoveSerive user)
         {
             _userRegisterService = userRegisterService;
-            _loginUserService = loginUserService;
             _userTokenService = userTokenService;
             _logger = logger;
             _user = user.GetUser();
@@ -59,7 +57,7 @@ namespace StudySystem.Controllers
         [HttpPost(Router.LoginUser)]
         public async Task<ActionResult<StudySystemAPIResponse<LoginResponseModel>>> Login([FromBody] LoginRequestModel request)
         {
-            var user = await _loginUserService.DoLogin(request);
+            var user = await _userRegisterService.DoLogin(request);
             if (user != null)
             {
                 if (await _userTokenService.IsUserOnl(user.UserID).ConfigureAwait(false))
@@ -82,7 +80,7 @@ namespace StudySystem.Controllers
                 return new StudySystemAPIResponse<LoginResponseModel>(StatusCodes.Status200OK, new Response<LoginResponseModel>(true, new LoginResponseModel(user.IsActive, token + "." + userInfor)));
             }
             _logger.LogInformation("Fail");
-            throw new BadHttpRequestException(Message.Unauthorize);
+            throw new BadHttpRequestException(Message.InValidAccount);
         }
 
         [HttpPost(Router.LogOut)]

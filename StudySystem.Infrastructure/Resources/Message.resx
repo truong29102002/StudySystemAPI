@@ -117,11 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="400" xml:space="preserve">
+    <value>Bad Request</value>
+  </data>
+  <data name="403" xml:space="preserve">
+    <value>Forbidden Error</value>
+  </data>
+  <data name="404" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
+  <data name="405" xml:space="preserve">
+    <value>Method Not Allowed</value>
+  </data>
+  <data name="500" xml:space="preserve">
+    <value>Internal Server Error</value>
+  </data>
+  <data name="InValidAccount" xml:space="preserve">
+    <value>UserID or Password is incorrect</value>
+  </data>
   <data name="Logout" xml:space="preserve">
     <value>You have been logging out of the system</value>
   </data>
   <data name="Unauthorize" xml:space="preserve">
-    <value>UnAuthorize</value>
+    <value>Unauthorized</value>
   </data>
   <data name="UserLogined" xml:space="preserve">
     <value>User was sign in</value>

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Ocsp;
 using StudySystem.Application.Service;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Request;
@@ -9,8 +9,8 @@ using StudySystem.Infrastructure.CommonConstant;
 
 namespace StudySystem.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmailVerificationController : ControllerBase
     {
         private readonly ISendMailService _sendMailService;
@@ -19,8 +19,7 @@ namespace StudySystem.Controllers
         public EmailVerificationController(ISendMailService sendMailService)
         {
             _sendMailService = sendMailService;
-            _verifyCode = new Random().Next(1000, 10000).ToString();
-            _expireCode = DateTime.UtcNow.AddMinutes(5);
+            
         }
 
         [HttpPost(Router.SendMail)]
@@ -30,7 +29,7 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
 
-        [HttpPost("~/api/verify-email")]
+        [HttpPost(Router.VerificationEmail)]
         public ActionResult<StudySystemAPIResponse<object>> VerificationEmail(string code)
         {
             var result = _sendMailService.VerificationCode(code, _verifyCode, _expireCode);

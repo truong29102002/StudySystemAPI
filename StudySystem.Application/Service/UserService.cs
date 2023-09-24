@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Application.Service
 {
-    public class UserRegisterService : BaseService, IUserRegisterService
+    public class UserService : BaseService, IUserService
     {
         
-        private readonly IUserRegisterRepository _userRegisterRepository;
+        private readonly IUserRepository _userRegisterRepository;
         private readonly IUnitOfWork _unitOfWorks;
-        public UserRegisterService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _unitOfWorks = unitOfWork;
-            _userRegisterRepository = unitOfWork.UserRegisterRepository;
+            _userRegisterRepository = unitOfWork.UserRepository;
         }
 
         public async Task<bool> RegisterUserDetail(UserRegisterRequestModel request)
@@ -51,6 +51,18 @@ namespace StudySystem.Application.Service
 
             }
             return false;
+        }
+        public async Task<UserDetail> DoLogin(LoginRequestModel request)
+        {
+            var user = await _userRegisterRepository.FindAsync(x => x.UserID.Equals(request.UserID.ToLower())).ConfigureAwait(false);
+            if (user != null)
+            {
+                if (PasswordHasher.VerifyPassword(request.Password, user.Password))
+                {
+                    return user;
+                }
+            }
+            return null;
         }
     }
 }

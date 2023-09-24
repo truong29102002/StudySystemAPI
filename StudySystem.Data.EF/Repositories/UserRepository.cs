@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.EF.Repositories
 {
-    public class UserRegisterRepository : Repository<UserDetail>, IUserRegisterRepository
+    public class UserRepository : Repository<UserDetail>, IUserRepository
     {
         private readonly AppDbContext _context;
-        public UserRegisterRepository(AppDbContext context) : base(context)
+        public UserRepository(AppDbContext context) : base(context)
         {
 
             _context = context;

@@ -9,6 +9,7 @@ namespace StudySystem.Application.Service.Interfaces
 {
     public interface IUserTokenService : IBaseService
     {
+        Task<bool> AuthToken(string token);
         Task Delete(string userId);
         Task<ApplicationUserToken> Insert(ApplicationUserToken request);
         Task<bool> IsUserOnl(string userId);

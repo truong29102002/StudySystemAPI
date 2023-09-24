@@ -61,6 +61,60 @@ namespace StudySystem.Infrastructure.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bad Request.
+        /// </summary>
+        public static string _400 {
+            get {
+                return ResourceManager.GetString("400", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forbidden Error.
+        /// </summary>
+        public static string _403 {
+            get {
+                return ResourceManager.GetString("403", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Found.
+        /// </summary>
+        public static string _404 {
+            get {
+                return ResourceManager.GetString("404", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Method Not Allowed.
+        /// </summary>
+        public static string _405 {
+            get {
+                return ResourceManager.GetString("405", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal Server Error.
+        /// </summary>
+        public static string _500 {
+            get {
+                return ResourceManager.GetString("500", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserID or Password is incorrect.
+        /// </summary>
+        public static string InValidAccount {
+            get {
+                return ResourceManager.GetString("InValidAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have been logging out of the system.
         /// </summary>
         public static string Logout {
@@ -70,7 +124,7 @@ namespace StudySystem.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UnAuthorize.
+        ///   Looks up a localized string similar to Unauthorized.
         /// </summary>
         public static string Unauthorize {
             get {
