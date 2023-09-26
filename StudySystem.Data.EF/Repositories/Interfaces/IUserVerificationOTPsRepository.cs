@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.EF.Repositories.Interfaces
 {
-    public interface IUserRepository : IRepository<UserDetail>
+    public interface IUserVerificationOTPsRepository : IRepository<VerificationOTP>
     {
-        Task<bool> IsUserExists(string userId);
-        Task InsertUserDetails(UserDetail userDetail);
-        Task UpdateStatusActiveUser(string userID);
+        Task<bool> InsertCode(VerificationOTP code);
+        Task DeleteCode(string UserID);
     }
 }

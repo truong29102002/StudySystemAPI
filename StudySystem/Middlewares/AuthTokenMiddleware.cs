@@ -25,7 +25,7 @@ namespace StudySystem.Middlewares
             }
             else
             {
-                var filter = endpoint.Metadata.GetMetadata<AuthorizeAttribute>();
+                var filter = endpoint.Metadata.GetMetadata<AuthorizeAttribute>(); 
                 if (filter != null)
                 {
                     string tokenHeader = context.Request.Headers["Authorization"];
@@ -71,6 +71,7 @@ namespace StudySystem.Middlewares
             }
 
         }
+
         public async Task ResponseStatusCode(HttpContext context, int statusCode)
         {
             if (statusCode == StatusCodes.Status401Unauthorized)

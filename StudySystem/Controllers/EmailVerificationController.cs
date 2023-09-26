@@ -6,33 +6,31 @@ using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Request;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudySystem.Controllers
 {
     [ApiController]
-    [Authorize]
     public class EmailVerificationController : ControllerBase
     {
         private readonly ISendMailService _sendMailService;
-        private readonly string _verifyCode;
-        private readonly DateTime _expireCode;
         public EmailVerificationController(ISendMailService sendMailService)
         {
             _sendMailService = sendMailService;
             
         }
 
-        [HttpPost(Router.SendMail)]
-        public async Task<ActionResult<StudySystemAPIResponse<object>>> SendMail([FromBody] string username)
+        [HttpGet(Router.SendMail)]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> SendMail()
         {
-            var result = await _sendMailService.SendMailAsync(username, _verifyCode);
+            var result = await _sendMailService.SendMailAsync();
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
 
         [HttpPost(Router.VerificationEmail)]
-        public ActionResult<StudySystemAPIResponse<object>> VerificationEmail(string code)
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> VerificationEmail(string code)
         {
-            var result = _sendMailService.VerificationCode(code, _verifyCode, _expireCode);
+            var result = await _sendMailService.VerificationCode(code);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
 

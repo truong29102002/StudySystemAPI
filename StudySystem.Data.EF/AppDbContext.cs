@@ -25,7 +25,7 @@ namespace StudySystem.Data.EF
         }
         public DbSet<UserDetail> UserDetails => Set<UserDetail>();
         public DbSet<VerificationOTP> VerificationOTPs => Set<VerificationOTP>();
-        public DbSet<ApplicationUserToken> UserTokens => Set<ApplicationUserToken>();
+        public DbSet<UserToken> UserTokens => Set<UserToken>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,7 +45,7 @@ namespace StudySystem.Data.EF
             #endregion
 
             #region User token
-            modelBuilder.Entity<ApplicationUserToken>(cfg =>
+            modelBuilder.Entity<UserToken>(cfg =>
             {
                 cfg.HasKey(cfg => cfg.UserID);
             });

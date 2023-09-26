@@ -36,5 +36,15 @@ namespace StudySystem.Data.EF.Repositories
             var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userId.ToLower()) && x.IsActive == true).ConfigureAwait(false);
             return query != null;
         }
+
+        public async Task UpdateStatusActiveUser(string userID)
+        {
+            var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userID.ToLower())).ConfigureAwait(false);
+            if(query != null)
+            {
+                query.IsActive = true;
+                await _context.SaveChangesAsync().ConfigureAwait (false);
+            }
+        }
     }
 }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.EF.Repositories.Interfaces
 {
-    public interface IUserTokenRepository : IRepository<ApplicationUserToken>
+    public interface IUserTokenRepository : IRepository<UserToken>
     {
-       
+        Task UpdateStatusActiveToken(string userID);
     }
 }

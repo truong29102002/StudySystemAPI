@@ -73,7 +73,7 @@ namespace StudySystem.Controllers
                 await _userTokenService.Delete(user.UserID).ConfigureAwait(false);
                 _logger.LogInformation($"Delete {user.UserID} from table UserToken");
                 // insert user to table usertoken
-                await _userTokenService.Insert(new Data.Entites.ApplicationUserToken { UserID = user.UserID, Token = token, ExpireTime = expireTime, ExpireTimeOnline = expireTimeOnl }).ConfigureAwait(false);
+                await _userTokenService.Insert(new Data.Entites.UserToken { UserID = user.UserID, Token = token,IsActive = user.IsActive, ExpireTime = expireTime, ExpireTimeOnline = expireTimeOnl }).ConfigureAwait(false);
                 _logger.LogInformation($"Insert {user.UserID} from table UserToken");
                 var userInfor = CreateUserInformation(user);
 

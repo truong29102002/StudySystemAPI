@@ -23,7 +23,7 @@ namespace StudySystem.Application.Service
 
         public async Task<bool> AuthToken(string token)
         {
-            var userAuth = await _userTokenRepository.FindAsync(x => x.Token.Equals(token) && x.ExpireTime > DateTime.UtcNow).ConfigureAwait(false);
+            var userAuth = await _userTokenRepository.FindAsync(x => x.Token.Equals(token) && x.IsActive && x.ExpireTime > DateTime.UtcNow).ConfigureAwait(false);
             if (userAuth != null)
             {
                 return true;
@@ -41,7 +41,7 @@ namespace StudySystem.Application.Service
             }
         }
 
-        public async Task<ApplicationUserToken> Insert(ApplicationUserToken request)
+        public async Task<UserToken> Insert(UserToken request)
         {
             await _userTokenRepository.AddAsyn(request).ConfigureAwait(false);
             await _unitOfWorks.CommitAsync().ConfigureAwait (false);

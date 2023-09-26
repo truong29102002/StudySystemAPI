@@ -11,6 +11,7 @@ namespace StudySystem.Data.EF
     {
         IUserRepository UserRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
+        IUserVerificationOTPsRepository UserVerificationOTPsRepository { get; }
         Task<bool> CommitAsync();
     }
 }

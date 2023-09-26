@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
+using NLog.Web;
 using StudySystem.Application.Service;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
@@ -12,17 +14,22 @@ using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
 
+// logger
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("Init main");
+
+// Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 #region config jwt, AppDbContext
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UserResoveSerive>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -150,6 +157,10 @@ app.Use(async (context, next) =>
         });
     }
 });
+#endregion
+
+#region seed data
+
 #endregion
 
 app.UseAuthorization();

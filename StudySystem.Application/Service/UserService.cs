@@ -1,4 +1,5 @@
-﻿using StudySystem.Application.Service.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
@@ -17,10 +18,12 @@ namespace StudySystem.Application.Service
         
         private readonly IUserRepository _userRegisterRepository;
         private readonly IUnitOfWork _unitOfWorks;
-        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        private readonly ILogger<UserService> _logger;
+        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger) : base(unitOfWork)
         {
             _unitOfWorks = unitOfWork;
             _userRegisterRepository = unitOfWork.UserRepository;
+            _logger = logger;
         }
 
         public async Task<bool> RegisterUserDetail(UserRegisterRequestModel request)
@@ -47,7 +50,7 @@ namespace StudySystem.Application.Service
             catch (Exception ex)
             {
 
-                await Console.Out.WriteLineAsync(ex.Message);
+                _logger.LogError(ex.Message);
 
             }
             return false;

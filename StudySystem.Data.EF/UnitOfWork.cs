@@ -13,6 +13,7 @@ namespace StudySystem.Data.EF
         private readonly AppDbContext _context;
         private UserRepository _userRegisterRepository;
         private UserTokenRepository _userTokenRepository;
+        private UserVerifycationOTPsRepository _userVerifycationOTPsRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -24,6 +25,11 @@ namespace StudySystem.Data.EF
         public IUserTokenRepository UserTokenRepository
         {
             get { return _userTokenRepository ?? (_userTokenRepository = new UserTokenRepository(_context)); }
+        }
+
+        public IUserVerificationOTPsRepository UserVerificationOTPsRepository
+        {
+            get { return _userVerifycationOTPsRepository ?? (_userVerifycationOTPsRepository = new UserVerifycationOTPsRepository(_context)); }
         }
 
         public async Task<bool> CommitAsync()

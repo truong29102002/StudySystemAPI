@@ -11,7 +11,7 @@ namespace StudySystem.Application.Service.Interfaces
     {
         Task<bool> AuthToken(string token);
         Task Delete(string userId);
-        Task<ApplicationUserToken> Insert(ApplicationUserToken request);
+        Task<UserToken> Insert(UserToken request);
         Task<bool> IsUserOnl(string userId);
     }
 }

@@ -1,6 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using MimeKit;
 using StudySystem.Application.Service.Interfaces;
+using StudySystem.Data.EF;
+using StudySystem.Data.EF.Repositories;
+using StudySystem.Data.EF.Repositories.Interfaces;
+using StudySystem.Data.Entites;
 using StudySystem.Data.Models.Request;
 using StudySystem.Infrastructure.Configuration;
 using System;
@@ -15,21 +19,44 @@ namespace StudySystem.Application.Service
     public class SendMailService : ISendMailService
     {
         private readonly ILogger<SendMailService> logger;
-        public SendMailService(ILogger<SendMailService> _logger)
+        private readonly string _currentUser;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserVerificationOTPsRepository _userVerificationOTPsRepository;
+        private readonly IUserTokenRepository _userTokenRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        public SendMailService(ILogger<SendMailService> _logger, UserResoveSerive currentUser, IUnitOfWork unitOfWork)
         {
             logger = _logger;
+            _currentUser = currentUser.GetUser();
+            _unitOfWork = unitOfWork;
+            _userRepository = unitOfWork.UserRepository;
+            _userVerificationOTPsRepository = unitOfWork.UserVerificationOTPsRepository;
+            _userTokenRepository = unitOfWork.UserTokenRepository;
             logger.LogInformation("Create SendMailService");
-            
         }
-        public async Task<bool> SendMailAsync(string username, string verificationCode)
+
+
+        public async Task<bool> SendMailAsync()
         {
+            if (string.IsNullOrEmpty(this._currentUser))
+            {
+                return false;
+            }
             try
             {
+                Random random = new Random();
+                var userEmail = _userRepository.Find(x => x.UserID.Equals(_currentUser));
+
+                await _userVerificationOTPsRepository.DeleteCode(userEmail.UserID).ConfigureAwait(false);
+                string verificationCode = random.Next(100000, 1000000).ToString();
+                var expireTimeCode = DateTime.UtcNow.AddMinutes(5);
+                await _userVerificationOTPsRepository.InsertCode(new VerificationOTP { UserID = userEmail.UserID, Code = verificationCode, ExpireTime = expireTimeCode });
+
                 var email = new MimeMessage();
                 email.Sender = new MailboxAddress(AppSetting.MailName, AppSetting.Mail);
                 email.From.Add(new MailboxAddress(AppSetting.MailName, AppSetting.Mail));
 
-                email.To.Add(new MailboxAddress(username, username));
+                email.To.Add(new MailboxAddress(userEmail.Email, userEmail.Email));
                 email.Subject = "Verify code";
 
                 var builder = new BodyBuilder();
@@ -57,18 +84,25 @@ namespace StudySystem.Application.Service
             return $"<h1>Xác minh tài khoản</h1><h3>Mã bảo mật tồn tại trong 5 phút</h3>Vui lòng sử dụng mã bảo mật sau cho tài khoản.<br/><br/>Mã bảo mật: {code}<br/><br/>Xin cám ơn.";
         }
 
-        public bool VerificationCode(string code, string verifyCode, DateTime expireCode)
+        public async Task<bool> VerificationCode(string verificationCode)
         {
+            if (string.IsNullOrEmpty(this._currentUser))
+            {
+                return false;
+            }
             try
             {
-                if (code.Equals(verifyCode) && expireCode > DateTime.UtcNow)
+                var user = _userVerificationOTPsRepository.Find(x => x.UserID.Equals(_currentUser));
+                if (user.Code.Equals(verificationCode) && user.ExpireTime > DateTime.UtcNow)
                 {
+                    await _userVerificationOTPsRepository.DeleteCode(user.UserID).ConfigureAwait(false);
+                    await _userRepository.UpdateStatusActiveUser(user.UserID).ConfigureAwait(false);
+                    await _userTokenRepository.UpdateStatusActiveToken(user.UserID).ConfigureAwait(false);
                     return true;
                 }
             }
             catch (Exception ex)
             {
-
                 logger.LogError(ex.Message);
             }
             return false;

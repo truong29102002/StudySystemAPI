@@ -9,7 +9,7 @@ namespace StudySystem.Application.Service.Interfaces
 {
     public interface ISendMailService
     {
-        Task<bool> SendMailAsync(string username, string verificationCode);
-        bool VerificationCode(string code, string verifyCode, DateTime expireCode);
+        Task<bool> SendMailAsync();
+        Task<bool> VerificationCode(string verificationCode);
     }
 }
