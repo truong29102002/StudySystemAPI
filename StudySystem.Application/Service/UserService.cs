@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Application.Service
 {
+    /// <summary>
+    /// UserService
+    /// </summary>
     public class UserService : BaseService, IUserService
     {
         
@@ -25,7 +28,11 @@ namespace StudySystem.Application.Service
             _userRegisterRepository = unitOfWork.UserRepository;
             _logger = logger;
         }
-
+        /// <summary>
+        /// RegisterUserDetail
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<bool> RegisterUserDetail(UserRegisterRequestModel request)
         {
             try
@@ -55,6 +62,11 @@ namespace StudySystem.Application.Service
             }
             return false;
         }
+        /// <summary>
+        /// DoLogin
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<UserDetail> DoLogin(LoginRequestModel request)
         {
             var user = await _userRegisterRepository.FindAsync(x => x.UserID.Equals(request.UserID.ToLower())).ConfigureAwait(false);

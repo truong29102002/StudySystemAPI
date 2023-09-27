@@ -82,7 +82,10 @@ namespace StudySystem.Controllers
             _logger.LogInformation("Fail");
             throw new BadHttpRequestException(Message.InValidAccount);
         }
-
+        /// <summary>
+        /// Logout
+        /// </summary>
+        /// <returns></returns>
         [HttpPost(Router.LogOut)]
         [Authorize]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> Logout()

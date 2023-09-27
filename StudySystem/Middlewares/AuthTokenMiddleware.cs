@@ -7,6 +7,9 @@ using System.Net;
 
 namespace StudySystem.Middlewares
 {
+    /// <summary>
+    /// Authorization when user was login or logout
+    /// </summary>
     public class AuthTokenMiddleware
     {
         private readonly RequestDelegate _next;

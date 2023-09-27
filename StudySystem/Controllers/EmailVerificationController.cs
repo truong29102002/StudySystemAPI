@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudySystem.Application.Service;
@@ -17,22 +19,28 @@ namespace StudySystem.Controllers
         public EmailVerificationController(ISendMailService sendMailService)
         {
             _sendMailService = sendMailService;
-            
-        }
 
+        }
+        /// <summary>
+        /// SendMail
+        /// </summary>
+        /// <returns></returns>
         [HttpGet(Router.SendMail)]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> SendMail()
         {
             var result = await _sendMailService.SendMailAsync();
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
-
+        /// <summary>
+        /// VerificationEmail
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpPost(Router.VerificationEmail)]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> VerificationEmail(string code)
         {
             var result = await _sendMailService.VerificationCode(code);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
-
     }
 }
