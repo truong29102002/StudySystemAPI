@@ -242,3 +242,17 @@
 2023-09-27 19:08:34.0815 Info Validating config: TargetNames=lifetimeConsole, ownFile-web, ConfigItems=35, FilePath=C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\bin\Debug\net6.0\NLog.config
 2023-09-27 19:08:34.1166 Info Configuration initialized.
 2023-09-27 19:08:34.8458 Info Validating config: TargetNames=lifetimeConsole, ownFile-web, ConfigItems=35, FilePath=C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\bin\Debug\net6.0\NLog.config
+2023-09-28 11:46:30.6743 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2023-09-28 11:46:30.6878 Info Registered target NLog.Targets.ConsoleTarget(Name=lifetimeConsole)
+2023-09-28 11:46:30.7025 Warn Error has been raised. Exception: NLog.NLogConfigurationException: Target 'allfile' not found for logging rule: *.
+2023-09-28 11:46:30.7146 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2023-09-28 11:46:30.7356 Info Validating config: TargetNames=lifetimeConsole, ownFile-web, ConfigItems=35, FilePath=C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\bin\Debug\net6.0\NLog.config
+2023-09-28 11:46:30.7510 Info Configuration initialized.
+2023-09-28 11:46:31.3810 Info Validating config: TargetNames=lifetimeConsole, ownFile-web, ConfigItems=35, FilePath=C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\bin\Debug\net6.0\NLog.config
+2023-09-28 11:47:01.7046 Info Registered target NLog.Targets.FileTarget(Name=ownFile-web)
+2023-09-28 11:47:01.7113 Info Registered target NLog.Targets.ConsoleTarget(Name=lifetimeConsole)
+2023-09-28 11:47:01.7113 Warn Error has been raised. Exception: NLog.NLogConfigurationException: Target 'allfile' not found for logging rule: *.
+2023-09-28 11:47:01.7318 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.2.4.2092. Product version: 5.2.4+5ed75b125a691ce9f01e64641f1a79f438385847. GlobalAssemblyCache: False
+2023-09-28 11:47:01.7493 Info Validating config: TargetNames=lifetimeConsole, ownFile-web, ConfigItems=35, FilePath=C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\bin\Debug\net6.0\NLog.config
+2023-09-28 11:47:01.7627 Info Configuration initialized.
+2023-09-28 11:47:02.1035 Info Validating config: TargetNames=lifetimeConsole, ownFile-web, ConfigItems=35, FilePath=C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\bin\Debug\net6.0\NLog.config

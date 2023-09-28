@@ -32,9 +32,10 @@ builder.Host.UseNLog();
 // Add services to the container.
 builder.Services.AddMemoryCache(); // add the memory cache to the service collection
 // Add miniprofilter : write speed time query sql
+// More more about config miniprofiler at https://ilovedotnet.org/blogs/profiling-webapi-with-mini-profiler/
 builder.Services.AddMiniProfiler(options =>
 {
-    options.RouteBasePath = "/profiler";
+    options.RouteBasePath = "/profiler"; // /profiler/results-index
 }).AddEntityFramework();
 #endregion
 // Add services to the container.
