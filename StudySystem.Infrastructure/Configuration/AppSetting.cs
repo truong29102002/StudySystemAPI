@@ -65,5 +65,11 @@ namespace StudySystem.Infrastructure.Configuration
             get { return Convert.ToInt32(configuration["MailSetting:Port"]); }
         }
         #endregion
+
+        // set time user online (minutes)
+        public static int SettimeUserOnl
+        {
+            get { return Convert.ToInt32(configuration["SetTimeOnlUser2"]); }
+        }
     }
 }

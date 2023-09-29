@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -94,6 +95,7 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 #endregion
 
 #region register service Add Transient
+builder.Services.AddScoped<IMapper>(sp=> new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
 builder.Services.AddTransient<DbInit>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));

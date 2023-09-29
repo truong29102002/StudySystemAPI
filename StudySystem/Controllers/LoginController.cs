@@ -74,14 +74,14 @@ namespace StudySystem.Controllers
                     throw new BadHttpRequestException(Message.UserLogined);
                 }
                 var expireTime = DateTime.UtcNow.AddHours(AppSetting.JwtExpireTime);
-                var expireTimeOnl = DateTime.UtcNow.AddMinutes(2);
+                var expireTimeOnl = DateTime.UtcNow.AddMinutes(AppSetting.SettimeUserOnl);
                 var claimUser = CeateClaim(user.UserID, user.UserFullName);
                 var token = GenerateJwtToken(claimUser, expireTime);
                 // delete user in UserToken
                 await _userTokenService.Delete(user.UserID).ConfigureAwait(false);
                 _logger.LogInformation($"Delete {user.UserID} from table UserToken");
                 // insert user to table usertoken
-                await _userTokenService.Insert(new Data.Entites.UserToken { UserID = user.UserID, Token = token,IsActive = user.IsActive, ExpireTime = expireTime, ExpireTimeOnline = expireTimeOnl }).ConfigureAwait(false);
+                await _userTokenService.Insert(new Data.Entites.UserToken { UserID = user.UserID, Token = token, IsActive = user.IsActive, ExpireTime = expireTime, ExpireTimeOnline = expireTimeOnl }).ConfigureAwait(false);
                 _logger.LogInformation($"Insert {user.UserID} from table UserToken");
                 var userInfor = CreateUserInformation(user);
 
@@ -92,6 +92,7 @@ namespace StudySystem.Controllers
         }
         /// <summary>
         /// Logout
+        /// API: "~/api/logout"
         /// </summary>
         /// <returns></returns>
         [HttpPost(Router.LogOut)]
@@ -101,6 +102,25 @@ namespace StudySystem.Controllers
             await _userTokenService.Delete(_user).ConfigureAwait(false);
             _logger.LogInformation(Message.Logout);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, data: Message.Logout));
+        }
+        /// <summary>
+        /// IsUserOnl
+        /// API: "~/api/user-onl"
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="BadHttpRequestException"></exception>
+        [HttpPut(Router.IsUserOnl)]
+        [Authorize]
+        public async Task<ActionResult<StudySystemAPIResponse<IsUserOnlineResponseModel>>> IsUserOnl()
+        {
+            var expireTimeOnl = DateTime.UtcNow.AddMinutes(AppSetting.SettimeUserOnl);
+            var rs = await _userTokenService.Update(_user, expireTimeOnl).ConfigureAwait(false);
+            if (rs)
+            {
+                return new StudySystemAPIResponse<IsUserOnlineResponseModel>(StatusCodes.Status200OK, new Response<IsUserOnlineResponseModel>(rs, new IsUserOnlineResponseModel(true, expireTimeOnl.ToLocalTime())));
+            }
+            _logger.LogError(Message.Unauthorize);
+            throw new BadHttpRequestException(Message.Unauthorize);
         }
 
         private string CreateUserInformation(UserDetail user)

@@ -12,6 +12,7 @@ namespace StudySystem.Application.Service.Interfaces
         Task<bool> AuthToken(string token);
         Task Delete(string userId);
         Task<UserToken> Insert(UserToken request);
+        Task<bool> Update(string userID, DateTime expireTimeOnl);
         Task<bool> IsUserOnl(string userId);
     }
 }
