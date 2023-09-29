@@ -1,4 +1,12 @@
-﻿using MailKit.Net.Smtp;
+﻿// <copyright file="LoginController.cs" ownedby="Xuan Truong">
+//  Copyright (c) XuanTruong. All rights reserved.
+//  FileType: Visual CSharp source file
+//  Created On: 29/09/2023
+//  Last Modified On: 29/09/2023
+//  Description: LoginController.cs
+// </copyright>
+
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

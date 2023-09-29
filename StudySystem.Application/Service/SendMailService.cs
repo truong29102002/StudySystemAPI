@@ -16,6 +16,9 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Application.Service
 {
+    /// <summary>
+    /// SendMailService
+    /// </summary>
     public class SendMailService : ISendMailService
     {
         private readonly ILogger<SendMailService> logger;
@@ -35,7 +38,10 @@ namespace StudySystem.Application.Service
             logger.LogInformation("Create SendMailService");
         }
 
-
+        /// <summary>
+        /// SendMailAsync
+        /// </summary>
+        /// <returns>Code</returns>
         public async Task<bool> SendMailAsync()
         {
             if (string.IsNullOrEmpty(this._currentUser))
@@ -83,7 +89,11 @@ namespace StudySystem.Application.Service
         {
             return $"<h1>Xác minh tài khoản</h1><h3>Mã bảo mật tồn tại trong 5 phút</h3>Vui lòng sử dụng mã bảo mật sau cho tài khoản.<br/><br/>Mã bảo mật: {code}<br/><br/>Xin cám ơn.";
         }
-
+        /// <summary>
+        /// VerificationCode
+        /// </summary>
+        /// <param name="verificationCode"></param>
+        /// <returns>bool</returns>
         public async Task<bool> VerificationCode(string verificationCode)
         {
             if (string.IsNullOrEmpty(this._currentUser))

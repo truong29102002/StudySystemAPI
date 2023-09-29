@@ -41,4 +41,12 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\.editorconfig" />
+  </ItemGroup>
+	
 </Project>

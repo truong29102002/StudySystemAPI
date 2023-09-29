@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Infrastructure.CommonConstant
 {
+    public class CommonConstant
+    {
+        public const string PathFolderCsv = @"..\StudySystem.Data.EF\Seed Data\FileCSV\";
+        public const string TypeFileCsv = @".csv";
+        public const string CsvFileUserDetails = "_UserDetails_";
+    }
     public static class Router
     {
         public const string RegisterUser = "~/api/register-user";

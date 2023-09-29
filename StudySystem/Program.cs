@@ -9,6 +9,7 @@ using StackExchange.Profiling.Storage;
 using StudySystem.Application.Service;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
+using StudySystem.Data.EF.Seed_Data;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.Configuration;
 using StudySystem.Infrastructure.Resources;
@@ -46,7 +47,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 
-
 #region config jwt, AppDbContext
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UserResoveSerive>();
@@ -71,7 +71,10 @@ builder.Services.AddCors(cors => cors.AddPolicy(name: "StudySystemPolicy", polic
 {
     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));
+
+
 //Optimize data traffic transmitted between server and client
+// Learn more about configuring Response Compression at https://learn.microsoft.com/en-us/aspnet/core/performance/response-compression?view=aspnetcore-7.0
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true; // enables https is a secure risk
@@ -91,6 +94,7 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 #endregion
 
 #region register service Add Transient
+builder.Services.AddTransient<DbInit>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddTransient<IUserService, UserService>();
@@ -117,7 +121,15 @@ var app = builder.Build();
 
 
 #region seed data
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
+    //var context = services.GetRequiredService<AppDbContext>();
+    //context.Database.Migrate();
+    //var dbInit = services.GetRequiredService<DbInit>();
+    //dbInit.Seed().Wait();
+}
 #endregion
 
 // Configure the HTTP request pipeline.
@@ -125,7 +137,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseMiniProfiler();
+    app.UseMiniProfiler(); // add miniprofiler
     app.UseHsts();
 }
 

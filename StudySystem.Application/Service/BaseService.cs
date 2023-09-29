@@ -1,4 +1,5 @@
-﻿using StudySystem.Application.Service.Interfaces;
+﻿
+using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Application.Service
 {
+    /// <summary>
+    /// Base service
+    /// </summary>
     public class BaseService : IBaseService
     {
         protected IUnitOfWork UnitOfWork { get; set; }

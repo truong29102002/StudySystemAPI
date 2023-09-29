@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
+
+using Microsoft.Extensions.Logging;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
 using StudySystem.Data.EF.Repositories.Interfaces;
@@ -18,7 +20,6 @@ namespace StudySystem.Application.Service
     /// </summary>
     public class UserService : BaseService, IUserService
     {
-        
         private readonly IUserRepository _userRegisterRepository;
         private readonly IUnitOfWork _unitOfWorks;
         private readonly ILogger<UserService> _logger;
@@ -32,7 +33,7 @@ namespace StudySystem.Application.Service
         /// RegisterUserDetail
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>bool</returns>
         public async Task<bool> RegisterUserDetail(UserRegisterRequestModel request)
         {
             try
@@ -66,7 +67,7 @@ namespace StudySystem.Application.Service
         /// DoLogin
         /// </summary>
         /// <param name="request"></param>
-        /// <returns></returns>
+        /// <returns>user</returns>
         public async Task<UserDetail> DoLogin(LoginRequestModel request)
         {
             var user = await _userRegisterRepository.FindAsync(x => x.UserID.Equals(request.UserID.ToLower())).ConfigureAwait(false);
