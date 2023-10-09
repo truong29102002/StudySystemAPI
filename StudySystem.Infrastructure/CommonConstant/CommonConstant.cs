@@ -21,4 +21,9 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string VerificationEmail = "~/api/verify-email";
         public const string IsUserOnl = "~/api/user-onl";
     }
+
+    public static class DateTimeConstant
+    {
+        public const int ExpireOnl = 2;
+    }
 }

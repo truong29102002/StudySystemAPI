@@ -9,13 +9,17 @@ namespace StudySystem.Data.Models.Response
 {
     public class LoginResponseModel
     {
+        [Required]
         public bool IsActive { get; set; }
         [Required]
         public string Token { get; set; } = null!;
-        public LoginResponseModel(bool isActive, string token)
+        [Required]
+        public int Role { get; set; }
+        public LoginResponseModel(bool isActive, string token, int role)
         {
             IsActive = isActive;
             Token = token;
+            Role = role;
         }
     }
 }

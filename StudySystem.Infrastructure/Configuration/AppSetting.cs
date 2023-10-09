@@ -66,10 +66,5 @@ namespace StudySystem.Infrastructure.Configuration
         }
         #endregion
 
-        // set time user online (minutes)
-        public static int SettimeUserOnl
-        {
-            get { return Convert.ToInt32(configuration["SetTimeOnlUser2"]); }
-        }
     }
 }

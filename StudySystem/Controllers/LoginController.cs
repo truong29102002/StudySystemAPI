@@ -74,7 +74,7 @@ namespace StudySystem.Controllers
                     throw new BadHttpRequestException(Message.UserLogined);
                 }
                 var expireTime = DateTime.UtcNow.AddHours(AppSetting.JwtExpireTime);
-                var expireTimeOnl = DateTime.UtcNow.AddMinutes(AppSetting.SettimeUserOnl);
+                var expireTimeOnl = DateTime.UtcNow.AddMinutes(DateTimeConstant.ExpireOnl);
                 var claimUser = CeateClaim(user.UserID, user.UserFullName);
                 var token = GenerateJwtToken(claimUser, expireTime);
                 // delete user in UserToken
@@ -85,7 +85,7 @@ namespace StudySystem.Controllers
                 _logger.LogInformation($"Insert {user.UserID} from table UserToken");
                 var userInfor = CreateUserInformation(user);
 
-                return new StudySystemAPIResponse<LoginResponseModel>(StatusCodes.Status200OK, new Response<LoginResponseModel>(true, new LoginResponseModel(user.IsActive, token + "." + userInfor)));
+                return new StudySystemAPIResponse<LoginResponseModel>(StatusCodes.Status200OK, new Response<LoginResponseModel>(true, new LoginResponseModel(user.IsActive, token + "." + userInfor, user.Role)));
             }
             _logger.LogInformation("Fail");
             throw new BadHttpRequestException(Message.InValidAccount);
@@ -113,7 +113,7 @@ namespace StudySystem.Controllers
         [Authorize]
         public async Task<ActionResult<StudySystemAPIResponse<IsUserOnlineResponseModel>>> IsUserOnl()
         {
-            var expireTimeOnl = DateTime.UtcNow.AddMinutes(AppSetting.SettimeUserOnl);
+            var expireTimeOnl = DateTime.UtcNow.AddMinutes(DateTimeConstant.ExpireOnl);
             var rs = await _userTokenService.Update(_user, expireTimeOnl).ConfigureAwait(false);
             if (rs)
             {
