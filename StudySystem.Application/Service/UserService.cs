@@ -45,7 +45,6 @@ namespace StudySystem.Application.Service
                     userDetail.UserID = request.UserID.ToLower();
                     userDetail.Password = PasswordHasher.HashPassword(request.Password);
                     userDetail.Email = request.Email.ToLower();
-                    userDetail.Address = request.Address;
                     userDetail.PhoneNumber = request.PhoneNumber;
                     userDetail.Gender = request.Gender;
                     userDetail.Role = 0;

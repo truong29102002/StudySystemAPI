@@ -21,7 +21,7 @@ namespace StudySystem.Data.EF.Repositories
 
         public async Task InsertUserDetails(UserDetail userDetail)
         {
-            var check = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userDetail.UserID.ToLower()) && x.IsActive == false).ConfigureAwait(false);
+            var check = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userDetail.UserID.ToLower())).ConfigureAwait(false);
             if (check != null)
             {
                 _context.Set<UserDetail>().Remove(check);
@@ -33,17 +33,17 @@ namespace StudySystem.Data.EF.Repositories
 
         public async Task<bool> IsUserExists(string userId)
         {
-            var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userId.ToLower()) && x.IsActive == true).ConfigureAwait(false);
+            var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userId.ToLower())).ConfigureAwait(false);
             return query != null;
         }
 
         public async Task UpdateStatusActiveUser(string userID)
         {
             var query = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userID.ToLower())).ConfigureAwait(false);
-            if(query != null)
+            if (query != null)
             {
                 query.IsActive = true;
-                await _context.SaveChangesAsync().ConfigureAwait (false);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

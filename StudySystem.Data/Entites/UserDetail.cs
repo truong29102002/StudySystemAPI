@@ -19,7 +19,6 @@ namespace StudySystem.Data.Entites
         public string Password { get; set; } = null!;
         [Phone]
         public string PhoneNumber { get; set; } = string.Empty;
-        public string Address { get; set; } = string.Empty;
         // 0 male, 1 female
         [Range(0,1)]
         public int Gender { get; set; }
@@ -27,6 +26,8 @@ namespace StudySystem.Data.Entites
         [Range(0,1)]
         public int Role { get; set; }
         public bool IsActive { get; set; }
+
+        public AddressUser? AddressUser { get; set; }
 
     }
 }

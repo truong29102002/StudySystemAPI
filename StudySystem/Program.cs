@@ -18,6 +18,7 @@ using StudySystem.Middlewares;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+
 #region log info
 System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -95,7 +96,7 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 #endregion
 
 #region register service Add Transient
-builder.Services.AddScoped<IMapper>(sp=> new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
+builder.Services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
 builder.Services.AddTransient<DbInit>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
@@ -128,7 +129,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
 
     //var context = services.GetRequiredService<AppDbContext>();
-    //context.Database.Migrate();
+    //await context.Database.MigrateAsync();
     //var dbInit = services.GetRequiredService<DbInit>();
     //dbInit.Seed().Wait();
 }

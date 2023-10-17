@@ -17,7 +17,6 @@ namespace StudySystem.Data.EF.Seed_Data.ClassMap
             Map(m => m.Email).Name("Email");
             Map(m => m.Password).Name("Password");
             Map(m => m.PhoneNumber).Name("PhoneNumber");
-            Map(m => m.Address).Name("Address");
             Map(m => m.Gender).Name("Gender");
             Map(m => m.Role).Name("Role");
             Map(m => m.IsActive).Name("IsActive");
