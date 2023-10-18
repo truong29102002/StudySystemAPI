@@ -46,8 +46,13 @@ namespace StudySystem.Controllers
             var result = await _locationService.GetDistricts(province_code).ConfigureAwait(false);
             return new StudySystemAPIResponse<DistrictsResponseModel>(StatusCodes.Status200OK, new Response<DistrictsResponseModel>(true, result));
         }
+        /// <summary>
+        /// GetWardsByDistrictCode
+        /// </summary>
+        /// <param name="district_code"></param>
+        /// <returns></returns>
         [HttpGet(Router.GetWards)]
-        public async Task<ActionResult<StudySystemAPIResponse<WardsResponseModel>>> GetWardByDistrictCode(string district_code)
+        public async Task<ActionResult<StudySystemAPIResponse<WardsResponseModel>>> GetWardsByDistrictCode(string district_code)
         {
             var result = await _locationService.GetWards(district_code).ConfigureAwait(false);
             return new StudySystemAPIResponse<WardsResponseModel>(StatusCodes.Status200OK, new Response<WardsResponseModel>(true, result));
