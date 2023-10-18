@@ -12,8 +12,8 @@ using StudySystem.Data.EF;
 namespace StudySystem.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231016024334_v9")]
-    partial class v9
+    [Migration("20231018143333_v8")]
+    partial class v8
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,60 @@ namespace StudySystem.Data.EF.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeRegions", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.AddressUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Descriptions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DistrictCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProvinceCode")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserID")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
+
+                    b.Property<string>("WardCode")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DistrictCode");
+
+                    b.HasIndex("ProvinceCode");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
+
+                    b.HasIndex("WardCode");
+
+                    b.HasIndex("UserID", "WardCode", "DistrictCode", "ProvinceCode");
+
+                    b.ToTable("AddressUsers");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeRegion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,30 +87,26 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.Property<string>("CodeName")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("CodeNameEn")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnType("text");
 
                     b.Property<string>("NameEn")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name_en");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("administrative_regions");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeUnits", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeUnit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,148 +116,101 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.Property<string>("CodeName")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("CodeNameEn")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullNameEn")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("short_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("ShortNameEn")
                         .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("short_name_en");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("administrative_units");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.Districts", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
                 {
                     b.Property<string>("Code")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("code");
+                        .HasColumnType("text");
 
-                    b.Property<int>("AdministrativeUnitId")
-                        .HasColumnType("integer")
-                        .HasColumnName("administrative_unit_id");
+                    b.Property<int?>("AdministrativeUnitId")
+                        .IsRequired()
+                        .HasColumnType("integer");
 
                     b.Property<string>("CodeName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnType("text");
 
                     b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProvinceCode")
                         .IsRequired()
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("province_code");
+                        .HasColumnType("text");
 
                     b.HasKey("Code");
 
-                    b.HasIndex("AdministrativeUnitId")
-                        .HasDatabaseName("idx_districts_unit");
+                    b.HasIndex("AdministrativeUnitId");
 
-                    b.HasIndex("ProvinceCode")
-                        .HasDatabaseName("idx_districts_province");
+                    b.HasIndex("ProvinceCode", "AdministrativeUnitId");
 
                     b.ToTable("districts");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.Provinces", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
                 {
                     b.Property<string>("Code")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("code");
+                        .HasColumnType("text");
 
-                    b.Property<int>("AdministrativeRegionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("administrative_region_id");
-
-                    b.Property<int?>("AdministrativeRegionsId1")
+                    b.Property<int?>("AdministrativeRegionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AdministrativeUnitId")
-                        .HasColumnType("integer")
-                        .HasColumnName("administrative_unit_id");
-
-                    b.Property<int?>("AdministrativeUnitsId")
+                    b.Property<int?>("AdministrativeUnitId")
                         .HasColumnType("integer");
 
                     b.Property<string>("CodeName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnType("text");
 
                     b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name_en");
+                        .HasColumnType("text");
 
                     b.HasKey("Code");
 
-                    b.HasIndex("AdministrativeRegionId")
-                        .HasDatabaseName("idx_provinces_region");
+                    b.HasIndex("AdministrativeUnitId");
 
-                    b.HasIndex("AdministrativeRegionsId1");
-
-                    b.HasIndex("AdministrativeUnitId")
-                        .HasDatabaseName("idx_provinces_unit");
-
-                    b.HasIndex("AdministrativeUnitsId");
+                    b.HasIndex("AdministrativeRegionId", "AdministrativeUnitId");
 
                     b.ToTable("provinces");
                 });
@@ -218,10 +220,6 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<string>("UserID")
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -249,6 +247,9 @@ namespace StudySystem.Data.EF.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("UserID");
+
+                    b.HasIndex("UserID")
+                        .HasDatabaseName("IX_UserDetail_UserID");
 
                     b.ToTable("UserDetails");
                 });
@@ -296,126 +297,133 @@ namespace StudySystem.Data.EF.Migrations
             modelBuilder.Entity("StudySystem.Data.Entites.Ward", b =>
                 {
                     b.Property<string>("Code")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("code");
+                        .HasColumnType("text");
 
-                    b.Property<int>("AdministrativeUnitId")
-                        .HasColumnType("integer")
-                        .HasColumnName("administrative_unit_id");
+                    b.Property<int?>("AdministrativeUnitId")
+                        .IsRequired()
+                        .HasColumnType("integer");
 
                     b.Property<string>("CodeName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("code_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("DistrictCode")
                         .IsRequired()
-                        .HasColumnType("varchar(20)")
-                        .HasColumnName("district_code");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("full_name_en");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnType("text");
 
                     b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)")
-                        .HasColumnName("name_en");
+                        .HasColumnType("text");
 
                     b.HasKey("Code");
 
-                    b.HasIndex("AdministrativeUnitId")
-                        .HasDatabaseName("idx_wards_unit");
+                    b.HasIndex("AdministrativeUnitId");
 
-                    b.HasIndex("DistrictCode")
-                        .HasDatabaseName("idx_wards_district");
+                    b.HasIndex("DistrictCode", "AdministrativeUnitId");
 
                     b.ToTable("wards");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.Districts", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.AddressUser", b =>
                 {
-                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnits", "AdministrativeUnits")
+                    b.HasOne("StudySystem.Data.Entites.District", "District")
+                        .WithMany("AddressUsers")
+                        .HasForeignKey("DistrictCode")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("StudySystem.Data.Entites.Province", "Province")
+                        .WithMany("AddressUsers")
+                        .HasForeignKey("ProvinceCode")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("StudySystem.Data.Entites.UserDetail", "UserDetail")
+                        .WithOne("AddressUser")
+                        .HasForeignKey("StudySystem.Data.Entites.AddressUser", "UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudySystem.Data.Entites.Ward", "Ward")
+                        .WithMany("AddressUsers")
+                        .HasForeignKey("WardCode")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("District");
+
+                    b.Navigation("Province");
+
+                    b.Navigation("UserDetail");
+
+                    b.Navigation("Ward");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnit", "AdministrativeUnit")
                         .WithMany("Districts")
                         .HasForeignKey("AdministrativeUnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudySystem.Data.Entites.Provinces", "Provinces")
+                    b.HasOne("StudySystem.Data.Entites.Province", "Province")
                         .WithMany("Districts")
                         .HasForeignKey("ProvinceCode")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AdministrativeUnits");
+                    b.Navigation("AdministrativeUnit");
 
-                    b.Navigation("Provinces");
+                    b.Navigation("Province");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.Provinces", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
                 {
-                    b.HasOne("StudySystem.Data.Entites.AdministrativeRegions", "AdministrativeRegions")
-                        .WithMany()
+                    b.HasOne("StudySystem.Data.Entites.AdministrativeRegion", "AdministrativeRegion")
+                        .WithMany("Provinces")
                         .HasForeignKey("AdministrativeRegionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("StudySystem.Data.Entites.AdministrativeRegions", null)
+                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnit", "AdministrativeUnit")
                         .WithMany("Provinces")
-                        .HasForeignKey("AdministrativeRegionsId1");
-
-                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnits", "AdministrativeUnits")
-                        .WithMany()
                         .HasForeignKey("AdministrativeUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnits", null)
-                        .WithMany("Provinces")
-                        .HasForeignKey("AdministrativeUnitsId");
+                    b.Navigation("AdministrativeRegion");
 
-                    b.Navigation("AdministrativeRegions");
-
-                    b.Navigation("AdministrativeUnits");
+                    b.Navigation("AdministrativeUnit");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Ward", b =>
                 {
-                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnits", "AdministrativeUnits")
+                    b.HasOne("StudySystem.Data.Entites.AdministrativeUnit", "AdministrativeUnit")
                         .WithMany("Wards")
                         .HasForeignKey("AdministrativeUnitId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("StudySystem.Data.Entites.Districts", "Districts")
+                    b.HasOne("StudySystem.Data.Entites.District", "District")
                         .WithMany("Wards")
                         .HasForeignKey("DistrictCode")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AdministrativeUnits");
+                    b.Navigation("AdministrativeUnit");
 
-                    b.Navigation("Districts");
+                    b.Navigation("District");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeRegions", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeRegion", b =>
                 {
                     b.Navigation("Provinces");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeUnits", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeUnit", b =>
                 {
                     b.Navigation("Districts");
 
@@ -424,14 +432,28 @@ namespace StudySystem.Data.EF.Migrations
                     b.Navigation("Wards");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.Districts", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
                 {
+                    b.Navigation("AddressUsers");
+
                     b.Navigation("Wards");
                 });
 
-            modelBuilder.Entity("StudySystem.Data.Entites.Provinces", b =>
+            modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
                 {
+                    b.Navigation("AddressUsers");
+
                     b.Navigation("Districts");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.UserDetail", b =>
+                {
+                    b.Navigation("AddressUser");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Ward", b =>
+                {
+                    b.Navigation("AddressUsers");
                 });
 #pragma warning restore 612, 618
         }

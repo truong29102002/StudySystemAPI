@@ -1,4 +1,5 @@
 ﻿using StudySystem.Data.EF.Repositories.Interfaces;
+using StudySystem.Data.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace StudySystem.Data.EF
         IUserRepository UserRepository { get; }
         IUserTokenRepository UserTokenRepository { get; }
         IUserVerificationOTPsRepository UserVerificationOTPsRepository { get; }
+        ILocationRepository<Province> ProvioncesRepository { get; }
+        ILocationRepository<District> DistrictsRepository { get; }
+        ILocationRepository<Ward> WardsRepository { get; }
         Task<bool> CommitAsync();
     }
 }

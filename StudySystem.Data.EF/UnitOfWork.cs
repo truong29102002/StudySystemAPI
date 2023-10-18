@@ -1,5 +1,6 @@
 ﻿using StudySystem.Data.EF.Repositories;
 using StudySystem.Data.EF.Repositories.Interfaces;
+using StudySystem.Data.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,9 @@ namespace StudySystem.Data.EF
         private UserRepository _userRegisterRepository;
         private UserTokenRepository _userTokenRepository;
         private UserVerifycationOTPsRepository _userVerifycationOTPsRepository;
+        private LocationRepository<Province> _provincesRepository;
+        private LocationRepository<District> _districtsRepository;
+        private LocationRepository<Ward> _wardsRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -30,6 +34,21 @@ namespace StudySystem.Data.EF
         public IUserVerificationOTPsRepository UserVerificationOTPsRepository
         {
             get { return _userVerifycationOTPsRepository ?? (_userVerifycationOTPsRepository = new UserVerifycationOTPsRepository(_context)); }
+        }
+
+        public ILocationRepository<Province> ProvioncesRepository
+        {
+            get { return _provincesRepository ?? (_provincesRepository = new LocationRepository<Province>(_context)); }
+        }
+
+        public ILocationRepository<District> DistrictsRepository
+        {
+            get { return _districtsRepository ?? (_districtsRepository = new LocationRepository<District>(_context)); }
+        }
+
+        public ILocationRepository<Ward> WardsRepository
+        {
+            get { return _wardsRepository ?? (_wardsRepository = new LocationRepository<Ward>(_context)); }
         }
 
         public async Task<bool> CommitAsync()

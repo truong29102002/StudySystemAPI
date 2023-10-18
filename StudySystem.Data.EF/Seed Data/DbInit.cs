@@ -30,7 +30,39 @@ namespace StudySystem.Data.EF.Seed_Data
                     List<UserDetail> userDetails = generatorFile.CsvDataGenerator<UserDetail, UserDetailMap>(CommonConstant.CsvFileUserDetails);
                     await _context.AddRangeAsync(userDetails).ConfigureAwait(false);
                 }
+
+                if (!_context.AdministrativeRegions.Any())
+                {
+                    List<AdministrativeRegion> administrativeRegions = generatorFile.CsvDataGenerator<AdministrativeRegion, AdministrativeRegonMap>(CommonConstant.CsvAdministrativeRegions);
+                    await _context.AddRangeAsync(administrativeRegions).ConfigureAwait(false);
+                }
+
+                if (!_context.AdministrativeUnits.Any())
+                {
+                    List<AdministrativeUnit> administrativeUnits = generatorFile.CsvDataGenerator<AdministrativeUnit, AdministrativeUnitMap>(CommonConstant.CsvAdministrativeUnits);
+                    await _context.AddRangeAsync(administrativeUnits).ConfigureAwait(false);
+                }
+
+                if (!_context.Provinces.Any())
+                {
+                    List<Province> provinces = generatorFile.CsvDataGenerator<Province, ProvinceMap>(CommonConstant.CsvProvinces);
+                    await _context.AddRangeAsync(provinces).ConfigureAwait(false);
+                }
+
+                if (!_context.Districts.Any())
+                {
+                    List<District> districts = generatorFile.CsvDataGenerator<District, DistrictMap>(CommonConstant.CsvDistricts);
+                    await _context.AddRangeAsync(districts).ConfigureAwait(false);
+                }
+
+                if (!_context.Wards.Any())
+                {
+                    List<Ward> wards = generatorFile.CsvDataGenerator<Ward, WardMap>(CommonConstant.CsvWards);
+                    await _context.AddRangeAsync(wards).ConfigureAwait(false);
+                }
+
                 await _context.SaveChangesAsync().ConfigureAwait(false);
+                _logger.LogInformation("Init Complement to db");
             }
             catch (Exception ex)
             {

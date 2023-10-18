@@ -8,20 +8,22 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.Entites
 {
-    [Table("wards")]
-    public class Ward
+    [Table("districts")]
+    public class District
     {
         [Key]
         public string Code { get; set; } = null!;
         public string? Name { get; set; }
-        public string? NameEn { get; set; } 
-        public string? FullName { get; set; }
+        public string? NameEn { get; set; }
+        public string? FullName { get; set; } 
         public string? FullNameEn { get; set; }
-        public string? CodeName { get; set; } 
-        public string? DistrictCode { get; set; }
+        public string? CodeName { get; set; }
+        public string? ProvinceCode { get; set; }
         public int? AdministrativeUnitId { get; set; }
-        public District District { get; set; } = null!;
+
+        public Province Province { get; set; } = null!;
         public AdministrativeUnit AdministrativeUnit { get; set; } = null!;
+        public ICollection<Ward> Wards { get; set; } = new List<Ward>();
         public ICollection<AddressUser> AddressUsers { get; set; } = new List<AddressUser>();
     }
 }

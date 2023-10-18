@@ -11,6 +11,11 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string PathFolderCsv = @"..\StudySystem.Data.EF\Seed Data\FileCSV\";
         public const string TypeFileCsv = @".csv";
         public const string CsvFileUserDetails = "_UserDetails_";
+        public const string CsvAdministrativeRegions = "administrative_regions";
+        public const string CsvAdministrativeUnits = "administrative_units";
+        public const string CsvDistricts = "districts";
+        public const string CsvProvinces = "provinces";
+        public const string CsvWards = "wards";
     }
     public static class Router
     {
@@ -20,6 +25,9 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string LogOut = "~/api/logout";
         public const string VerificationEmail = "~/api/verify-email";
         public const string IsUserOnl = "~/api/user-onl";
+        public const string GetProvinces = "~/api/get-provinces";
+        public const string GetDistricts = "~/api/get-districts/{province_code}";
+        public const string GetWards = "~/api/get-wards/{district_code}";
     }
 
     public static class DateTimeConstant

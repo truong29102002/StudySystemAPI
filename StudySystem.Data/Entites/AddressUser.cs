@@ -12,19 +12,15 @@ namespace StudySystem.Data.Entites
     {
         [Key]
         public Guid Id { get; set; }
-        public string Descriptions { get; set; } = string.Empty;
-
-        [Column("ward_code", TypeName = "varchar(20)")]
-        public string WardCode { get; set; } = string.Empty;
-        [Column("districts_code", TypeName = "varchar(20)")]
-        public string DistrictCode { get; set; } = string.Empty;
-        [Column("province_code", TypeName = "varchar(20)")]
-        public string ProvinceCode { get; set; } = string.Empty;
+        public string? Descriptions { get; set; } 
+        public string? WardCode { get; set; } 
+        public string? DistrictCode { get; set; } 
+        public string? ProvinceCode { get; set; } 
         [MaxLength(12)]
         public string UserID { get; set; } = null!;
         public UserDetail? UserDetail { get; set; }
         public Ward? Ward { get; set; }
-        public Districts? District { get; set; }
-        public Provinces? Province { get; set; }
+        public District? District { get; set; }
+        public Province? Province { get; set; }
     }
 }

@@ -27,7 +27,7 @@ var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurre
 logger.Debug("Init main");
 #endregion
 var builder = WebApplication.CreateBuilder(args);
-#region Nlog: setup Nlog
+#region Nlog: setup Nlog dependence injector
 builder.Logging.ClearProviders();
 builder.Host.UseNLog();
 #endregion
@@ -103,6 +103,7 @@ builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ISendMailService, SendMailService>();
 builder.Services.AddTransient<IUserTokenService, UserTokenService>();
+builder.Services.AddTransient<ILocationService, LocationService>();
 #endregion
 
 #region configure connect to db
