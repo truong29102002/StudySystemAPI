@@ -1,4 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// <copyright file="AuthTokenMiddleware.cs" ownedby="Xuan Truong">
+//  Copyright (c) XuanTruong. All rights reserved.
+//  FileType: Visual CSharp source file
+//  Created On: 19/10/2023
+//  Last Modified On: 19/10/2023
+//  Description: AuthTokenMiddleware.cs
+// </copyright>
+
+using Microsoft.AspNetCore.Authorization;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.Resources;

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using StudySystem.Data.EF.Seed_Data.ClassMap;
 using StudySystem.Data.Entites;
 using StudySystem.Infrastructure.CommonConstant;
@@ -22,52 +24,59 @@ namespace StudySystem.Data.EF.Seed_Data
         public async Task Seed()
         {
             GeneratorFile generatorFile = new GeneratorFile();
-            try
+            var excutionStrategy = _context.Database.CreateExecutionStrategy();
+            await excutionStrategy.Execute(async () =>
             {
-
-                if (!_context.UserDetails.Any())
+                using (var db = await _context.Database.BeginTransactionAsync())
                 {
-                    List<UserDetail> userDetails = generatorFile.CsvDataGenerator<UserDetail, UserDetailMap>(CommonConstant.CsvFileUserDetails);
-                    await _context.AddRangeAsync(userDetails).ConfigureAwait(false);
-                }
+                    try
+                    {
 
-                if (!_context.AdministrativeRegions.Any())
-                {
-                    List<AdministrativeRegion> administrativeRegions = generatorFile.CsvDataGenerator<AdministrativeRegion, AdministrativeRegonMap>(CommonConstant.CsvAdministrativeRegions);
-                    await _context.AddRangeAsync(administrativeRegions).ConfigureAwait(false);
-                }
+                        if (!_context.UserDetails.Any())
+                        {
+                            List<UserDetail> userDetails = generatorFile.CsvDataGenerator<UserDetail, UserDetailMap>(CommonConstant.CsvFileUserDetails);
+                            await _context.BulkInsertAsync(userDetails).ConfigureAwait(false);
+                        }
 
-                if (!_context.AdministrativeUnits.Any())
-                {
-                    List<AdministrativeUnit> administrativeUnits = generatorFile.CsvDataGenerator<AdministrativeUnit, AdministrativeUnitMap>(CommonConstant.CsvAdministrativeUnits);
-                    await _context.AddRangeAsync(administrativeUnits).ConfigureAwait(false);
-                }
+                        if (!_context.AdministrativeRegions.Any())
+                        {
+                            List<AdministrativeRegion> administrativeRegions = generatorFile.CsvDataGenerator<AdministrativeRegion, AdministrativeRegonMap>(CommonConstant.CsvAdministrativeRegions);
+                            await _context.BulkInsertAsync(administrativeRegions).ConfigureAwait(false);
+                        }
 
-                if (!_context.Provinces.Any())
-                {
-                    List<Province> provinces = generatorFile.CsvDataGenerator<Province, ProvinceMap>(CommonConstant.CsvProvinces);
-                    await _context.AddRangeAsync(provinces).ConfigureAwait(false);
-                }
+                        if (!_context.AdministrativeUnits.Any())
+                        {
+                            List<AdministrativeUnit> administrativeUnits = generatorFile.CsvDataGenerator<AdministrativeUnit, AdministrativeUnitMap>(CommonConstant.CsvAdministrativeUnits);
+                            await _context.BulkInsertAsync(administrativeUnits).ConfigureAwait(false);
+                        }
 
-                if (!_context.Districts.Any())
-                {
-                    List<District> districts = generatorFile.CsvDataGenerator<District, DistrictMap>(CommonConstant.CsvDistricts);
-                    await _context.AddRangeAsync(districts).ConfigureAwait(false);
-                }
+                        if (!_context.Provinces.Any())
+                        {
+                            List<Province> provinces = generatorFile.CsvDataGenerator<Province, ProvinceMap>(CommonConstant.CsvProvinces);
+                            await _context.BulkInsertAsync(provinces).ConfigureAwait(false);
+                        }
 
-                if (!_context.Wards.Any())
-                {
-                    List<Ward> wards = generatorFile.CsvDataGenerator<Ward, WardMap>(CommonConstant.CsvWards);
-                    await _context.AddRangeAsync(wards).ConfigureAwait(false);
-                }
+                        if (!_context.Districts.Any())
+                        {
+                            List<District> districts = generatorFile.CsvDataGenerator<District, DistrictMap>(CommonConstant.CsvDistricts);
+                            await _context.BulkInsertAsync(districts).ConfigureAwait(false);
+                        }
 
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                _logger.LogInformation("Init Complement to db");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-            }
+                        if (!_context.Wards.Any())
+                        {
+                            List<Ward> wards = generatorFile.CsvDataGenerator<Ward, WardMap>(CommonConstant.CsvWards);
+                            await _context.BulkInsertAsync(wards).ConfigureAwait(false);
+                        }
+                        await db.CommitAsync();
+                        _logger.LogInformation("Init Complement to db");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.ToString());
+                        await db.RollbackAsync();
+                    }
+                }
+            });
 
         }
     }

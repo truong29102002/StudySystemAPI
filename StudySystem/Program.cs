@@ -13,6 +13,7 @@ using StudySystem.Data.EF;
 using StudySystem.Data.EF.Seed_Data;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.Configuration;
+using StudySystem.Infrastructure.Extensions;
 using StudySystem.Infrastructure.Resources;
 using StudySystem.Middlewares;
 using System.IO.Compression;
@@ -41,7 +42,13 @@ builder.Services.AddMiniProfiler(options =>
     options.RouteBasePath = "/profiler"; // /profiler/results-index
 }).AddEntityFramework();
 #endregion
+
 // Add services to the container.
+#region config automapper
+builder.Services.AddAutoMapper(typeof(DomainToViewModelMappingProfile));
+builder.Services.AddAutoMapper(typeof(ViewModelToDomainMappingProfile));
+#endregion
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;

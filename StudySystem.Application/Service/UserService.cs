@@ -1,5 +1,6 @@
 ﻿
 
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
@@ -23,11 +24,13 @@ namespace StudySystem.Application.Service
         private readonly IUserRepository _userRegisterRepository;
         private readonly IUnitOfWork _unitOfWorks;
         private readonly ILogger<UserService> _logger;
-        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger) : base(unitOfWork)
+        private readonly IMapper _mapper;
+        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IMapper mapper) : base(unitOfWork)
         {
             _unitOfWorks = unitOfWork;
             _userRegisterRepository = unitOfWork.UserRepository;
             _logger = logger;
+            _mapper = mapper;
         }
         /// <summary>
         /// RegisterUserDetail
@@ -41,16 +44,13 @@ namespace StudySystem.Application.Service
                 var isUserExists = await _userRegisterRepository.IsUserExists(request.UserID);
                 if (!isUserExists)
                 {
-                    UserDetail userDetail = new UserDetail();
-                    userDetail.UserID = request.UserID.ToLower();
-                    userDetail.Password = PasswordHasher.HashPassword(request.Password);
-                    userDetail.Email = request.Email.ToLower();
-                    userDetail.PhoneNumber = request.PhoneNumber;
-                    userDetail.Gender = request.Gender;
-                    userDetail.Role = 0;
-                    userDetail.UserFullName = request.FullName.ToLower();
-                    userDetail.IsActive = false;
-                    await _userRegisterRepository.InsertUserDetails(userDetail);
+                    UserDetail userDetail = _mapper.Map<UserDetail>(request);
+                    AddressUser addressUser = _mapper.Map<AddressUser>(request.Address);
+                    addressUser.Id = Guid.NewGuid();
+                    addressUser.CreateUser = request.UserID;
+                    addressUser.UpdateUser = request.UserID;
+                    await Console.Out.WriteLineAsync("a");
+                    //await _userRegisterRepository.InsertUserDetails(userDetail);
                     return true;
                 }
             }

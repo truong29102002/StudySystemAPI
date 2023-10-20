@@ -13,7 +13,7 @@ namespace StudySystem.Data.Models.Request
         [MaxLength(12)]
         public string UserID { get; set; } = null!;
         [Required]
-        public string FullName { get; set; } = null!;
+        public string UserFullName { get; set; } = null!;
         [Required, EmailAddress]
         public string Email { get; set; } = null!;
         [Required]

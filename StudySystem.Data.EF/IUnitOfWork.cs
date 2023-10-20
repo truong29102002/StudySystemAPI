@@ -16,6 +16,7 @@ namespace StudySystem.Data.EF
         ILocationRepository<Province> ProvioncesRepository { get; }
         ILocationRepository<District> DistrictsRepository { get; }
         ILocationRepository<Ward> WardsRepository { get; }
+        IAddressUserRepository AddressUserRepository { get; }
         Task<bool> CommitAsync();
     }
 }

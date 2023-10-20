@@ -9,6 +9,7 @@ using StudySystem.Data.Models.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace StudySystem.Application.Service
             try
             {
                 var districtList = await _districtsRepository.FindAllAsync(x => x.ProvinceCode.Equals(province_code)).ConfigureAwait(false);
-                result.Districts = districtList.Select(x => new LocationDataModel { Code = x.Code, Name = x.FullName }).ToList();
+                result.Districts = districtList.OrderBy(x => x.Name).Select(x => new LocationDataModel { Code = x.Code, Name = x.FullName }).ToList();
             }
             catch (Exception ex)
             {
@@ -59,7 +60,7 @@ namespace StudySystem.Application.Service
             try
             {
                 var proinces = await _provincesRepository.GetAllLocation().ConfigureAwait(false);
-                result.Provinces = proinces.Select(x => new LocationDataModel { Code = x.Code, Name = x.FullName }).ToList();
+                result.Provinces = proinces.OrderBy(x => x.AdministrativeRegionId).Select(x => new LocationDataModel { Code = x.Code, Name = x.FullName }).ToList();
             }
             catch (Exception ex)
             {
@@ -90,7 +91,7 @@ namespace StudySystem.Application.Service
             try
             {
                 var wardList = await _wardsRepository.FindAllAsync(x => x.DistrictCode.Equals(district_code)).ConfigureAwait(false);
-                result.Wards = wardList.Select(x => new LocationDataModel { Code = x.Code, Name = x.FullName }).ToList();
+                result.Wards = wardList.OrderBy(x => x.Name).Select(x => new LocationDataModel { Code = x.Code, Name = x.FullName }).ToList();
             }
             catch (Exception ex)
             {
