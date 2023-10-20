@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LinqToDB;
 using Microsoft.EntityFrameworkCore;
 using LinqToDB.Data;
+using LinqToDB.EntityFrameworkCore;
 
 namespace StudySystem.Data.EF.Repositories
 {
@@ -18,13 +19,14 @@ namespace StudySystem.Data.EF.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task BulkInsertUsersAddess(AddressUser addressUser)
+
+        [Obsolete]
+        public async Task BulkInsertUsersAddess(List<AddressUser> addressUsers)
         {
-            //using (var db = _appDbContext.CreateLinqToDbConnection())
-            //{
-            //await _appDbContext.BulkCopyAsync(new BulkCopyOptions { TableName = "SATConnectorLayoutConnectorInfo" }, addressUser).ConfigureAwait(false);
-            //}
-            throw new Exception();
+            using (var db = _appDbContext.CreateLinqToDbConnection())
+            {
+                await db.BulkCopyAsync(new BulkCopyOptions { TableName = "AddressUsers" }, addressUsers).ConfigureAwait(false);
+            }
         }
     }
 }

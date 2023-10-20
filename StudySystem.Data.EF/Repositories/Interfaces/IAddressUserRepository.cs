@@ -9,6 +9,6 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
 {
     public interface IAddressUserRepository : IRepository<AddressUser>
     {
-        Task BulkInsertUsersAddess(AddressUser addressUser);
+        Task BulkInsertUsersAddess(List<AddressUser> addressUser);
     }
 }
