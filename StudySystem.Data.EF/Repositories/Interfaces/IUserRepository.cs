@@ -10,7 +10,7 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
     public interface IUserRepository : IRepository<UserDetail>
     {
         Task<bool> IsUserExists(string userId);
-        Task InsertUserDetails(UserDetail userDetail);
+        Task<bool> InsertUserDetails(UserDetail userDetail);
         Task UpdateStatusActiveUser(string userID);
     }
 }

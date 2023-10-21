@@ -19,7 +19,7 @@ namespace StudySystem.Data.EF.Repositories
 
         }
 
-        public async Task InsertUserDetails(UserDetail userDetail)
+        public async Task<bool> InsertUserDetails(UserDetail userDetail)
         {
             var check = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(userDetail.UserID.ToLower())).ConfigureAwait(false);
             if (check != null)
@@ -29,6 +29,7 @@ namespace StudySystem.Data.EF.Repositories
             }
             await _context.Set<UserDetail>().AddAsync(userDetail).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
+            return true;
         }
 
         public async Task<bool> IsUserExists(string userId)

@@ -1,6 +1,7 @@
 ﻿
 
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
@@ -24,6 +25,7 @@ namespace StudySystem.Application.Service
         private readonly IUserRepository _userRegisterRepository;
         private readonly IUnitOfWork _unitOfWorks;
         private readonly ILogger<UserService> _logger;
+        private readonly IAddressUserRepository _addressUserRepository;
         private readonly IMapper _mapper;
         public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IMapper mapper) : base(unitOfWork)
         {
@@ -31,6 +33,7 @@ namespace StudySystem.Application.Service
             _userRegisterRepository = unitOfWork.UserRepository;
             _logger = logger;
             _mapper = mapper;
+            _addressUserRepository = unitOfWork.AddressUserRepository;
         }
         /// <summary>
         /// RegisterUserDetail
@@ -39,28 +42,47 @@ namespace StudySystem.Application.Service
         /// <returns>bool</returns>
         public async Task<bool> RegisterUserDetail(UserRegisterRequestModel request)
         {
-            try
+            var createStrategy = _unitOfWorks.CreateExecutionStrategy();
+            var result = false;
+            await createStrategy.Execute(async () =>
             {
-                var isUserExists = await _userRegisterRepository.IsUserExists(request.UserID);
-                if (!isUserExists)
+                using (var db = await _unitOfWorks.BeginTransactionAsync())
                 {
-                    UserDetail userDetail = _mapper.Map<UserDetail>(request);
-                    AddressUser addressUser = _mapper.Map<AddressUser>(request.Address);
-                    addressUser.Id = Guid.NewGuid();
-                    addressUser.CreateUser = request.UserID;
-                    addressUser.UpdateUser = request.UserID;
-                    await Console.Out.WriteLineAsync("a");
-                    //await _userRegisterRepository.InsertUserDetails(userDetail);
-                    return true;
+                    try
+                    {
+                        var isUserExists = await _userRegisterRepository.IsUserExists(request.UserID);
+                        if (!isUserExists)
+                        {
+                            UserDetail userDetail = _mapper.Map<UserDetail>(request);
+                            userDetail.Password = PasswordHasher.HashPassword(request.Password);
+                            AddressUser addressUser = _mapper.Map<AddressUser>(request.Address);
+                            addressUser.Id = Guid.NewGuid();
+                            addressUser.UserID = request.UserID;
+                            addressUser.CreateUser = request.UserID;
+                            addressUser.UpdateUser = request.UserID;
+                            if (await _userRegisterRepository.InsertUserDetails(userDetail))
+                            {
+                                if (await _addressUserRepository.InsertUserAddress(addressUser))
+                                {
+                                    result = true;
+                                    await db.CommitAsync();
+                                }
+                            }
+                        }
+                        if (!result)
+                        {
+                            await db.RollbackAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        await db.RollbackAsync();
+                        _logger.LogError(ex.Message);
+
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex.Message);
-
-            }
-            return false;
+            });
+            return result;
         }
         /// <summary>
         /// DoLogin

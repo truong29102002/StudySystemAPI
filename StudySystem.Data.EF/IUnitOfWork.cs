@@ -1,4 +1,5 @@
-﻿using StudySystem.Data.EF.Repositories.Interfaces;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,8 @@ namespace StudySystem.Data.EF
         ILocationRepository<Ward> WardsRepository { get; }
         IAddressUserRepository AddressUserRepository { get; }
         Task<bool> CommitAsync();
+        Task BulkInserAsync<T>(IList<T> entities) where T :class;
+        IExecutionStrategy CreateExecutionStrategy();
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

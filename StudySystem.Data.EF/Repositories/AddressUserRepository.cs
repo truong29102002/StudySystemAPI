@@ -9,6 +9,7 @@ using LinqToDB;
 using Microsoft.EntityFrameworkCore;
 using LinqToDB.Data;
 using LinqToDB.EntityFrameworkCore;
+using EFCore.BulkExtensions;
 
 namespace StudySystem.Data.EF.Repositories
 {
@@ -19,7 +20,11 @@ namespace StudySystem.Data.EF.Repositories
         {
             _appDbContext = appDbContext;
         }
-
+        /// <summary>
+        /// BulkInsertUsersAddess
+        /// </summary>
+        /// <param name="addressUsers"></param>
+        /// <returns></returns>
         [Obsolete]
         public async Task BulkInsertUsersAddess(List<AddressUser> addressUsers)
         {
@@ -27,6 +32,17 @@ namespace StudySystem.Data.EF.Repositories
             {
                 await db.BulkCopyAsync(new BulkCopyOptions { TableName = "AddressUsers" }, addressUsers).ConfigureAwait(false);
             }
+        }
+        /// <summary>
+        /// InsertUserAddress
+        /// </summary>
+        /// <param name="addressUser"></param>
+        /// <returns></returns>
+        public async Task<bool> InsertUserAddress(AddressUser addressUser)
+        {
+            await _appDbContext.Set<AddressUser>().AddAsync(addressUser).ConfigureAwait(false);
+            await _appDbContext.SaveChangesAsync().ConfigureAwait(false);
+            return true;
         }
     }
 }

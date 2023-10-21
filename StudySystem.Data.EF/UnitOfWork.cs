@@ -1,4 +1,6 @@
-﻿using StudySystem.Data.EF.Repositories;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore.Storage;
+using StudySystem.Data.EF.Repositories;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using System;
@@ -57,10 +59,25 @@ namespace StudySystem.Data.EF
             get { return _addressUserRepository ?? (_addressUserRepository = new AddressUserRepository(_context)); }
         }
 
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
+
+        public async Task BulkInserAsync<T>(IList<T> entities) where T : class
+        {
+            await _context.BulkInsertAsync(entities).ConfigureAwait(false);
+        }
+
         public async Task<bool> CommitAsync()
         {
             var cm = await _context.SaveChangesAsync().ConfigureAwait(false);
             return cm != 0;
+        }
+
+        public IExecutionStrategy CreateExecutionStrategy()
+        {
+            return _context.Database.CreateExecutionStrategy();
         }
     }
 }

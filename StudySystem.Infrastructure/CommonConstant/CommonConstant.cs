@@ -28,6 +28,8 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string GetProvinces = "~/api/get-provinces";
         public const string GetDistricts = "~/api/get-districts/{province_code}";
         public const string GetWards = "~/api/get-wards/{district_code}";
+        public const string GetListUserDetail = "~/api/list-user-detail";
+        public const string GetUserById = "~/api/get-user-by-id";
     }
 
     public static class DateTimeConstant
