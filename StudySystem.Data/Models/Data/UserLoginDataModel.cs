@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.Models.Data
 {
-    public class UserInformationDataModel
+    public class UserLoginDataModel
     {
         [Required]
         public string UserId { get; set; } = null!;
         [Required]
         public string UserName { get; set; } = null!;
-        public UserInformationDataModel(string userId, string userName)
+        public UserLoginDataModel(string userId, string userName)
         {
             UserId = userId;
             UserName = userName;

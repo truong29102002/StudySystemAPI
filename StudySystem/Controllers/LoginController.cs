@@ -75,7 +75,7 @@ namespace StudySystem.Controllers
                 }
                 var expireTime = DateTime.UtcNow.AddHours(AppSetting.JwtExpireTime);
                 var expireTimeOnl = DateTime.UtcNow.AddMinutes(DateTimeConstant.ExpireOnl);
-                var claimUser = CeateClaim(user.UserID, user.UserFullName);
+                var claimUser = CeateClaim(user.UserID, user.UserFullName, user.Role.ToString());
                 var token = GenerateJwtToken(claimUser, expireTime);
                 // delete user in UserToken
                 await _userTokenService.Delete(user.UserID).ConfigureAwait(false);
@@ -125,13 +125,13 @@ namespace StudySystem.Controllers
 
         private string CreateUserInformation(UserDetail user)
         {
-            var userInfor = new UserInformationDataModel(user.UserID, user.UserFullName);
+            var userInfor = new UserLoginDataModel(user.UserID, user.UserFullName);
             var jsonString = JsonSerializer.Serialize(userInfor);
             var textBytes = Encoding.UTF8.GetBytes(jsonString);
             return Convert.ToBase64String(textBytes);
         }
 
-        private Claim[] CeateClaim(string userID = "", string userName = "")
+        private Claim[] CeateClaim(string userID = "", string userName = "", string role = "")
         {
             var claims = new Claim[]
                 {
@@ -140,6 +140,7 @@ namespace StudySystem.Controllers
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.AddHours(8).ToString()),
                     new Claim("UserID", userID),
                     new Claim("UserName", userName),
+                    new Claim("Roles", role)
                 };
             return claims;
         }

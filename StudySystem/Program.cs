@@ -111,6 +111,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ISendMailService, SendMailService>();
 builder.Services.AddTransient<IUserTokenService, UserTokenService>();
 builder.Services.AddTransient<ILocationService, LocationService>();
+builder.Services.AddTransient<ISupplierService, SupplierService>();
 #endregion
 
 #region configure connect to db
@@ -160,6 +161,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 #region custom middleware
 app.UseMiddleware<AuthTokenMiddleware>();
+app.UseMiddleware<AuthPermissionMiddleware>();
 app.ConfigureExceptionHandler();
 #endregion
 #region config status codes error response

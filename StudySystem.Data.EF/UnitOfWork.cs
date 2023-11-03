@@ -21,6 +21,7 @@ namespace StudySystem.Data.EF
         private LocationRepository<District> _districtsRepository;
         private LocationRepository<Ward> _wardsRepository;
         private AddressUserRepository _addressUserRepository;
+        private SupplierRepository _supplierRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -57,6 +58,11 @@ namespace StudySystem.Data.EF
         public IAddressUserRepository AddressUserRepository
         {
             get { return _addressUserRepository ?? (_addressUserRepository = new AddressUserRepository(_context)); }
+        }
+
+        public ISupplierRepository SupplierRepository
+        {
+            get { return _supplierRepository ?? (_supplierRepository = new SupplierRepository(_context)); }
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()

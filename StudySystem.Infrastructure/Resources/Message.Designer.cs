@@ -70,7 +70,7 @@ namespace StudySystem.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Forbidden Error.
+        ///   Looks up a localized string similar to Access denied. You don&apos;t have the necessary permissions..
         /// </summary>
         public static string _403 {
             get {

@@ -32,6 +32,15 @@ namespace StudySystem.Data.EF
         public DbSet<District> Districts => Set<District>();
         public DbSet<Ward> Wards => Set<Ward>();
         public DbSet<AddressUser> AddressUsers => Set<AddressUser>();
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+        public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<CartItem> CartItems => Set<CartItem>();
+        public DbSet<Order> Orders => Set<Order>();
+        public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+        public DbSet<Supplier> Suppliers => Set<Supplier>();
+        public DbSet<WishList> WishLists => Set<WishList>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -155,6 +164,90 @@ namespace StudySystem.Data.EF
 
             modelBuilder.Entity<AddressUser>()
                 .HasIndex(x => new { x.UserID, x.WardCode, x.DistrictCode, x.ProvinceCode });
+            #endregion
+
+            #region product
+            modelBuilder.Entity<Product>().HasKey(e => e.ProductId);
+            modelBuilder.Entity<Product>().HasIndex(e => e.ProductId);
+            #endregion
+
+            #region category
+            modelBuilder.Entity<Category>().HasKey(e => e.CategoryId);
+            modelBuilder.Entity<Category>().HasIndex(e => e.CategoryId);
+            #endregion
+
+            #region product
+            modelBuilder.Entity<ProductCategory>().HasKey(e => new { e.ProductId, e.CategoryId });
+
+            modelBuilder.Entity<ProductCategory>()
+                .HasOne(pc => pc.Product)
+                .WithMany(p => p.ProductCategories)
+                .HasForeignKey(pc => pc.ProductId);
+
+            modelBuilder.Entity<ProductCategory>()
+                .HasOne(pc => pc.Category)
+                .WithMany(c => c.ProductCategories)
+                .HasForeignKey(pc => pc.CategoryId);
+            #endregion
+
+            #region cart
+            modelBuilder.Entity<Cart>().HasKey(x => x.CartId);
+            modelBuilder.Entity<Cart>()
+                .HasOne(x => x.UserDetail)
+                .WithMany(x => x.Carts)
+                .HasForeignKey(x => x.UserId);
+            #endregion
+
+            #region cartitem
+            modelBuilder.Entity<CartItem>().HasKey(e => e.CartItemId);
+
+            modelBuilder.Entity<CartItem>()
+           .HasOne(c => c.Cart)
+           .WithMany(ci => ci.CartItems)
+           .HasForeignKey(ci => ci.CartId);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(ci => ci.ProductId);
+            #endregion
+
+            #region order
+            modelBuilder.Entity<Order>().HasKey(e => e.OrderId);
+            modelBuilder.Entity<Order>()
+            .HasOne(u => u.UserDetail)
+            .WithMany(o => o.Orders)
+            .HasForeignKey(o => o.UserId);
+
+            modelBuilder.Entity<Order>()
+            .HasMany(o => o.OrderItems)
+            .WithOne(oi => oi.Order)
+            .HasForeignKey(oi => oi.OrderId);
+            #endregion
+
+            #region order item
+            modelBuilder.Entity<OrderItem>().HasKey(e => e.OrderItemId);
+            // n-1 between OrderItem and Product
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Product)
+                .WithMany(p => p.OrderItems)
+                .HasForeignKey(oi => oi.ProductId);
+            #endregion
+
+            #region supplier
+            modelBuilder.Entity<Supplier>().HasKey(e => e.Id);
+            #endregion
+
+            #region wishList
+            modelBuilder.Entity<WishList>()
+                .HasOne(x => x.UserDetail)
+                .WithMany(e => e.WishLists)
+                .HasForeignKey(x => x.UserId);
+
+            modelBuilder.Entity<WishList>()
+                .HasOne(x => x.Product)
+                .WithMany(e => e.WishLists)
+                .HasForeignKey(x => x.ProductId);
             #endregion
 
             base.OnModelCreating(modelBuilder);

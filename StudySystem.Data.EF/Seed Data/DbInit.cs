@@ -67,6 +67,13 @@ namespace StudySystem.Data.EF.Seed_Data
                             List<Ward> wards = generatorFile.CsvDataGenerator<Ward, WardMap>(CommonConstant.CsvWards);
                             await _context.BulkInsertAsync(wards).ConfigureAwait(false);
                         }
+
+                        if (!_context.Categories.Any())
+                        {
+                            List<Category> categories = generatorFile.CsvDataGenerator<Category, CategoryMap>(CommonConstant.CsvCategories);
+                            await _context.BulkInsertAsync(categories).ConfigureAwait(false);
+                        }
+
                         await db.CommitAsync();
                         _logger.LogInformation("Init Complement to db");
                     }

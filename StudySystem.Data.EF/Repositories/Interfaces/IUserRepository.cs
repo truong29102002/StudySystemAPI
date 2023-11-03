@@ -1,4 +1,5 @@
 ﻿using StudySystem.Data.Entites;
+using StudySystem.Data.Models.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
         Task<bool> IsUserExists(string userId);
         Task<bool> InsertUserDetails(UserDetail userDetail);
         Task UpdateStatusActiveUser(string userID);
+        UserDetailDataModel  GetUserDetailById(string userId);
     }
 }

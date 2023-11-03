@@ -16,6 +16,7 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string CsvDistricts = "districts";
         public const string CsvProvinces = "provinces";
         public const string CsvWards = "wards";
+        public const string CsvCategories = "_Categories_";
     }
     public static class Router
     {
@@ -30,10 +31,26 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string GetWards = "~/api/get-wards/{district_code}";
         public const string GetListUserDetail = "~/api/list-user-detail";
         public const string GetUserById = "~/api/get-user-by-id";
+        public const string UserRegisterAds = "~/api/register-mail";
+        public const string SupplierImg = "~/api/supplier-img";
+
+    }
+
+    public static class StatusOrdetItem
+    {
+        public const string Paid = "0"; // đã thanh toán
+        public const string Waiting = "1";
+        public const string Cancel = "2";
     }
 
     public static class DateTimeConstant
     {
         public const int ExpireOnl = 2;
+    }
+    public static class Roles
+    {
+        public const string RolesAdmin = "1";
+        public const string RolesUser = "0";
+
     }
 }

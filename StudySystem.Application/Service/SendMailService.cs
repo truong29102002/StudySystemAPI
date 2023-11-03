@@ -7,6 +7,7 @@ using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using StudySystem.Data.Models.Request;
 using StudySystem.Infrastructure.Configuration;
+using StudySystem.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,5 +118,29 @@ namespace StudySystem.Application.Service
             }
             return false;
         }
+
+        public async Task<bool> RegisterMail(string emailRegister)
+        {
+            var email = new MimeMessage();
+            email.Sender = new MailboxAddress(AppSetting.MailName, AppSetting.Mail);
+            email.From.Add(new MailboxAddress(AppSetting.MailName, AppSetting.Mail));
+
+            email.To.Add(new MailboxAddress(emailRegister, emailRegister));
+            email.Subject = "TDT Shop";
+
+            var builder = new BodyBuilder();
+            builder.HtmlBody = StringUtils.NewUserRegisterAds();
+            email.Body = builder.ToMessageBody();
+
+            using (var smtp = new MailKit.Net.Smtp.SmtpClient())
+            {
+                await smtp.ConnectAsync(AppSetting.MailHost, AppSetting.MailPort, MailKit.Security.SecureSocketOptions.StartTls).ConfigureAwait(false);
+                await smtp.AuthenticateAsync(AppSetting.Mail, AppSetting.MailPassword).ConfigureAwait(false);
+                await smtp.SendAsync(email).ConfigureAwait(false);
+                smtp.Disconnect(true);
+            }
+            return true;
+        }
+
     }
 }

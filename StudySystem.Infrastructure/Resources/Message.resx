@@ -121,7 +121,7 @@
     <value>Bad Request</value>
   </data>
   <data name="403" xml:space="preserve">
-    <value>Forbidden Error</value>
+    <value>Access denied. You don't have the necessary permissions.</value>
   </data>
   <data name="404" xml:space="preserve">
     <value>Not Found</value>

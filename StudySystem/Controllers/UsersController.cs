@@ -9,8 +9,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StudySystem.Application.Service.Interfaces;
+using StudySystem.Data.EF;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
+using StudySystem.Middlewares;
 
 namespace StudySystem.Controllers
 {
@@ -18,7 +21,15 @@ namespace StudySystem.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
-        public UsersController() { }
+        private readonly ILogger<UsersController> _logger;
+        private readonly string _currentUser;
+        private readonly IUserService _userService;
+        public UsersController(ILogger<UsersController> logger, UserResoveSerive user, IUserService userService)
+        {
+            _logger = logger;
+            _currentUser = user.GetUser();
+            _userService = userService;
+        }
         /// <summary>
         /// <para>api: ~/api/list-user-detail</para>
         /// <para>GetUserDetail</para>
@@ -35,9 +46,11 @@ namespace StudySystem.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Router.GetUserById)]
-        public ActionResult<StudySystemAPIResponse<object>> GetUserById()
+        [AuthPermission]
+        public async Task<ActionResult<StudySystemAPIResponse<UserInformationResponseModel>>> GetUserById()
         {
-            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, new object()));
+            var rs = await _userService.GetUserById(_currentUser);
+            return new StudySystemAPIResponse<UserInformationResponseModel>(StatusCodes.Status200OK, new Response<UserInformationResponseModel>(true, rs));
         }
     }
 }

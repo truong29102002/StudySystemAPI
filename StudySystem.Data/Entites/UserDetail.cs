@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.Entites
 {
-    public class UserDetail
+    public class UserDetail : BaseEntity
     {
         [Key, MaxLength(12)]
         public string UserID { get; set; } = null!;
@@ -28,6 +28,9 @@ namespace StudySystem.Data.Entites
         public bool IsActive { get; set; }
 
         public AddressUser? AddressUser { get; set; }
+        public List<Order>? Orders { get; set; }
+        public List<Cart>? Carts { get; set; }
+        public List<WishList>? WishLists { get; set; }
 
     }
 }

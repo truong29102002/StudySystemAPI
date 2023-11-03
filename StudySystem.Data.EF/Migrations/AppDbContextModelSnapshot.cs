@@ -141,6 +141,110 @@ namespace StudySystem.Data.EF.Migrations
                     b.ToTable("administrative_units");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Cart", b =>
+                {
+                    b.Property<int>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartId"));
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("character varying(12)");
+
+                    b.HasKey("CartId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.CartItem", b =>
+                {
+                    b.Property<int>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartItemId"));
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Category", b =>
+                {
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
                 {
                     b.Property<string>("Code")
@@ -178,6 +282,146 @@ namespace StudySystem.Data.EF.Migrations
                     b.ToTable("districts");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OrderDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("character varying(12)");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.OrderItem", b =>
+                {
+                    b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemId"));
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Product", b =>
+                {
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductImage")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductManufacturer")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("text");
+
+                    b.Property<double?>("ProductPrice")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("ProductQuantity")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.ProductCategory", b =>
+                {
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("text");
+
+                    b.HasKey("ProductId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductCategories");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
                 {
                     b.Property<string>("Code")
@@ -213,11 +457,37 @@ namespace StudySystem.Data.EF.Migrations
                     b.ToTable("provinces");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Image")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Suppliers");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.UserDetail", b =>
                 {
                     b.Property<string>("UserID")
                         .HasMaxLength(12)
                         .HasColumnType("character varying(12)");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -239,6 +509,13 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.Property<int>("Role")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("UserFullName")
                         .IsRequired()
@@ -329,6 +606,43 @@ namespace StudySystem.Data.EF.Migrations
                     b.ToTable("wards");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.WishList", b =>
+                {
+                    b.Property<int>("WishListId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("WishListId"));
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("character varying(12)");
+
+                    b.HasKey("WishListId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WishLists");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.AddressUser", b =>
                 {
                     b.HasOne("StudySystem.Data.Entites.District", "District")
@@ -361,6 +675,32 @@ namespace StudySystem.Data.EF.Migrations
                     b.Navigation("Ward");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Cart", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.UserDetail", "UserDetail")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("UserDetail");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.CartItem", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudySystem.Data.Entites.Product", "Product")
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
                 {
                     b.HasOne("StudySystem.Data.Entites.AdministrativeUnit", "AdministrativeUnit")
@@ -378,6 +718,51 @@ namespace StudySystem.Data.EF.Migrations
                     b.Navigation("AdministrativeUnit");
 
                     b.Navigation("Province");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Order", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.UserDetail", "UserDetail")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("UserDetail");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.OrderItem", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudySystem.Data.Entites.Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.ProductCategory", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.Category", "Category")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudySystem.Data.Entites.Product", "Product")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
@@ -416,6 +801,21 @@ namespace StudySystem.Data.EF.Migrations
                     b.Navigation("District");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.WishList", b =>
+                {
+                    b.HasOne("StudySystem.Data.Entites.Product", "Product")
+                        .WithMany("WishLists")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("StudySystem.Data.Entites.UserDetail", "UserDetail")
+                        .WithMany("WishLists")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("UserDetail");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeRegion", b =>
                 {
                     b.Navigation("Provinces");
@@ -430,11 +830,37 @@ namespace StudySystem.Data.EF.Migrations
                     b.Navigation("Wards");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Cart", b =>
+                {
+                    b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Category", b =>
+                {
+                    b.Navigation("ProductCategories");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
                 {
                     b.Navigation("AddressUsers");
 
                     b.Navigation("Wards");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.Product", b =>
+                {
+                    b.Navigation("CartItems");
+
+                    b.Navigation("OrderItems");
+
+                    b.Navigation("ProductCategories");
+
+                    b.Navigation("WishLists");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
@@ -447,6 +873,12 @@ namespace StudySystem.Data.EF.Migrations
             modelBuilder.Entity("StudySystem.Data.Entites.UserDetail", b =>
                 {
                     b.Navigation("AddressUser");
+
+                    b.Navigation("Carts");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("WishLists");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Ward", b =>

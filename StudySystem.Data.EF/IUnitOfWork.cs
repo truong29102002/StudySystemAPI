@@ -18,6 +18,7 @@ namespace StudySystem.Data.EF
         ILocationRepository<District> DistrictsRepository { get; }
         ILocationRepository<Ward> WardsRepository { get; }
         IAddressUserRepository AddressUserRepository { get; }
+        ISupplierRepository SupplierRepository { get; }
         Task<bool> CommitAsync();
         Task BulkInserAsync<T>(IList<T> entities) where T :class;
         IExecutionStrategy CreateExecutionStrategy();

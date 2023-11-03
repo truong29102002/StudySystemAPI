@@ -48,5 +48,17 @@ namespace StudySystem.Controllers
             var result = await _sendMailService.VerificationCode(code);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
+        /// <summary>
+        /// RegisterMail Ads
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost(Router.UserRegisterAds)]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> RegisterMail(string email)
+        {
+            var result = await _sendMailService.RegisterMail(email);
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
+        }
+
     }
 }

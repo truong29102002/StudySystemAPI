@@ -10,9 +10,9 @@ namespace StudySystem.Data.Entites
     public class BaseEntity
     {
         [Required]
-        public string CreateUser { get; set; } = null!;
+        public string CreateUser { get; set; } = "admin";
         [Required]
-        public string UpdateUser { get; set; } = null!;
+        public string UpdateUser { get; set; } = "admin";
         [Required]
         public DateTime CreateDateAt { get; set; } = DateTime.UtcNow;
         [Required]

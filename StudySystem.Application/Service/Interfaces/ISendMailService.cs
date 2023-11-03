@@ -11,5 +11,6 @@ namespace StudySystem.Application.Service.Interfaces
     {
         Task<bool> SendMailAsync();
         Task<bool> VerificationCode(string verificationCode);
+        Task<bool> RegisterMail(string emailRegister);
     }
 }
