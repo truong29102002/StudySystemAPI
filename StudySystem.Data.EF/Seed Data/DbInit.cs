@@ -31,7 +31,6 @@ namespace StudySystem.Data.EF.Seed_Data
                 {
                     try
                     {
-
                         if (!_context.UserDetails.Any())
                         {
                             List<UserDetail> userDetails = generatorFile.CsvDataGenerator<UserDetail, UserDetailMap>(CommonConstant.CsvFileUserDetails);

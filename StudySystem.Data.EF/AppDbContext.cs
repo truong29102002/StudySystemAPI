@@ -41,6 +41,10 @@ namespace StudySystem.Data.EF
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<Supplier> Suppliers => Set<Supplier>();
         public DbSet<WishList> WishLists => Set<WishList>();
+        public DbSet<News> News => Set<News>();
+        public DbSet<Banner> Banners => Set<Banner>();
+        public DbSet<Image> Images => Set<Image>();
+        public DbSet<ProductConfiguration> ProductConfigurations => Set<ProductConfiguration>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -176,7 +180,7 @@ namespace StudySystem.Data.EF
             modelBuilder.Entity<Category>().HasIndex(e => e.CategoryId);
             #endregion
 
-            #region product
+            #region product category
             modelBuilder.Entity<ProductCategory>().HasKey(e => new { e.ProductId, e.CategoryId });
 
             modelBuilder.Entity<ProductCategory>()
@@ -248,6 +252,28 @@ namespace StudySystem.Data.EF
                 .HasOne(x => x.Product)
                 .WithMany(e => e.WishLists)
                 .HasForeignKey(x => x.ProductId);
+            #endregion
+
+            #region news
+            modelBuilder.Entity<News>(cfg =>
+            {
+                cfg.HasKey(cfg => cfg.Id);
+            });
+            #endregion
+
+            #region Banner
+            modelBuilder.Entity<Banner>(cfg =>
+            {
+                cfg.HasKey(cfg => cfg.Id);
+            });
+            #endregion
+
+            #region image
+            modelBuilder.Entity<Image>().HasKey(e => new { e.Id });
+            #endregion
+
+            #region product configuration
+            modelBuilder.Entity<ProductConfiguration>().HasKey(e => e.ProductId);
             #endregion
 
             base.OnModelCreating(modelBuilder);

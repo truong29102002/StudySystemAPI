@@ -48,5 +48,9 @@
   <ItemGroup>
     <None Include="C:\Users\xuant\OneDrive\Máy tính\StudySystem\StudySystem\.editorconfig" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Product\" />
+  </ItemGroup>
 	
 </Project>

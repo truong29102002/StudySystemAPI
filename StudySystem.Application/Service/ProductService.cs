@@ -1,0 +1,138 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using StudySystem.Application.Service.Interfaces;
+using StudySystem.Data.EF;
+using StudySystem.Data.EF.Repositories.Interfaces;
+using StudySystem.Data.Entites;
+using StudySystem.Data.Models.Request;
+using StudySystem.Infrastructure.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StudySystem.Application.Service
+{
+    public class ProductService : BaseService, IProductService
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<ProductService> _logger;
+        private readonly IProductRepository _productRepository;
+        private readonly string _currentUser;
+        public ProductService(IUnitOfWork unitOfWork, ILogger<ProductService> logger, UserResoveSerive user) : base(unitOfWork)
+        {
+
+            _unitOfWork = unitOfWork;
+            _logger = logger;
+            _productRepository = unitOfWork.ProductRepository;
+            _currentUser = user.GetUser();
+        }
+        /// <summary>
+        /// CreateProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="imageName"></param>
+        /// <returns></returns>
+        public async Task<bool> CreateProduct(CreateProductRequestModel request, List<string> imageName)
+        {
+            var excutionStrategy = _unitOfWork.CreateExecutionStrategy();
+            var result = false;
+            await excutionStrategy.Execute(async () =>
+            {
+                using (var db = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        string productId = StringUtils.NewGuid();
+                        if (await ProcessCreateNewProduct(request, productId))
+                        {
+                            if (await ProcessCreateProductCategory(productId, request.ProductCategoryId))
+                            {
+                                List<Image> image = new List<Image>();
+                                foreach (var item in imageName)
+                                {
+                                    string imageId = StringUtils.NewGuid();
+                                    image.Add(new Image { Id = imageId, ImageDes = item, ProductId = productId, CreateUser = _currentUser, UpdateUser = _currentUser });
+                                }
+                                if (await ProcessSaveImage(image))
+                                {
+                                    List<ProductConfiguration> cfg = new List<ProductConfiguration>();
+                                    cfg.Add(new ProductConfiguration { ProductId = productId, Chip = request.ChipProduct, Ram = request.RamProduct, Rom = request.RomProduct, Screen = request.ScreenProduct });
+                                    if (await ProcessSaveProductConfiguration(cfg))
+                                    {
+                                        result = true;
+                                        await db.CommitAsync();
+                                    }
+                                }
+                            }
+                        }
+                        if (!result)
+                        {
+                            await db.RollbackAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                        await db.RollbackAsync();
+                    }
+
+                }
+            });
+
+            return result;
+        }
+        private async Task<bool> ProcessSaveProductConfiguration(List<ProductConfiguration> cfg)
+        {
+            await _unitOfWork.BulkInserAsync<ProductConfiguration>(cfg);
+            return true;
+        }
+        private async Task<bool> ProcessSaveImage(List<Image> image)
+        {
+            await _unitOfWork.BulkInserAsync<Image>(image);
+            return true;
+        }
+
+        private async Task<bool> ProcessCreateProductCategory(string productId, string categoryID)
+        {
+            try
+            {
+                List<ProductCategory> productCategories = new List<ProductCategory>();
+                productCategories.Add(new ProductCategory { CategoryId = categoryID, ProductId = productId });
+                await _unitOfWork.BulkInserAsync<ProductCategory>(productCategories);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// ProcessCreateNewProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        private async Task<bool> ProcessCreateNewProduct(CreateProductRequestModel request, string productId)
+        {
+            try
+            {
+                List<Product> products = new List<Product>();
+                products.Add(new Product { ProductId = productId, ProductName = request.ProductName, ProductDescription = request.Description, ProductPrice = request.Price, ProductQuantity = request.ProductQuantity, ProductionDate = request.ProductionDate, BrandName = request.ProductBrand, ProductStatus = request.ProductStatus, PriceSell = request.PriceSell, CreateUser = _currentUser, UpdateUser = _currentUser });
+                await _productRepository.CreateProduct(products);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+            }
+            return false;
+        }
+
+    }
+}

@@ -6,18 +6,15 @@
 //  Description: SupplierController.cs
 // </copyright>
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
-using StudySystem.Middlewares;
 
 namespace StudySystem.Controllers
 {
     [ApiController]
-    [Authorize]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
@@ -31,7 +28,6 @@ namespace StudySystem.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Router.SupplierImg)]
-        [AuthPermission]
         public async Task<ActionResult<StudySystemAPIResponse<SupplierResponseModel>>> GetSupplierImg()
         {
             var rs = await _supplierService.GetSupplierImg().ConfigureAwait(false);

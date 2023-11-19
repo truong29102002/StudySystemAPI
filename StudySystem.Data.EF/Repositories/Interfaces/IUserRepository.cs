@@ -13,6 +13,6 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
         Task<bool> IsUserExists(string userId);
         Task<bool> InsertUserDetails(UserDetail userDetail);
         Task UpdateStatusActiveUser(string userID);
-        UserDetailDataModel  GetUserDetailById(string userId);
+        List<UserDetailDataModel> GetUserDetail(string userId);
     }
 }

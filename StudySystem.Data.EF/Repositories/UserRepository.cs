@@ -24,8 +24,29 @@ namespace StudySystem.Data.EF.Repositories
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public UserDetailDataModel GetUserDetailById(string userId)
+        public List<UserDetailDataModel> GetUserDetail(string userId)
         {
+            var countItem = (from ud in _context.UserDetails
+                             join o in _context.Orders on ud.UserID equals o.UserId into userOrders
+                             from uo in userOrders.DefaultIfEmpty()
+                             join oi in _context.OrderItems on uo.OrderId equals oi.OrderId into userOrderItems
+                             from uoi in userOrderItems.DefaultIfEmpty()
+                             where ud.UserID == userId && uoi != null
+                             select new { }
+                            ).Count();
+            var address = (from ud in _context.UserDetails
+                           join au in _context.Set<AddressUser>() on ud.UserID equals au.UserID
+                           join wa in _context.Set<Ward>() on au.WardCode equals wa.Code
+                           join dt in _context.Set<District>() on au.DistrictCode equals dt.Code
+                           join pr in _context.Set<Province>() on au.ProvinceCode equals pr.Code
+                           where ud.UserID == userId
+                           select new
+                           {
+                               Des = au.Descriptions,
+                               Ward = wa.Name,
+                               Dist = dt.Name,
+                               Province = pr.Name,
+                           }).FirstOrDefault();
             var result = (from ud in _context.UserDetails
                           join o in _context.Orders on ud.UserID equals o.UserId into userOrders
                           from uo in userOrders.DefaultIfEmpty()
@@ -38,12 +59,17 @@ namespace StudySystem.Data.EF.Repositories
                               UserFullName = g.Key.UserFullName,
                               Email = g.Key.Email,
                               PhoneNumber = g.Key.PhoneNumber,
-                              PriceBought = g.Where(x=>g.Key.Status.Equals(StatusOrdetItem.Paid)).Sum(x => x.Price),
+                              PriceBought = g.Where(x => g.Key.Status.Equals(StatusOrdetItem.Paid)).Sum(x => x.Price),
                               RankUser = StringUtils.RankUser(g.Where(x => g.Key.Status.Equals(StatusOrdetItem.Paid)).Sum(x => x.Price)),
-                              Gender = g.Key.Gender,
-                              JoinDateAt = g.Key.CreateDateAt.ToString("dd MM yyyy")
+                              Gender = g.Key.Gender == 0 ? "Nam" : "Nữ",
+                              JoinDateAt = g.Key.CreateDateAt.ToString("dd/MM/yyyy"),
+                              CountOrderItem = countItem,
+                              AddressUserDes = address.Des,
+                              AddressUserWard = address.Ward,
+                              AddressUserDistrict = address.Dist,
+                              AddressUserProvince = address.Province
                           }).ToList();
-            return result.OrderByDescending(x=>x.PriceBought).FirstOrDefault();
+            return result;
         }
 
         /// <summary>

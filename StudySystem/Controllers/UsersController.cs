@@ -36,6 +36,7 @@ namespace StudySystem.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Router.GetListUserDetail)]
+        [AuthPermission]
         public ActionResult<StudySystemAPIResponse<object>> GetListUserDetail()
         {
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, new object()));
@@ -46,7 +47,6 @@ namespace StudySystem.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Router.GetUserById)]
-        [AuthPermission]
         public async Task<ActionResult<StudySystemAPIResponse<UserInformationResponseModel>>> GetUserById()
         {
             var rs = await _userService.GetUserById(_currentUser);

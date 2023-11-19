@@ -141,6 +141,39 @@ namespace StudySystem.Data.EF.Migrations
                     b.ToTable("administrative_units");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Banner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.Cart", b =>
                 {
                     b.Property<int>("CartId")
@@ -282,6 +315,84 @@ namespace StudySystem.Data.EF.Migrations
                     b.ToTable("districts");
                 });
 
+            modelBuilder.Entity("StudySystem.Data.Entites.Image", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageDes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentBody")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContentFooter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContentHeader")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageNew")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TitleBody")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TitleFooter")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TitleHeader")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdateDateAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdateUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("News");
+                });
+
             modelBuilder.Entity("StudySystem.Data.Entites.Order", b =>
                 {
                     b.Property<int>("OrderId")
@@ -368,6 +479,9 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<string>("ProductId")
                         .HasColumnType("text");
 
+                    b.Property<string>("BrandName")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreateDateAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -375,22 +489,25 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<double>("PriceSell")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("ProductDescription")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProductImage")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProductManufacturer")
                         .HasColumnType("text");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("text");
 
-                    b.Property<double?>("ProductPrice")
+                    b.Property<double>("ProductPrice")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("ProductQuantity")
+                    b.Property<int>("ProductQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ProductionDate")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdateDateAt")
@@ -420,6 +537,28 @@ namespace StudySystem.Data.EF.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("StudySystem.Data.Entites.ProductConfiguration", b =>
+                {
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Chip")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Ram")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Rom")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Screen")
+                        .HasColumnType("text");
+
+                    b.HasKey("ProductId");
+
+                    b.ToTable("ProductConfigurations");
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>

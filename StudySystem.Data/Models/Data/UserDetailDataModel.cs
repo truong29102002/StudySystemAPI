@@ -12,9 +12,14 @@ namespace StudySystem.Data.Models.Data
         public string? UserFullName { get; set; }
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public int Gender { get; set; }
+        public string? Gender { get; set; }
         public string? RankUser { get; set; }
         public string? JoinDateAt { get; set; }
         public decimal PriceBought { get; set; }
+        public int CountOrderItem { get; set; }
+        public string? AddressUserDes { get; set; }
+        public string? AddressUserWard { get; set; }
+        public string? AddressUserDistrict { get; set; }
+        public string? AddressUserProvince { get; set; }
     }
 }

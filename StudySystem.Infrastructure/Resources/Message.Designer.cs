@@ -106,6 +106,15 @@ namespace StudySystem.Infrastructure.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurs while save.
+        /// </summary>
+        public static string ErrorCreateProduct {
+            get {
+                return ResourceManager.GetString("ErrorCreateProduct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to UserID or Password is incorrect.
         /// </summary>
         public static string InValidAccount {

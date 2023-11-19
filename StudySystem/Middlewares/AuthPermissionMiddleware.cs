@@ -56,7 +56,7 @@ namespace StudySystem.Middlewares
                                     var jti = readJwtToken.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
                                     var uid = readJwtToken.Claims.FirstOrDefault(x => x.Type == "UserID")?.Value;
                                     var ur = readJwtToken.Claims.FirstOrDefault(x => x.Type == "Roles")?.Value;
-                                    context.Items.Add("Roles", ur);
+                                    
                                     bool validToken = await userService.UserPermissionRolesAuth(uid).ConfigureAwait(false);
                                     if (!validToken)
                                     {

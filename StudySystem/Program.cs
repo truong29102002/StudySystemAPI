@@ -112,6 +112,7 @@ builder.Services.AddTransient<ISendMailService, SendMailService>();
 builder.Services.AddTransient<IUserTokenService, UserTokenService>();
 builder.Services.AddTransient<ILocationService, LocationService>();
 builder.Services.AddTransient<ISupplierService, SupplierService>();
+builder.Services.AddTransient<IProductService, ProductService>();
 #endregion
 
 #region configure connect to db
@@ -156,7 +157,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
 #region config allows web permission
 app.UseCors("StudySystemPolicy");
 #endregion
-
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 #region custom middleware

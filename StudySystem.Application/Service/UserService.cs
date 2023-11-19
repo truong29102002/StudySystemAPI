@@ -115,7 +115,7 @@ namespace StudySystem.Application.Service
             UserInformationResponseModel result = new UserInformationResponseModel();
             try
             {
-                var userById = _userRepository.GetUserDetailById(id);
+                var userById = _userRepository.GetUserDetail(id).OrderByDescending(x => x.PriceBought).FirstOrDefault();
                 result.User = (Data.Models.Data.UserDetailDataModel?)userById;
             }
             catch (Exception ex)

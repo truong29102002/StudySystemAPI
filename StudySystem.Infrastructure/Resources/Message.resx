@@ -132,6 +132,9 @@
   <data name="500" xml:space="preserve">
     <value>Internal Server Error</value>
   </data>
+  <data name="ErrorCreateProduct" xml:space="preserve">
+    <value>An error occurs while save</value>
+  </data>
   <data name="InValidAccount" xml:space="preserve">
     <value>UserID or Password is incorrect</value>
   </data>

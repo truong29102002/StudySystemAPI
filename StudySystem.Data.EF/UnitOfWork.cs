@@ -22,6 +22,9 @@ namespace StudySystem.Data.EF
         private LocationRepository<Ward> _wardsRepository;
         private AddressUserRepository _addressUserRepository;
         private SupplierRepository _supplierRepository;
+        private ProductRepository _productRepository;
+        private CategoryRepository _categoryRepository;
+        private ProductCategoryrepository _productCategoryRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -63,6 +66,21 @@ namespace StudySystem.Data.EF
         public ISupplierRepository SupplierRepository
         {
             get { return _supplierRepository ?? (_supplierRepository = new SupplierRepository(_context)); }
+        }
+
+        public IProductRepository ProductRepository
+        {
+            get { return _productRepository ?? (_productRepository = new ProductRepository(_context)); }
+        }
+
+        public ICategoryRepository CategoryRepository
+        {
+            get { return _categoryRepository ?? (_categoryRepository = new CategoryRepository(_context)); }
+        }
+
+        public IProductCategoryRepository ProductCategoryRepository
+        {
+            get { return _productCategoryRepository ?? (_productCategoryRepository = new ProductCategoryrepository(_context)); }
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
