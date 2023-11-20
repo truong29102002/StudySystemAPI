@@ -5,6 +5,7 @@ using StudySystem.Data.EF;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using StudySystem.Data.Models.Request;
+using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace StudySystem.Application.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<ProductService> _logger;
         private readonly IProductRepository _productRepository;
+        private readonly IImageProductRepository _imageProductRepository;
+        private readonly IProductCategoryRepository _prodcutCategoryRepository;
         private readonly string _currentUser;
         public ProductService(IUnitOfWork unitOfWork, ILogger<ProductService> logger, UserResoveSerive user) : base(unitOfWork)
         {
@@ -27,6 +30,8 @@ namespace StudySystem.Application.Service
             _logger = logger;
             _productRepository = unitOfWork.ProductRepository;
             _currentUser = user.GetUser();
+            _imageProductRepository = unitOfWork.ImageProductRepository;
+            _prodcutCategoryRepository = unitOfWork.ProductCategoryRepository;
         }
         /// <summary>
         /// CreateProduct
@@ -34,10 +39,11 @@ namespace StudySystem.Application.Service
         /// <param name="request"></param>
         /// <param name="imageName"></param>
         /// <returns></returns>
-        public async Task<bool> CreateProduct(CreateProductRequestModel request, List<string> imageName)
+        public async Task<string> CreateProduct(CreateProductRequestModel request, List<string> imageName)
         {
             var excutionStrategy = _unitOfWork.CreateExecutionStrategy();
             var result = false;
+            string rs = "";
             await excutionStrategy.Execute(async () =>
             {
                 using (var db = await _unitOfWork.BeginTransactionAsync())
@@ -53,7 +59,7 @@ namespace StudySystem.Application.Service
                                 foreach (var item in imageName)
                                 {
                                     string imageId = StringUtils.NewGuid();
-                                    image.Add(new Image { Id = imageId, ImageDes = item, ProductId = productId, CreateUser = _currentUser, UpdateUser = _currentUser });
+                                    image.Add(new Image {Id = imageId, ImageDes = item, ProductId = productId, CreateUser = _currentUser, UpdateUser = _currentUser });
                                 }
                                 if (await ProcessSaveImage(image))
                                 {
@@ -62,6 +68,7 @@ namespace StudySystem.Application.Service
                                     if (await ProcessSaveProductConfiguration(cfg))
                                     {
                                         result = true;
+                                        rs = productId;
                                         await db.CommitAsync();
                                     }
                                 }
@@ -81,7 +88,7 @@ namespace StudySystem.Application.Service
                 }
             });
 
-            return result;
+            return rs;
         }
         private async Task<bool> ProcessSaveProductConfiguration(List<ProductConfiguration> cfg)
         {
@@ -134,5 +141,34 @@ namespace StudySystem.Application.Service
             return false;
         }
 
+        /// <summary>
+        /// GetAllProductDetails
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ListProductDetailResponseModel> GetAllProductDetails()
+        {
+            ListProductDetailResponseModel rs = new ListProductDetailResponseModel();
+            try
+            {
+                rs = await _productRepository.GetAllProduct();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            return rs;
+        }
+        /// <summary>
+        /// UpdateProductDetail
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> UpdateProductDetail(UpdateProductRequestModel request, List<string> imageNew)
+        {
+            await _imageProductRepository.UpdateImageProduct(request.ProductId, imageNew);
+
+            return true;
+        }
     }
 }

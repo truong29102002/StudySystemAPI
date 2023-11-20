@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.EF.Repositories.Interfaces
 {
-    public interface ICategoryRepository : IRepository<Category>
+    public interface IImageProductRepository : IRepository<Image>
     {
+        Task<bool> UpdateImageProduct(string productId, List<string> imageName);
     }
 }

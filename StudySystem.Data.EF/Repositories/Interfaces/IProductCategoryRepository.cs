@@ -9,6 +9,6 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
 {
     public interface IProductCategoryRepository : IRepository<ProductCategory>
     {
-        Task CreateProductCategory(string productId, string categoryId);
+        Task<bool> CreateProductCategory(string productId, string categoryId);
     }
 }

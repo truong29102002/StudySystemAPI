@@ -270,6 +270,7 @@ namespace StudySystem.Data.EF
 
             #region image
             modelBuilder.Entity<Image>().HasKey(e => new { e.Id });
+            modelBuilder.Entity<Image>().HasIndex(e => e.ProductId);
             #endregion
 
             #region product configuration

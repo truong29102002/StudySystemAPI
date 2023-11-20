@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudySystem.Data.EF;
@@ -11,9 +12,10 @@ using StudySystem.Data.EF;
 namespace StudySystem.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231120104421_v30")]
+    partial class v30
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,7 +319,7 @@ namespace StudySystem.Data.EF.Migrations
 
             modelBuilder.Entity("StudySystem.Data.Entites.Image", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ProductId")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreateDateAt")
@@ -330,9 +332,6 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<string>("ImageDes")
                         .HasColumnType("text");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("text");
-
                     b.Property<DateTime>("UpdateDateAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -340,7 +339,7 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId");
 
                     b.HasIndex("ProductId");
 

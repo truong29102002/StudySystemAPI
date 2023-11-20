@@ -23,8 +23,8 @@ namespace StudySystem.Data.EF
         private AddressUserRepository _addressUserRepository;
         private SupplierRepository _supplierRepository;
         private ProductRepository _productRepository;
-        private CategoryRepository _categoryRepository;
         private ProductCategoryrepository _productCategoryRepository;
+        private ImageProductRepository _imageProductRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -73,14 +73,15 @@ namespace StudySystem.Data.EF
             get { return _productRepository ?? (_productRepository = new ProductRepository(_context)); }
         }
 
-        public ICategoryRepository CategoryRepository
-        {
-            get { return _categoryRepository ?? (_categoryRepository = new CategoryRepository(_context)); }
-        }
-
+       
         public IProductCategoryRepository ProductCategoryRepository
         {
             get { return _productCategoryRepository ?? (_productCategoryRepository = new ProductCategoryrepository(_context)); }
+        }
+
+        public IImageProductRepository ImageProductRepository
+        {
+            get { return _imageProductRepository ?? (_imageProductRepository = new ImageProductRepository(_context)); }
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
@@ -91,6 +92,11 @@ namespace StudySystem.Data.EF
         public async Task BulkInserAsync<T>(IList<T> entities) where T : class
         {
             await _context.BulkInsertAsync(entities).ConfigureAwait(false);
+        }
+
+        public async Task BulkUpdateAsync<T>(IList<T> entities) where T : class
+        {
+            await _context.BulkUpdateAsync(entities).ConfigureAwait(false);
         }
 
         public async Task<bool> CommitAsync()
