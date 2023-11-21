@@ -22,6 +22,7 @@ namespace StudySystem.Data.EF
         IProductRepository ProductRepository { get; }
         IProductCategoryRepository ProductCategoryRepository { get; }
         IImageProductRepository ImageProductRepository { get; }
+        IProductConfigurationRepository ProductConfigurationRepository { get; }
         Task<bool> CommitAsync();
         Task BulkInserAsync<T>(IList<T> entities) where T : class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;

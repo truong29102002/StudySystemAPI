@@ -36,6 +36,7 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string CreateProduct = "~/api/create-product";
         public const string GetAllProduct = "~/api/get-product";
         public const string UpdateProduct = "~/api/update-product";
+        public const string DeleteProduct = "~/api/delete-product";
 
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using System;
@@ -16,7 +17,14 @@ namespace StudySystem.Data.EF.Repositories
         {
             _context = context;
         }
-        public async Task<bool> CreateProductCategory(string productId, string categoryId)
+        
+        /// <summary>
+        /// UpdateProductCategory
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateProductCategory(string productId, string categoryId)
         {
             var productCategory = await _context.Set<ProductCategory>().FirstOrDefaultAsync(x => x.ProductId.Equals(productId));
             if (productCategory == null)
@@ -24,6 +32,7 @@ namespace StudySystem.Data.EF.Repositories
                 return false;
             }
             productCategory.CategoryId = categoryId;
+            await _context.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
     }

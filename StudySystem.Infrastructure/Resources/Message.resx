@@ -144,6 +144,9 @@
   <data name="Unauthorize" xml:space="preserve">
     <value>Unauthorized</value>
   </data>
+  <data name="UpdateError" xml:space="preserve">
+    <value>An error occurs while save</value>
+  </data>
   <data name="UserLogined" xml:space="preserve">
     <value>User was sign in</value>
   </data>

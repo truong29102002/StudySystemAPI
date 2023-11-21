@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Asn1.Ocsp;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
 using StudySystem.Data.EF.Repositories.Interfaces;
@@ -22,6 +23,7 @@ namespace StudySystem.Application.Service
         private readonly IProductRepository _productRepository;
         private readonly IImageProductRepository _imageProductRepository;
         private readonly IProductCategoryRepository _prodcutCategoryRepository;
+        private readonly IProductConfigurationRepository _productConfigurationRepository;
         private readonly string _currentUser;
         public ProductService(IUnitOfWork unitOfWork, ILogger<ProductService> logger, UserResoveSerive user) : base(unitOfWork)
         {
@@ -32,6 +34,7 @@ namespace StudySystem.Application.Service
             _currentUser = user.GetUser();
             _imageProductRepository = unitOfWork.ImageProductRepository;
             _prodcutCategoryRepository = unitOfWork.ProductCategoryRepository;
+            _productConfigurationRepository = unitOfWork.ProductConfigurationRepository;
         }
         /// <summary>
         /// CreateProduct
@@ -59,7 +62,7 @@ namespace StudySystem.Application.Service
                                 foreach (var item in imageName)
                                 {
                                     string imageId = StringUtils.NewGuid();
-                                    image.Add(new Image {Id = imageId, ImageDes = item, ProductId = productId, CreateUser = _currentUser, UpdateUser = _currentUser });
+                                    image.Add(new Image { Id = imageId, ImageDes = item, ProductId = productId, CreateUser = _currentUser, UpdateUser = _currentUser });
                                 }
                                 if (await ProcessSaveImage(image))
                                 {
@@ -166,9 +169,87 @@ namespace StudySystem.Application.Service
         /// <exception cref="NotImplementedException"></exception>
         public async Task<bool> UpdateProductDetail(UpdateProductRequestModel request, List<string> imageNew)
         {
-            await _imageProductRepository.UpdateImageProduct(request.ProductId, imageNew);
+            var excutionStrategy = _unitOfWork.CreateExecutionStrategy();
+            var result = false;
+            await excutionStrategy.ExecuteAsync(async () =>
+            {
+                using (var db = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        if (await _productRepository.UpdateProduct(request))
+                        {
+                            if (await _imageProductRepository.UpdateImageProduct(request.ProductId, imageNew, _currentUser))
+                            {
+                                if (await _productConfigurationRepository.UpdateProductConfiguration(request))
+                                {
+                                    if (await _prodcutCategoryRepository.UpdateProductCategory(request.ProductId, request.ProductCategoryId))
+                                    {
+                                        result = true;
+                                        await db.CommitAsync();
+                                    }
+                                }
+                            }
+                        }
+                        if (!result)
+                        {
+                            await db.RollbackAsync();
+                        }
 
-            return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"{ex.Message}");
+                        await db.RollbackAsync();
+                    }
+                }
+            });
+
+            return result;
+        }
+        /// <summary>
+        /// DeleteProduct
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> DeleteProduct(string productId)
+        {
+            var excutionStrategy = _unitOfWork.CreateExecutionStrategy();
+            var result = false;
+            await excutionStrategy.ExecuteAsync(async () =>
+            {
+                using (var db = await _unitOfWork.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        if (await _productRepository.DeleteProduct(productId))
+                        {
+                            if (await _imageProductRepository.DeleteImageProduct(productId))
+                            {
+                                if (await _productConfigurationRepository.DeleteProductConfiguration(productId))
+                                {
+
+                                    result = true;
+                                    await db.CommitAsync();
+                                }
+                            }
+                        }
+                        if (!result)
+                        {
+                            await db.RollbackAsync();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"{ex.Message}");
+                        await db.RollbackAsync();
+                    }
+                }
+            });
+
+            return result;
         }
     }
 }

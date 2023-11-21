@@ -2,6 +2,7 @@
 using LinqToDB;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
+using StudySystem.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +18,45 @@ namespace StudySystem.Data.EF.Repositories
         {
             _context = context;
         }
-
-        public async Task<bool> UpdateImageProduct(string productId, List<string> imageName)
+        /// <summary>
+        /// DeleteImageProduct
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> DeleteImageProduct(string productId) 
         {
-            var imgOld = await _context.Set<Image>().Where(x => x.ProductId.Equals(productId) && !imageName.Contains(x.ImageDes)).ToListAsync();
-            if (imgOld.Count() > 0)
+            var rs = await _context.Set<Image>().Where(x => x.ProductId.Equals(productId)).ToListAsync();
+            if (rs.Count() > 0)
             {
-                await _context.BulkDeleteAsync(imgOld).ConfigureAwait(false);
+                await _context.BulkDeleteAsync(rs).ConfigureAwait(false);
+                return true;
             }
-            //await _context.BulkInsertOrUpdateAsync(dataUpadate);
+            return false;
+        }
+        /// <summary>
+        /// UpdateImageProduct
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="imageName"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateImageProduct(string productId, List<string> imageName, string user)
+        {
+            var imgOldDel = await _context.Set<Image>().Where(x => x.ProductId.Equals(productId) && !imageName.Contains(x.ImageDes)).ToListAsync().ConfigureAwait(false);
+            if (imgOldDel.Count() > 0)
+            {
+                await _context.BulkDeleteAsync(imgOldDel).ConfigureAwait(false);
+            }
+            List<Image> addNew = new List<Image>();
+            var imageOldUpdate = await _context.Set<Image>().Where(x => x.ProductId.Equals(productId) && imageName.Contains(x.ImageDes)).ToListAsync().ConfigureAwait(false);
+            var listNemImg = imageName.Except(imageOldUpdate.Select(x => x.ImageDes)).ToList();
+            foreach (var img in listNemImg)
+            {
+                string id = StringUtils.NewGuid();
+                addNew.Add(new Image { Id = id, ImageDes = img, ProductId = productId, CreateUser = user, UpdateUser = user });
+            }
+            await _context.BulkInsertAsync(addNew);
             return true;
         }
     }

@@ -9,6 +9,7 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
 {
     public interface IImageProductRepository : IRepository<Image>
     {
-        Task<bool> UpdateImageProduct(string productId, List<string> imageName);
+        Task<bool> UpdateImageProduct(string productId, List<string> imageName, string user);
+        Task<bool> DeleteImageProduct(string productId);
     }
 }

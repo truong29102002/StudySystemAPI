@@ -142,6 +142,15 @@ namespace StudySystem.Infrastructure.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurs while save.
+        /// </summary>
+        public static string UpdateError {
+            get {
+                return ResourceManager.GetString("UpdateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User was sign in.
         /// </summary>
         public static string UserLogined {

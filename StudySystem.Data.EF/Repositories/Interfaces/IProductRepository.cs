@@ -12,5 +12,7 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
     {
         Task CreateProduct(List<Product> products);
         Task<ListProductDetailResponseModel> GetAllProduct();
+        Task<bool> UpdateProduct(UpdateProductRequestModel updateProduct);
+        Task<bool> DeleteProduct(string productId);
     }
 }

@@ -25,6 +25,7 @@ namespace StudySystem.Data.EF
         private ProductRepository _productRepository;
         private ProductCategoryrepository _productCategoryRepository;
         private ImageProductRepository _imageProductRepository;
+        private ProductConfigurationRepository _productConfigurationRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -73,7 +74,7 @@ namespace StudySystem.Data.EF
             get { return _productRepository ?? (_productRepository = new ProductRepository(_context)); }
         }
 
-       
+
         public IProductCategoryRepository ProductCategoryRepository
         {
             get { return _productCategoryRepository ?? (_productCategoryRepository = new ProductCategoryrepository(_context)); }
@@ -82,6 +83,11 @@ namespace StudySystem.Data.EF
         public IImageProductRepository ImageProductRepository
         {
             get { return _imageProductRepository ?? (_imageProductRepository = new ImageProductRepository(_context)); }
+        }
+
+        public IProductConfigurationRepository ProductConfigurationRepository
+        {
+            get { return _productConfigurationRepository ?? (_productConfigurationRepository = new ProductConfigurationRepository(_context)); }
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
