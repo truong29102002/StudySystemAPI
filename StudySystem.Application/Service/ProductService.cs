@@ -251,5 +251,33 @@ namespace StudySystem.Application.Service
 
             return result;
         }
+        /// <summary>
+        /// GetProdcutDetail
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<ProductDetailResponseModel> GetProdcutDetail(string productId)
+        {
+            var rs = _productRepository.GetProductDetail(productId).First();
+            return rs;
+        }
+
+        public async Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request)
+        {
+            ListProductDetailResponseModel rs = new ListProductDetailResponseModel();
+            try
+            {
+
+                rs = await _productRepository.ViewedProduct(request).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex.Message);
+            }
+
+            return rs;
+        }
     }
 }

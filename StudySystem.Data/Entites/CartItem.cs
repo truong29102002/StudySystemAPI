@@ -10,8 +10,8 @@ namespace StudySystem.Data.Entites
     public class CartItem : BaseEntity
     {
         [Key]
-        public int CartItemId { get; set; }
-        public int CartId { get; set; }
+        public string CartId { get; set; } = null!;
+        [Key]
         public string? ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }

@@ -176,11 +176,8 @@ namespace StudySystem.Data.EF.Migrations
 
             modelBuilder.Entity("StudySystem.Data.Entites.Cart", b =>
                 {
-                    b.Property<int>("CartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartId"));
+                    b.Property<string>("CartId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreateDateAt")
                         .HasColumnType("timestamp with time zone");
@@ -208,14 +205,11 @@ namespace StudySystem.Data.EF.Migrations
 
             modelBuilder.Entity("StudySystem.Data.Entites.CartItem", b =>
                 {
-                    b.Property<int>("CartItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                    b.Property<string>("CartId")
+                        .HasColumnType("text");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CartItemId"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreateDateAt")
                         .HasColumnType("timestamp with time zone");
@@ -227,9 +221,6 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("text");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
@@ -240,9 +231,7 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("CartItemId");
-
-                    b.HasIndex("CartId");
+                    b.HasKey("CartId", "ProductId");
 
                     b.HasIndex("ProductId");
 
@@ -835,7 +824,9 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasOne("StudySystem.Data.Entites.Product", "Product")
                         .WithMany("CartItems")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Cart");
 

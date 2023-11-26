@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudySystem.Data.Models.Response
+namespace StudySystem.Data.Models.Request
 {
     public class UpdateProductRequestModel
     {

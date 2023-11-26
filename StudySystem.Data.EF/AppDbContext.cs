@@ -203,7 +203,7 @@ namespace StudySystem.Data.EF
             #endregion
 
             #region cartitem
-            modelBuilder.Entity<CartItem>().HasKey(e => e.CartItemId);
+            modelBuilder.Entity<CartItem>().HasKey(e => new { e.CartId, e.ProductId });
 
             modelBuilder.Entity<CartItem>()
            .HasOne(c => c.Cart)

@@ -14,9 +14,7 @@ namespace StudySystem.Data.EF.Migrations
                 name: "Carts",
                 columns: table => new
                 {
-                    CartId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CartName = table.Column<string>(type: "text", nullable: true),
+                    CartId = table.Column<string>(type: "text", nullable: false),
                     UserId = table.Column<string>(type: "character varying(12)", nullable: false),
                     CreateUser = table.Column<string>(type: "text", nullable: false),
                     UpdateUser = table.Column<string>(type: "text", nullable: false),
@@ -38,9 +36,8 @@ namespace StudySystem.Data.EF.Migrations
                 name: "CartItems",
                 columns: table => new
                 {
-                    CartItemId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CartId = table.Column<int>(type: "integer", nullable: false),
+                    CartItemId = table.Column<string>(type: "text", nullable: false),
+                    CartId = table.Column<string>(type: "text", nullable: false),
                     ProductId = table.Column<string>(type: "text", nullable: true),
                     Quantity = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),

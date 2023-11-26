@@ -113,6 +113,7 @@ builder.Services.AddTransient<IUserTokenService, UserTokenService>();
 builder.Services.AddTransient<ILocationService, LocationService>();
 builder.Services.AddTransient<ISupplierService, SupplierService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<ICartService, CartService>();
 #endregion
 
 #region configure connect to db

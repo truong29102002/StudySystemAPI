@@ -21,15 +21,15 @@ namespace StudySystem.Data.EF.Migrations
                 table: "Products",
                 newName: "ProductionDate");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "ProductQuantity",
-                table: "Products",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(string),
-                oldType: "text",
-                oldNullable: true);
+            //migrationBuilder.AlterColumn<int>(
+            //    name: "ProductQuantity",
+            //    table: "Products",
+            //    type: "integer",
+            //    nullable: false,
+            //    defaultValue: 0,
+            //    oldClrType: typeof(string),
+            //    oldType: "text",
+            //    oldNullable: true);
 
             migrationBuilder.AlterColumn<double>(
                 name: "ProductPrice",
