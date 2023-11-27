@@ -10,7 +10,9 @@ namespace StudySystem.Application.Service.Interfaces
 {
     public interface ICartService : IBaseService
     {
-        Task<bool> InsertOrUpdateCart(CartInsertRequestModel model);
+        Task<bool> InsertOrUpdateCart(CartItemsRequestModel model);
         Task<CartResponseModel> GetCart();
+        Task<int> UpdateQuantity(CartUpdateDataModel model);
+        Task<bool> DeleteCart(CartItemsRequestModel model);
     }
 }

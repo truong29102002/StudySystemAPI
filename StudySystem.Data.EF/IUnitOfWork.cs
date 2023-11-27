@@ -28,6 +28,7 @@ namespace StudySystem.Data.EF
         Task<bool> CommitAsync();
         Task BulkInserAsync<T>(IList<T> entities) where T : class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;
+        Task BulkDeleteAsync<T>(IList<T> entities) where T : class;
         IExecutionStrategy CreateExecutionStrategy();
         Task<IDbContextTransaction> BeginTransactionAsync();
     }

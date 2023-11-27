@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace StudySystem.Data.Models.Request
 {
-    public class CartInsertRequestModel
+    public class CartItemsRequestModel
     {
-        public List<CartInsertDataModel> CartInsertData { get; set; }
+        public List<CartUpdateDataModel> CartInsertData { get; set; }
     }
 
-    public class CartInsertDataModel
+    public class CartUpdateDataModel
     {
         public string ProductId { get; set; }
         public int Quantity { get; set; }

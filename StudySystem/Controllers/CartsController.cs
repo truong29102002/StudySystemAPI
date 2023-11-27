@@ -40,20 +40,30 @@ namespace StudySystem.Controllers
         /// <param name="requestModel"></param>
         /// <returns></returns>
         [HttpPost(Router.UpdateCart)]
-
-        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateCart(CartInsertRequestModel requestModel)
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateCart(CartItemsRequestModel requestModel)
         {
             var rs = await _cartService.InsertOrUpdateCart(requestModel);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
         }
-
-        [HttpPut("~/api/calculate-total")]
-        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateQuantity(int quantity)
+        /// <summary>
+        /// UpdateQuantity
+        /// "~/api/calculate-total"
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut(Router.CartCalculate)]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateQuantity(CartUpdateDataModel request)
         {
-            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, new object()));
+            var rs = await _cartService.UpdateQuantity(request).ConfigureAwait(false);
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
         }
 
-        [HttpGet("~/api/get-cart")]
+        /// <summary>
+        /// GetCart
+        /// api: "~/api/get-cart"
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(Router.GetCart)]
         public async Task<ActionResult<StudySystemAPIResponse<CartResponseModel>>> GetCart()
         {
             var rs = await _cartService.GetCart();
@@ -69,6 +79,18 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<CartResponseModel>(StatusCodes.Status200OK, new Response<CartResponseModel>(true, rs));
         }
 
+        /// <summary>
+        /// DeleteCartItems
+        /// "~/api/cart-delete"
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost(Router.CartDelete)]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> DeleteCartItems(CartItemsRequestModel model)
+        {
+            var rs = await _cartService.DeleteCart(model);
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
+        }
 
         [NonAction]
         private string GetFilepath(string productId)

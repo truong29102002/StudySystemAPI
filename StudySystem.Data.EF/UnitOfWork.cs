@@ -110,6 +110,13 @@ namespace StudySystem.Data.EF
             return await _context.Database.BeginTransactionAsync();
         }
 
+        public async Task BulkDeleteAsync<T>(IList<T> entities) where T : class
+        {
+            
+            await _context.BulkDeleteAsync(entities).ConfigureAwait(false);
+           
+        }
+
         public async Task BulkInserAsync<T>(IList<T> entities) where T : class
         {
             await _context.BulkInsertAsync(entities).ConfigureAwait(false);

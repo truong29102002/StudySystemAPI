@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
 using StudySystem.Data.EF.Repositories.Interfaces;
@@ -21,6 +22,7 @@ namespace StudySystem.Application.Service
         private readonly string _currentUser;
         private readonly ICartRepository _cartRepository;
         private readonly ICartItemRepository _cartItemRepository;
+        private readonly IProductRepository _productRepository;
         public CartService(ILogger<CartService> logger, IUnitOfWork unitOfWork, UserResoveSerive currentUser) : base(unitOfWork)
         {
             _logger = logger;
@@ -28,7 +30,29 @@ namespace StudySystem.Application.Service
             _currentUser = currentUser.GetUser();
             _cartRepository = unitOfWork.CartRepository;
             _cartItemRepository = unitOfWork.CartItemRepository;
+            _productRepository = unitOfWork.ProductRepository;
         }
+
+        public async Task<bool> DeleteCart(CartItemsRequestModel model)
+        {
+            try
+            {
+                var cartId = await _cartRepository.FindAsync(x => x.UserId.Equals(_currentUser)).ConfigureAwait(false);
+                var cartItem = await _cartItemRepository.FindAllAsync(x => x.CartId.Equals(cartId.CartId)).ConfigureAwait(false);
+                var rs = cartItem.Where(x => model.CartInsertData.Select(x => x.ProductId).Contains(x.ProductId)).ToList();
+                List<CartItem> cartItems = new List<CartItem>();
+                cartItems = rs;
+                await _unitOfWork.BulkDeleteAsync(cartItems).ConfigureAwait(false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+
+        }
+
         /// <summary>
         /// GetCart
         /// </summary>
@@ -54,7 +78,7 @@ namespace StudySystem.Application.Service
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<bool> InsertOrUpdateCart(CartInsertRequestModel model)
+        public async Task<bool> InsertOrUpdateCart(CartItemsRequestModel model)
         {
             try
             {
@@ -79,39 +103,79 @@ namespace StudySystem.Application.Service
 
         }
         /// <summary>
+        /// UpdateQuantity
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateQuantity(CartUpdateDataModel model)
+        {
+            try
+            {
+                var cart = await _cartRepository.FindAsync(x => x.UserId.Equals(_currentUser)).ConfigureAwait(false);
+                var cartItem = await _cartItemRepository.FindAsync(x => x.ProductId.Equals(model.ProductId) && x.CartId.Equals(cart.CartId)).ConfigureAwait(false);
+                if (cartItem != null)
+                {
+                    cartItem.Quantity = model.Quantity;
+                    await _unitOfWork.CommitAsync();
+                }
+                return model.Quantity;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}");
+            }
+            return 0;
+        }
+
+
+
+        /// <summary>
         /// ProcessUpdateCartItem
         /// </summary>
         /// <param name="model"></param>
         /// <param name="cartId"></param>
         /// <returns></returns>
-        private async Task ProcessUpdateCartItem(CartInsertRequestModel model, string cartId)
+        private async Task ProcessUpdateCartItem(CartItemsRequestModel model, string cartId)
         {
             List<CartItem> cartItems = new List<CartItem>();
-            var oldItem = (await _cartItemRepository.FindAllAsync(x => x.CartId.Equals(cartId))).ToDictionary(x => x.ProductId);
-            foreach (var item in model.CartInsertData)
+            try
             {
-                
-                int quantityNew = 0;
-                if (oldItem.TryGetValue(item.ProductId, out var existingItem))
+                var oldItem = await _cartItemRepository.FindAllAsync(x => x.CartId.Equals(cartId));
+                var oldItemDictory = oldItem.ToDictionary(x => x.ProductId);
+                foreach (var item in model.CartInsertData)
                 {
-                    quantityNew = existingItem.Quantity + item.Quantity;
-                }
-                else
-                {
-                    quantityNew = item.Quantity;
+                    int quantityNew = 0;
+                    var thisProduct = await _productRepository.FindAsync(x => x.ProductId.Equals(item.ProductId)).ConfigureAwait(false);
+                    if (oldItemDictory.TryGetValue(item.ProductId, out var existingItem))
+                    {
+                        quantityNew = existingItem.Quantity + item.Quantity;
+                    }
+                    else
+                    {
+                        quantityNew = item.Quantity;
+
+                    }
+                    if (quantityNew <= thisProduct.ProductQuantity)
+                    {
+                        cartItems.Add(new CartItem
+                        {
+                            CartId = cartId,
+                            ProductId = item.ProductId,
+                            Quantity = quantityNew,
+                            Price = item.Price,
+                            CreateUser = _currentUser,
+                            UpdateUser = _currentUser
+                        });
+                    }
 
                 }
-                cartItems.Add(new CartItem
-                {
-                    CartId = cartId,
-                    ProductId = item.ProductId,
-                    Quantity = quantityNew,
-                    Price = item.Price,
-                    CreateUser = _currentUser,
-                    UpdateUser = _currentUser
-                });
+                await _unitOfWork.BulkUpdateAsync(cartItems).ConfigureAwait(false);
             }
-            await _unitOfWork.BulkUpdateAsync(cartItems).ConfigureAwait(false);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
+
         }
     }
 }

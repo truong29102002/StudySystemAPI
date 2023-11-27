@@ -1,5 +1,6 @@
 ﻿using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
+using StudySystem.Data.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace StudySystem.Data.EF.Repositories
             _context = context;
 
         }
+
     }
 }
