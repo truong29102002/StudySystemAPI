@@ -58,7 +58,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 #region config jwt, AppDbContext
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddTransient<UserResoveSerive>();
+builder.Services.AddTransient<UserResolverSerive>();
 builder.Services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -114,6 +114,9 @@ builder.Services.AddTransient<ILocationService, LocationService>();
 builder.Services.AddTransient<ISupplierService, SupplierService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<IExtensionsService, ExtensionsService>();
+builder.Services.AddTransient<IPaymentService, PaymentService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 #endregion
 
 #region configure connect to db

@@ -17,6 +17,12 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string CsvProvinces = "provinces";
         public const string CsvWards = "wards";
         public const string CsvCategories = "_Categories_";
+        public const string UserIdSession = "User_Session_";
+        public const string OrderStatusNotYetPayment = "1";
+        public const string OrderStatusPaymented = "0";
+        public const string OrderStatusCancelPayment = "2";
+
+
     }
     public static class Router
     {
@@ -42,6 +48,7 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string GetCart = "~/api/get-cart";
         public const string CartCalculate = "~/api/calculate-total";
         public const string CartDelete = "~/api/cart-delete";
+        public const string CreatedOrder = "~/api/created-order";
 
     }
 

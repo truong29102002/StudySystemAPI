@@ -9,7 +9,7 @@ namespace StudySystem.Data.Entites
 {
     public class UserDetail : BaseEntity
     {
-        [Key, MaxLength(12)]
+        [Key]
         public string UserID { get; set; } = null!;
         [Required]
         public string UserFullName { get; set; } = null!;

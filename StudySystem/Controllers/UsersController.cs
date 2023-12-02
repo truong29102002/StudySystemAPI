@@ -22,12 +22,10 @@ namespace StudySystem.Controllers
     public class UsersController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
-        private readonly string _currentUser;
         private readonly IUserService _userService;
-        public UsersController(ILogger<UsersController> logger, UserResoveSerive user, IUserService userService)
+        public UsersController(ILogger<UsersController> logger, IUserService userService)
         {
             _logger = logger;
-            _currentUser = user.GetUser();
             _userService = userService;
         }
         /// <summary>
@@ -49,7 +47,7 @@ namespace StudySystem.Controllers
         [HttpGet(Router.GetUserById)]
         public async Task<ActionResult<StudySystemAPIResponse<UserInformationResponseModel>>> GetUserById()
         {
-            var rs = await _userService.GetUserById(_currentUser);
+            var rs = await _userService.GetUserById();
             return new StudySystemAPIResponse<UserInformationResponseModel>(StatusCodes.Status200OK, new Response<UserInformationResponseModel>(true, rs));
         }
     }

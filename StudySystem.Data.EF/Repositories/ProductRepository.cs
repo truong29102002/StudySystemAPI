@@ -4,6 +4,7 @@ using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
+using StudySystem.Data.Models.Data;
 using StudySystem.Data.Models.Request;
 using StudySystem.Data.Models.Response;
 using System;
@@ -134,6 +135,27 @@ namespace StudySystem.Data.EF.Repositories
                 return true;
             }
             return false;
+        }
+
+        public async Task<bool> UpdateProductQuantity(UpdateProductQuantityDataModel data)
+        {
+            int count = 0;
+            foreach (var item in data.ProductChangedData)
+            {
+                var productChange = await _context.Set<Product>().FirstOrDefaultAsync(x => x.ProductId.Equals(item.ProductId)).ConfigureAwait(false);
+                if (productChange != null)
+                {
+                    productChange.ProductQuantity = productChange.ProductQuantity - item.Quantity;
+                    count++;
+                }
+            }
+            if(count == data.ProductChangedData.Count())
+            {
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            return false;
+            
         }
 
         public async Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request)

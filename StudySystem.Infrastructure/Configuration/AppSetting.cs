@@ -66,5 +66,28 @@ namespace StudySystem.Infrastructure.Configuration
         }
         #endregion
 
+        #region configuration payment vnpay
+        public static string VnpVersion
+        {
+            get { return configuration["PaymentSetting:vnp_Version"]; }
+        }
+        public static string VnpTmnCode
+        {
+            get { return configuration["PaymentSetting:vnp_TmnCode"]; }
+        }
+        public static string VnpHashSecret
+        {
+            get { return configuration["PaymentSetting:vnp_HashSecret"]; }
+        }
+        public static string VnpUrl
+        {
+            get { return configuration["PaymentSetting:vnp_Url"]; }
+        }
+        public static string VnpReturnUrl
+        {
+            get { return configuration["PaymentSetting:vnp_ReturnUrl"]; }
+        }
+        #endregion
+
     }
 }

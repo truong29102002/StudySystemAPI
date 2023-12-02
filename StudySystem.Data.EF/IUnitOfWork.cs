@@ -25,6 +25,8 @@ namespace StudySystem.Data.EF
         IProductConfigurationRepository ProductConfigurationRepository { get; }
         ICartItemRepository CartItemRepository { get; }
         ICartRepository CartRepository { get; }
+        IOrderRepository OrderRepository { get; }
+        IOrderItemRepository OrderItemRepository { get; }
         Task<bool> CommitAsync();
         Task BulkInserAsync<T>(IList<T> entities) where T : class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;

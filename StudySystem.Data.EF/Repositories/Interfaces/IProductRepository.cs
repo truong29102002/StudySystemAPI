@@ -1,4 +1,5 @@
 ﻿using StudySystem.Data.Entites;
+using StudySystem.Data.Models.Data;
 using StudySystem.Data.Models.Request;
 using StudySystem.Data.Models.Response;
 using System;
@@ -17,6 +18,7 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
         Task<bool> DeleteProduct(string productId);
         IQueryable<ProductDetailResponseModel> GetProductDetail(string productId);
         Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request);
+        Task<bool> UpdateProductQuantity(UpdateProductQuantityDataModel data);
 
     }
 }

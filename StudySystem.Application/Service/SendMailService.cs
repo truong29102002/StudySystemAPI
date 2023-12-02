@@ -28,7 +28,7 @@ namespace StudySystem.Application.Service
         private readonly IUserVerificationOTPsRepository _userVerificationOTPsRepository;
         private readonly IUserTokenRepository _userTokenRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public SendMailService(ILogger<SendMailService> _logger, UserResoveSerive currentUser, IUnitOfWork unitOfWork)
+        public SendMailService(ILogger<SendMailService> _logger, UserResolverSerive currentUser, IUnitOfWork unitOfWork)
         {
             logger = _logger;
             _currentUser = currentUser.GetUser();

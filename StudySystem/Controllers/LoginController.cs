@@ -37,7 +37,7 @@ namespace StudySystem.Controllers
         private readonly IUserTokenService _userTokenService;
         private readonly ILogger<LoginController> _logger;
         private readonly string _user;
-        public LoginController(IUserService userRegisterService, IUserTokenService userTokenService, ILogger<LoginController> logger, UserResoveSerive user)
+        public LoginController(IUserService userRegisterService, IUserTokenService userTokenService, ILogger<LoginController> logger, UserResolverSerive user)
         {
             _userRegisterService = userRegisterService;
             _userTokenService = userTokenService;

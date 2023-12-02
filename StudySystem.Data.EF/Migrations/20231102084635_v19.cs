@@ -8,18 +8,18 @@ namespace StudySystem.Data.EF.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CartName",
-                table: "Carts");
+            //migrationBuilder.DropColumn(
+            //    name: "CartName",
+            //    table: "Carts");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "CartName",
-                table: "Carts",
-                type: "text",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "CartName",
+            //    table: "Carts",
+            //    type: "text",
+            //    nullable: true);
         }
     }
 }

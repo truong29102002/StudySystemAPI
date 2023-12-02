@@ -1,0 +1,49 @@
+﻿// <copyright file="OrdersController.cs" ownedby="Xuan Truong">
+//  Copyright (c) XuanTruong. All rights reserved.
+//  FileType: Visual CSharp source file
+//  Created On: 29/09/2023
+//  Last Modified On: 29/09/2023
+//  Description: OrdersController.cs
+// </copyright>
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using StudySystem.Application.Service.Interfaces;
+using StudySystem.Data.Models.Request;
+using StudySystem.Data.Models.Response;
+using StudySystem.Infrastructure.CommonConstant;
+
+namespace StudySystem.Controllers
+{
+    [ApiController]
+    public class OrdersController : ControllerBase
+    {
+        private readonly ILogger<OrdersController> _logger;
+        private readonly IOrderService _orderService;
+        public OrdersController(ILogger<OrdersController> logger, IOrderService orderService)
+        {
+            _logger = logger;
+            _orderService = orderService;
+
+        }
+
+        /// <summary>
+        /// CreatesOrder
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        [HttpPost(Router.CreatedOrder)]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> CreatesOrder(OrderRequestModel requestModel)
+        {
+            string rs = await _orderService.CreatedOrder(requestModel);
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
+        }
+
+        [HttpPost("~/api/vnpay_return/IPN")]
+        public async Task<ActionResult<StudySystemAPIResponse<OrderCompletedResponse>>> VerifyIPN(VNPayIPNRequest request)
+        {
+            var rs = await _orderService.UpdatedOrder(request);
+            return new StudySystemAPIResponse<OrderCompletedResponse>(StatusCodes.Status200OK, new Response<OrderCompletedResponse>(true, rs));
+        }
+    }
+}

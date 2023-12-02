@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudySystem.Data.EF;
@@ -11,9 +12,10 @@ using StudySystem.Data.EF;
 namespace StudySystem.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231129071840_v33")]
+    partial class v33
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,25 +23,6 @@ namespace StudySystem.Data.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("StudySystem.Data.Entites.AddressBook", b =>
-                {
-                    b.Property<string>("OrderId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("AddressReceive")
-                        .HasColumnType("text");
-
-                    b.Property<string>("District")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Province")
-                        .HasColumnType("text");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("AddressBooks");
-                });
 
             modelBuilder.Entity("StudySystem.Data.Entites.AddressUser", b =>
                 {
@@ -213,7 +196,7 @@ namespace StudySystem.Data.EF.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(12)");
 
                     b.HasKey("CartId");
 
@@ -405,8 +388,11 @@ namespace StudySystem.Data.EF.Migrations
 
             modelBuilder.Entity("StudySystem.Data.Entites.Order", b =>
                 {
-                    b.Property<string>("OrderId")
-                        .HasColumnType("text");
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderId"));
 
                     b.Property<DateTime>("CreateDateAt")
                         .HasColumnType("timestamp with time zone");
@@ -415,20 +401,13 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("text");
+                    b.Property<DateTime>("OrderDateAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Payment")
                         .HasColumnType("text");
 
-                    b.Property<string>("ReceiveType")
-                        .HasColumnType("text");
-
                     b.Property<string>("Status")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TotalAmount")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdateDateAt")
@@ -439,7 +418,7 @@ namespace StudySystem.Data.EF.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(12)");
 
                     b.HasKey("OrderId");
 
@@ -450,11 +429,11 @@ namespace StudySystem.Data.EF.Migrations
 
             modelBuilder.Entity("StudySystem.Data.Entites.OrderItem", b =>
                 {
-                    b.Property<string>("OrderId")
-                        .HasColumnType("text");
+                    b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("text");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OrderItemId"));
 
                     b.Property<DateTime>("CreateDateAt")
                         .HasColumnType("timestamp with time zone");
@@ -463,8 +442,14 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
+
+                    b.Property<string>("ProductId")
+                        .HasColumnType("text");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer");
@@ -476,7 +461,9 @@ namespace StudySystem.Data.EF.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("OrderId", "ProductId");
+                    b.HasKey("OrderItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
@@ -627,7 +614,8 @@ namespace StudySystem.Data.EF.Migrations
             modelBuilder.Entity("StudySystem.Data.Entites.UserDetail", b =>
                 {
                     b.Property<string>("UserID")
-                        .HasColumnType("text");
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
 
                     b.Property<DateTime>("CreateDateAt")
                         .HasColumnType("timestamp with time zone");
@@ -779,7 +767,7 @@ namespace StudySystem.Data.EF.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("character varying(12)");
 
                     b.HasKey("WishListId");
 
@@ -888,9 +876,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasOne("StudySystem.Data.Entites.Product", "Product")
                         .WithMany("OrderItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("Order");
 

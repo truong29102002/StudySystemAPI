@@ -25,7 +25,7 @@ namespace StudySystem.Application.Service
         private readonly IProductCategoryRepository _prodcutCategoryRepository;
         private readonly IProductConfigurationRepository _productConfigurationRepository;
         private readonly string _currentUser;
-        public ProductService(IUnitOfWork unitOfWork, ILogger<ProductService> logger, UserResoveSerive user) : base(unitOfWork)
+        public ProductService(IUnitOfWork unitOfWork, ILogger<ProductService> logger, UserResolverSerive user) : base(unitOfWork)
         {
 
             _unitOfWork = unitOfWork;

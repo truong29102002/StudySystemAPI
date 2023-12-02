@@ -28,6 +28,8 @@ namespace StudySystem.Data.EF
         private ProductConfigurationRepository _productConfigurationRepository;
         private CartRepository _cartRepository;
         private CartItemRepository _cartItemRepository;
+        private OrderRepository _orderRepository;
+        private OrderItemRepository _orderItemRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -105,6 +107,18 @@ namespace StudySystem.Data.EF
             }
         }
 
+        public IOrderRepository OrderRepository
+        {
+            get { return _orderRepository ?? (_orderRepository = new OrderRepository(_context)); }
+        }
+
+        public IOrderItemRepository OrderItemRepository
+        {
+            get
+            {
+                return _orderItemRepository ?? (_orderItemRepository = new Repositories.OrderItemRepository(_context));
+            }
+        }
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return await _context.Database.BeginTransactionAsync();
@@ -112,9 +126,9 @@ namespace StudySystem.Data.EF
 
         public async Task BulkDeleteAsync<T>(IList<T> entities) where T : class
         {
-            
+
             await _context.BulkDeleteAsync(entities).ConfigureAwait(false);
-           
+
         }
 
         public async Task BulkInserAsync<T>(IList<T> entities) where T : class

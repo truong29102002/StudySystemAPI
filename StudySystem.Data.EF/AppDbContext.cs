@@ -5,6 +5,8 @@ using StudySystem.Data.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +16,7 @@ namespace StudySystem.Data.EF
     {
         private readonly ILogger<AppDbContext> _logger;
         private readonly string _currentUser;
-        public AppDbContext(DbContextOptions<AppDbContext> options, UserResoveSerive userResoveSerive, ILogger<AppDbContext> logger) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, UserResolverSerive userResoveSerive, ILogger<AppDbContext> logger) : base(options)
         {
             _logger = logger;
             _currentUser = userResoveSerive.GetUser();
@@ -45,6 +47,7 @@ namespace StudySystem.Data.EF
         public DbSet<Banner> Banners => Set<Banner>();
         public DbSet<Image> Images => Set<Image>();
         public DbSet<ProductConfiguration> ProductConfigurations => Set<ProductConfiguration>();
+        public DbSet<AddressBook> AddressBooks => Set<AddressBook>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -230,7 +233,7 @@ namespace StudySystem.Data.EF
             #endregion
 
             #region order item
-            modelBuilder.Entity<OrderItem>().HasKey(e => e.OrderItemId);
+            modelBuilder.Entity<OrderItem>().HasKey(e => new { e.OrderId, e.ProductId });
             // n-1 between OrderItem and Product
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Product)
@@ -277,15 +280,19 @@ namespace StudySystem.Data.EF
             modelBuilder.Entity<ProductConfiguration>().HasKey(e => e.ProductId);
             #endregion
 
+            #region address book
+            modelBuilder.Entity<AddressBook>().HasKey(x => x.OrderId);
+            #endregion
+
             base.OnModelCreating(modelBuilder);
         }
     }
 
-    public class UserResoveSerive
+    public class UserResolverSerive
     {
         private readonly IHttpContextAccessor _context;
-        private readonly ILogger<UserResoveSerive> _logger;
-        public UserResoveSerive(IHttpContextAccessor context, ILogger<UserResoveSerive> logger)
+        private readonly ILogger<UserResolverSerive> _logger;
+        public UserResolverSerive(IHttpContextAccessor context, ILogger<UserResolverSerive> logger)
         {
             _context = context;
             _logger = logger;
@@ -296,6 +303,28 @@ namespace StudySystem.Data.EF
             {
                 var user = _context.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "UserID")?.Value;
                 return user ?? "";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return "";
+            }
+        }
+        public string GetIpAdressUser()
+        {
+            string ipAddress = string.Empty;
+            try
+            {
+                IPAddress ip = _context.HttpContext.Connection.RemoteIpAddress;
+                if (ipAddress != null)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                    {
+                        ip = Dns.GetHostEntry(ip).AddressList.First(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+                    }
+                    ipAddress = ip.ToString();
+                }
+                return ipAddress;
             }
             catch (Exception ex)
             {

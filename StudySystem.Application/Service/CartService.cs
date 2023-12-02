@@ -23,7 +23,7 @@ namespace StudySystem.Application.Service
         private readonly ICartRepository _cartRepository;
         private readonly ICartItemRepository _cartItemRepository;
         private readonly IProductRepository _productRepository;
-        public CartService(ILogger<CartService> logger, IUnitOfWork unitOfWork, UserResoveSerive currentUser) : base(unitOfWork)
+        public CartService(ILogger<CartService> logger, IUnitOfWork unitOfWork, UserResolverSerive currentUser) : base(unitOfWork)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;

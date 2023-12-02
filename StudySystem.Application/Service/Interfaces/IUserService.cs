@@ -28,7 +28,7 @@ namespace StudySystem.Application.Service.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<UserInformationResponseModel> GetUserById(string id);
+        Task<UserInformationResponseModel> GetUserById();
         /// <summary>
         /// UserPermissionRolesAuth
         /// </summary>

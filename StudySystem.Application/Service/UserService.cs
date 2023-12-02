@@ -29,13 +29,15 @@ namespace StudySystem.Application.Service
         private readonly ILogger<UserService> _logger;
         private readonly IAddressUserRepository _addressUserRepository;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IMapper mapper) : base(unitOfWork)
+        private readonly string _currentUser;
+        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IMapper mapper, UserResolverSerive currentUser) : base(unitOfWork)
         {
             _unitOfWorks = unitOfWork;
             _userRepository = unitOfWork.UserRepository;
             _logger = logger;
             _mapper = mapper;
             _addressUserRepository = unitOfWork.AddressUserRepository;
+            _currentUser = currentUser.GetUser();
         }
         /// <summary>
         /// RegisterUserDetail
@@ -110,13 +112,13 @@ namespace StudySystem.Application.Service
         /// <param name="id"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task<UserInformationResponseModel> GetUserById(string id)
+        public async Task<UserInformationResponseModel> GetUserById()
         {
             UserInformationResponseModel result = new UserInformationResponseModel();
             try
             {
-                var userById = _userRepository.GetUserDetail(id).OrderByDescending(x => x.PriceBought).FirstOrDefault();
-                result.User = (Data.Models.Data.UserDetailDataModel?)userById;
+                var userById = await _userRepository.GetUserDetail(_currentUser).ConfigureAwait(false);
+                result.User = userById;
             }
             catch (Exception ex)
             {
