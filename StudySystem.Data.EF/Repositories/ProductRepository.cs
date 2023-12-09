@@ -113,6 +113,28 @@ namespace StudySystem.Data.EF.Repositories
             return resul1t;
         }
 
+        public async Task<ListProductDetailResponseModel> ProductByCategoryId(string categoryId)
+        {
+            var result = (from p in _context.Products
+                          join pc in _context.ProductCategories on p.ProductId equals pc.ProductId
+                          join i in _context.Images on p.ProductId equals i.ProductId
+                          where pc.CategoryId.Equals(categoryId)
+                          group new { p, i } by new { p.ProductId, p.ProductName, p.ProductDescription, p.ProductPrice, p.BrandName, p.ProductQuantity, p.ProductionDate, p.ProductStatus, p.PriceSell } into pGroup
+                          select new ProductDetailResponseModel
+                          {
+                              ProductId = pGroup.Key.ProductId,
+                              ProductName = pGroup.Key.ProductName,
+                              ProductPrice = pGroup.Key.ProductPrice,
+                              ProductSell = pGroup.Key.PriceSell,
+                              ProductStatus = pGroup.Key.ProductStatus,
+                              Images = new List<ImageProductData> { pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).FirstOrDefault() },
+                              ProductBrand = pGroup.Key.BrandName
+                          }).ToListAsync().ConfigureAwait(false);
+            ListProductDetailResponseModel listProductDetailResponseModel = new ListProductDetailResponseModel();
+            listProductDetailResponseModel.listProductDeatails = await result;
+            return listProductDetailResponseModel;
+        }
+
         /// <summary>
         /// UpdateProduct
         /// </summary>
@@ -149,13 +171,13 @@ namespace StudySystem.Data.EF.Repositories
                     count++;
                 }
             }
-            if(count == data.ProductChangedData.Count())
+            if (count == data.ProductChangedData.Count())
             {
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 return true;
             }
             return false;
-            
+
         }
 
         public async Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request)

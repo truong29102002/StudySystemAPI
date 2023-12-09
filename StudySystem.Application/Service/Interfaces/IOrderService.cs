@@ -12,5 +12,6 @@ namespace StudySystem.Application.Service.Interfaces
     {
         Task<string> CreatedOrder(OrderRequestModel orderRequest);
         Task<OrderCompletedResponse> UpdatedOrder(VNPayIPNRequest request);
+        Task<OrdersAllResponseModel> AllOrders();
     }
 }

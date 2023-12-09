@@ -18,6 +18,7 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
         Task<bool> DeleteProduct(string productId);
         IQueryable<ProductDetailResponseModel> GetProductDetail(string productId);
         Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request);
+        Task<ListProductDetailResponseModel> ProductByCategoryId(string categoryId);
         Task<bool> UpdateProductQuantity(UpdateProductQuantityDataModel data);
 
     }

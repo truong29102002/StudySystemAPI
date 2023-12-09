@@ -21,6 +21,8 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string OrderStatusNotYetPayment = "1";
         public const string OrderStatusPaymented = "0";
         public const string OrderStatusCancelPayment = "2";
+        public const string ReceiveTypeAtHome = "0";
+        public const string ReceiveTypeAtShop = "1";
 
 
     }
@@ -49,6 +51,7 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string CartCalculate = "~/api/calculate-total";
         public const string CartDelete = "~/api/cart-delete";
         public const string CreatedOrder = "~/api/created-order";
+        public const string VerifyIPN = "~/api/vnpay_return/IPN";
 
     }
 

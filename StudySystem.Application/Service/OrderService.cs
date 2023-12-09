@@ -51,15 +51,7 @@ namespace StudySystem.Application.Service
             string paymentRedirect = string.Empty;
             try
             {
-                await CheckOutUser(orderRequest, userId).ConfigureAwait(false);
 
-                await CreateOrderUser(orderRequest, orderId, userId).ConfigureAwait(false);
-
-                await CreateOrderItem(orderRequest, orderId, userId).ConfigureAwait(false);
-
-                List<AddressBook> addresses = new List<AddressBook>();
-                addresses.Add(new AddressBook { OrderId = orderId, District = orderRequest.District, AddressReceive = orderRequest.AddressReceive, Province = orderRequest.Province });
-                await _unitOfWork.BulkInserAsync(addresses).ConfigureAwait(false);
                 if (orderRequest.MethodPayment == "0") // thanh toán sau nhận hàng
                 {
                     paymentRedirect = "/";
@@ -67,6 +59,18 @@ namespace StudySystem.Application.Service
                 else if (orderRequest.MethodPayment == "1") // thanh toán ngân hàng vnpay
                 {
                     paymentRedirect = _paymentService.GetPaymentUrl(orderRequest, orderId);
+                }
+                if (!string.IsNullOrEmpty(paymentRedirect))
+                {
+                    await CheckOutUser(orderRequest, userId).ConfigureAwait(false);
+
+                    await CreateOrderUser(orderRequest, orderId, userId).ConfigureAwait(false);
+
+                    await CreateOrderItem(orderRequest, orderId, userId).ConfigureAwait(false);
+
+                    List<AddressBook> addresses = new List<AddressBook>();
+                    addresses.Add(new AddressBook { OrderId = orderId, District = orderRequest.District, AddressReceive = orderRequest.AddressReceive, Province = orderRequest.Province });
+                    await _unitOfWork.BulkInserAsync(addresses).ConfigureAwait(false);
                 }
 
             }
@@ -228,8 +232,22 @@ namespace StudySystem.Application.Service
 
             return response;
         }
-
-
-
+        /// <summary>
+        /// AllOrders
+        /// </summary>
+        /// <returns></returns>
+        public async Task<OrdersAllResponseModel> AllOrders()
+        {
+            try
+            {
+                return await _orderRepository.GetOrders();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
+            
+        }
     }
 }

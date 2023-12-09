@@ -41,7 +41,12 @@ namespace StudySystem.Application.Service.Interfaces
         /// <param name="productId"></param>
         /// <returns></returns>
         Task<ProductDetailResponseModel> GetProdcutDetail(string productId);
-
+        /// <summary>
+        /// ViewedProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request);
+        Task<ListProductDetailResponseModel> GetProductByCategoryId(string categoryID);
     }
 }

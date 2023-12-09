@@ -6,12 +6,15 @@
 //  Description: OrdersController.cs
 // </copyright>
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Request;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
+using StudySystem.Infrastructure.Resources;
+using StudySystem.Middlewares;
 
 namespace StudySystem.Controllers
 {
@@ -39,11 +42,30 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
         }
 
-        [HttpPost("~/api/vnpay_return/IPN")]
+        /// <summary>
+        /// VerifyIPN
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost(Router.VerifyIPN)]
         public async Task<ActionResult<StudySystemAPIResponse<OrderCompletedResponse>>> VerifyIPN(VNPayIPNRequest request)
         {
             var rs = await _orderService.UpdatedOrder(request);
             return new StudySystemAPIResponse<OrderCompletedResponse>(StatusCodes.Status200OK, new Response<OrderCompletedResponse>(true, rs));
         }
+
+        [HttpGet("~/api/order-list")]
+        //[Authorize]
+        //[AuthPermission]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> GetOrder()
+        {
+            var rs = await _orderService.AllOrders();
+            if (rs == null)
+            {
+                throw new BadHttpRequestException(Message._500);
+            }
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
+        }
+
     }
 }

@@ -181,11 +181,35 @@ namespace StudySystem.Controllers
             }
             return new StudySystemAPIResponse<ProductDetailResponseModel>(StatusCodes.Status200OK, new Response<ProductDetailResponseModel>(true, rs));
         }
-
+        /// <summary>
+        /// ListViewedProduct
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("~/api/viewed-product")]
         public async Task<ActionResult<StudySystemAPIResponse<ListProductDetailResponseModel>>> ListViewedProduct(ViewedProductRequestModel request)
         {
             var rs = await _productService.ViewedProduct(request);
+            string hosturl = $"{this.Request.Scheme}:/{this.Request.Host}{this.Request.PathBase}/Product/";
+            foreach (var productDetail in rs.listProductDeatails)
+            {
+                foreach (var image in productDetail.Images)
+                {
+                    image.ImagePath = hosturl + $"{productDetail.ProductId}/" + image.ImagePath;
+                }
+            }
+            return new StudySystemAPIResponse<ListProductDetailResponseModel>(StatusCodes.Status200OK, new Response<ListProductDetailResponseModel>(true, rs));
+        }
+
+        /// <summary>
+        /// GeProductByCategoryId
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet("~/api/product-by-category")]
+        public async Task<ActionResult<StudySystemAPIResponse<ListProductDetailResponseModel>>> GeProductByCategoryId(string request)
+        {
+            var rs = await _productService.GetProductByCategoryId(request);
             string hosturl = $"{this.Request.Scheme}:/{this.Request.Host}{this.Request.PathBase}/Product/";
             foreach (var productDetail in rs.listProductDeatails)
             {

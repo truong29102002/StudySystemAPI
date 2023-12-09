@@ -279,5 +279,20 @@ namespace StudySystem.Application.Service
 
             return rs;
         }
+
+        public async Task<ListProductDetailResponseModel> GetProductByCategoryId(string categoryID)
+        {
+            ListProductDetailResponseModel rs = new ListProductDetailResponseModel();
+            try
+            {
+                rs = await _productRepository.ProductByCategoryId(categoryID).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex.Message);
+                throw;
+            }
+            return rs;
+        }
     }
 }
