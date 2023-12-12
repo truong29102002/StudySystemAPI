@@ -2,6 +2,7 @@
 using MailKit.Search;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Asn1.X9;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.EF;
@@ -12,6 +13,7 @@ using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
 using StudySystem.Infrastructure.Configuration;
 using StudySystem.Infrastructure.Extensions;
+using StudySystem.Infrastructure.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,7 +132,11 @@ namespace StudySystem.Application.Service
 
             await _unitOfWork.BulkInserAsync(orderItems).ConfigureAwait(false);
         }
-
+        /// <summary>
+        /// UpdatedOrder
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<OrderCompletedResponse> UpdatedOrder(VNPayIPNRequest request)
         {
             OrderCompletedResponse response = new OrderCompletedResponse();
@@ -247,7 +253,40 @@ namespace StudySystem.Application.Service
                 _logger.LogError(ex.Message, ex);
                 throw;
             }
-            
+
+        }
+
+        public async Task<bool> DeleteOrder(string orderId)
+        {
+            try
+            {
+                return await _orderRepository.DeleteOrder(orderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateStatus(string orderId, string status)
+        {
+            try
+            {
+                var orderChange = await _orderRepository.UpdateStatusOrder(orderId, status);
+                if (orderChange && status == CommonConstant.OrderStatusPaymented)
+                {
+                    var paymentedProduct = await _orderItemRepository.ReturnProductChanged(orderId);
+                    await _productRepository.UpdateProductQuantity(paymentedProduct);
+                    return true;
+                }
+                return orderChange;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}", ex);
+                return false;
+            }
         }
     }
 }

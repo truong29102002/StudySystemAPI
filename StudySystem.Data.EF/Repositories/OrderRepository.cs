@@ -2,6 +2,7 @@
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using StudySystem.Data.Models.Response;
+using StudySystem.Infrastructure.CommonConstant;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,25 @@ namespace StudySystem.Data.EF.Repositories
             await _context.AddAsync(order).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return true;
+        }
+
+        public async Task<bool> DeleteOrder(string orderId)
+        {
+            var rs = await _context.Set<Order>().SingleOrDefaultAsync(x => x.OrderId.Equals(orderId)).ConfigureAwait(false);
+            var orderAddress = await _context.Set<AddressBook>().FirstOrDefaultAsync(x => x.OrderId.Equals(orderId)).ConfigureAwait(false);
+            var userOrder = await _context.Set<UserDetail>().SingleOrDefaultAsync(x => x.UserID.Equals(rs.CreateUser)).ConfigureAwait(false);
+            if (rs != null && rs.Status != CommonConstant.OrderStatusPaymented && userOrder.UserID.Contains(CommonConstant.UserIdSession))
+            {
+                _context.Remove(rs);
+                _context.Remove(userOrder);
+                if (orderAddress != null)
+                {
+                    _context.Remove(orderAddress);
+                }
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            return false;
         }
 
         public async Task<OrdersAllResponseModel> GetOrders()
@@ -63,7 +83,8 @@ namespace StudySystem.Data.EF.Repositories
                                   Quantity = oi.OrderItem.Quantity,
                                   Price = oi.OrderItem.Price
                               })
-                              .ToList()
+                              .ToList(),
+                          OrderDateAt = group.First().Order.CreateDateAt.ToString("MM/dd/yyyy H:mm:ss"),
                       })
                       .ToList();
 
@@ -71,6 +92,18 @@ namespace StudySystem.Data.EF.Repositories
             OrdersAllResponseModel orders = new OrdersAllResponseModel();
             orders.Orders = rs;
             return orders;
+        }
+
+        public async Task<bool> UpdateStatusOrder(string orderId, string orderStatus)
+        {
+            var rs = await _context.Set<Order>().SingleOrDefaultAsync(x => x.OrderId.Equals(orderId)).ConfigureAwait(false);
+            if (rs != null)
+            {
+                rs.Status = orderStatus;
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            return false;
         }
     }
 }

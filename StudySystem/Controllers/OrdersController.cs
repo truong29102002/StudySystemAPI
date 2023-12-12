@@ -67,5 +67,31 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
         }
 
+        [HttpDelete("~/api/detele-order")]
+        //[Authorize]
+        //[AuthPermission]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> DeleteOrder(string orderId)
+        {
+            var rs = await _orderService.DeleteOrder(orderId);
+            if (!rs)
+            {
+                throw new BadHttpRequestException(Message._500);
+            }
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, "Xóa thành công"));
+        }
+
+        [HttpPost("~/api/update-status-order")]
+        //[Authorize]
+        //[AuthPermission]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateStatusOrder(string orderId, string statusNew)
+        {
+            var rs = await _orderService.UpdateStatus(orderId, statusNew);
+            if (!rs)
+            {
+                throw new BadHttpRequestException(Message.UpdateError);
+            }
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
+        }
+
     }
 }

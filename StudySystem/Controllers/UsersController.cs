@@ -18,7 +18,7 @@ using StudySystem.Middlewares;
 namespace StudySystem.Controllers
 {
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UsersController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
@@ -34,7 +34,7 @@ namespace StudySystem.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Router.GetListUserDetail)]
-        [AuthPermission]
+        //[AuthPermission]
         public ActionResult<StudySystemAPIResponse<object>> GetListUserDetail()
         {
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, new object()));

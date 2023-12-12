@@ -13,5 +13,7 @@ namespace StudySystem.Application.Service.Interfaces
         Task<string> CreatedOrder(OrderRequestModel orderRequest);
         Task<OrderCompletedResponse> UpdatedOrder(VNPayIPNRequest request);
         Task<OrdersAllResponseModel> AllOrders();
+        Task<bool> DeleteOrder(string orderId);
+        Task<bool> UpdateStatus(string orderId, string status);
     }
 }
