@@ -85,6 +85,7 @@ namespace StudySystem.Data.EF.Repositories
                               })
                               .ToList(),
                           OrderDateAt = group.First().Order.CreateDateAt.ToString("MM/dd/yyyy H:mm:ss"),
+                          StatusReceive = group.First().Order.StatusReceive ?? 3,
                       })
                       .ToList();
 
@@ -94,12 +95,17 @@ namespace StudySystem.Data.EF.Repositories
             return orders;
         }
 
-        public async Task<bool> UpdateStatusOrder(string orderId, string orderStatus)
+        public async Task<bool> UpdateStatusOrder(string orderId, string orderStatus, int statusReceive)
         {
             var rs = await _context.Set<Order>().SingleOrDefaultAsync(x => x.OrderId.Equals(orderId)).ConfigureAwait(false);
             if (rs != null)
             {
                 rs.Status = orderStatus;
+                rs.StatusReceive = statusReceive;
+                if(orderStatus == "2")
+                {
+                    rs.StatusReceive = 2;
+                }
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 return true;
             }

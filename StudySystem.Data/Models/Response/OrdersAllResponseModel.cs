@@ -21,6 +21,7 @@ namespace StudySystem.Data.Models.Response
         public string AddressReceive { get; set; }
         public string Note { get; set; }
         public string StatusOrder { get; set; }
+        public int StatusReceive { get; set; }
         public string OrderDateAt { get; set; }
         public string MethodPayment { get; set; }
         public string TotalAmount { get; set; }

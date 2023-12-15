@@ -172,17 +172,17 @@ app.ConfigureExceptionHandler();
 #region config status codes error response
 app.Use(async (context, next) =>
 {
-    await next();
+   await next();
     dynamic responseError = new System.Dynamic.ExpandoObject();
-    if (context.Response.StatusCode == (int)HttpStatusCode.BadRequest) // 400
-    {
-        logger.Error(responseError);
-        await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
-        {
-            Code = (int)HttpStatusCode.BadRequest,
-            Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status400BadRequest, Message._400))
-        });
-    }
+    //if (context.Response.StatusCode == (int)HttpStatusCode.BadRequest) // 400
+    //{
+    //    logger.Error(responseError);
+    //    await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+    //    {
+    //        Code = (int)HttpStatusCode.BadRequest,
+    //        Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status400BadRequest, Message._400))
+    //    });
+    //}
 
     if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized) // 401
     {

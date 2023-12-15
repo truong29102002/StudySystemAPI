@@ -268,12 +268,19 @@ namespace StudySystem.Application.Service
                 return false;
             }
         }
-
-        public async Task<bool> UpdateStatus(string orderId, string status)
+        /// <summary>
+        /// admin
+        /// UpdateStatus
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="status"></param>
+        /// <param name="statusReceive"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateStatus(string orderId, string status, int statusReceive)
         {
             try
             {
-                var orderChange = await _orderRepository.UpdateStatusOrder(orderId, status);
+                var orderChange = await _orderRepository.UpdateStatusOrder(orderId, status,statusReceive);
                 if (orderChange && status == CommonConstant.OrderStatusPaymented)
                 {
                     var paymentedProduct = await _orderItemRepository.ReturnProductChanged(orderId);

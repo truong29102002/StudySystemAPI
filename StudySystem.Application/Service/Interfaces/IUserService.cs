@@ -35,5 +35,46 @@ namespace StudySystem.Application.Service.Interfaces
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<bool> UserPermissionRolesAuth(string userId);
+        /// <summary>
+        /// GetUsersInforManage
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<UsersInforManageResponseModel> GetUsersInforManage();
+        /// <summary>
+        /// Admin
+        /// UpdateUser
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="role"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        Task<bool> UpdateUser(string userId, int role, bool active);
+        /// <summary>
+        /// admin
+        /// DeleteUser
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<bool> DeleteUser(string userId);
+        /// <summary>
+        /// user
+        /// ChangeNameGender
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<bool> ChangeNameGender(ChangeNameGenderRequestModel request);
+        /// <summary>
+        /// ChangePassword
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<bool> ChangePassword(PassswordChangeRequestModel request);
+        /// <summary>
+        /// ChangeAddress
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<bool> ChangeAddress(ChangeAddressRequestModel request);
     }
 }

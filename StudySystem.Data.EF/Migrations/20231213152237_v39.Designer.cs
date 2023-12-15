@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using StudySystem.Data.EF;
@@ -11,9 +12,10 @@ using StudySystem.Data.EF;
 namespace StudySystem.Data.EF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231213152237_v39")]
+    partial class v39
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -427,7 +429,7 @@ namespace StudySystem.Data.EF.Migrations
                     b.Property<string>("Status")
                         .HasColumnType("text");
 
-                    b.Property<int>("StatusReceive")
+                    b.Property<int?>("StatusReceive")
                         .HasColumnType("integer");
 
                     b.Property<string>("TotalAmount")

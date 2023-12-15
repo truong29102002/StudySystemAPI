@@ -83,9 +83,9 @@ namespace StudySystem.Controllers
         [HttpPost("~/api/update-status-order")]
         //[Authorize]
         //[AuthPermission]
-        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateStatusOrder(string orderId, string statusNew)
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateStatusOrder(string orderId, string statusNew, int statusReceive)
         {
-            var rs = await _orderService.UpdateStatus(orderId, statusNew);
+            var rs = await _orderService.UpdateStatus(orderId, statusNew, statusReceive);
             if (!rs)
             {
                 throw new BadHttpRequestException(Message.UpdateError);

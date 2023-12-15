@@ -12,7 +12,7 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
     {
         Task<bool> CreatedOrder(Order order);
         Task<OrdersAllResponseModel> GetOrders();
-        Task<bool> UpdateStatusOrder(string orderId, string orderStatus);
+        Task<bool> UpdateStatusOrder(string orderId, string orderStatus, int statusReceive);
         Task<bool> DeleteOrder(string orderId);
     }
 }

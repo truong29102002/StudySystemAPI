@@ -21,5 +21,8 @@ namespace StudySystem.Data.Models.Data
         public string? AddressUserWard { get; set; }
         public string? AddressUserDistrict { get; set; }
         public string? AddressUserProvince { get; set; }
+        public string? WardCode { get; set; }
+        public string? DistrictCode { get; set; }
+        public string? ProvinceCode { get; set; }
     }
 }

@@ -7,6 +7,8 @@
 // </copyright>
 
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.Resources;
@@ -36,7 +38,7 @@ namespace StudySystem.Middlewares
             }
             else
             {
-                var filter = endpoint.Metadata.GetMetadata<AuthorizeAttribute>(); 
+                var filter = endpoint.Metadata.GetMetadata<AuthorizeAttribute>();
                 if (filter != null)
                 {
                     string tokenHeader = context.Request.Headers["Authorization"];
