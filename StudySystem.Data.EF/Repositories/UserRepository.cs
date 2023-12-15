@@ -126,7 +126,7 @@ namespace StudySystem.Data.EF.Repositories
                              Role = user.Role,
                              IsActive = user.IsActive,
                              CreateDateAt = user.CreateDateAt.ToString("MM/dd/yyyy"),
-                             RankUser = StringUtils.RankUser(_context.Orders.Where(x => x.UserId.Equals(user.UserID)).Select(x => Convert.ToDecimal(x.TotalAmount)).Sum()),
+                             RankUser = StringUtils.RankUser(_context.Orders.Where(x => x.UserId.Equals(user.UserID) && x.StatusReceive == OrderStatusReceive.IsShipped).Select(x => Convert.ToDecimal(x.TotalAmount)).Sum()),
                          });
             return query;
         }
@@ -157,14 +157,14 @@ namespace StudySystem.Data.EF.Repositories
                                 join oi in _context.OrderItems on uo.OrderId equals oi.OrderId into userOrderItems
                                 from uoi in userOrderItems.DefaultIfEmpty()
                                 where ud.UserID == userId
-                                group new { uoi } by new { ud.UserFullName, ud.Email, ud.PhoneNumber, uo.Status, ud.Gender, ud.CreateDateAt, uoi.Quantity } into g
+                                group new { uoi } by new { ud.UserFullName, ud.Email, ud.PhoneNumber, uo.Status, uo.StatusReceive, ud.Gender, ud.CreateDateAt, uoi.Quantity } into g
                                 select new
                                 {
                                     UserFullName = g.Key.UserFullName,
                                     Email = g.Key.Email,
                                     PhoneNumber = g.Key.PhoneNumber,
-                                    PriceBought = g.Where(x => g.Key.Status.Equals(StatusOrdetItem.Paid)).Sum(x => x.uoi.Price),
-                                    RankUser = StringUtils.RankUser(g.Where(x => g.Key.Status.Equals(StatusOrdetItem.Paid)).Sum(x => x.uoi.Price)),
+                                    PriceBought = g.Where(x => g.Key.StatusReceive == OrderStatusReceive.IsShipped).Sum(x => x.uoi.Price),
+                                    
                                     Gender = g.Key.Gender == 0 ? "Nam" : "Nữ",
                                     JoinDateAt = g.Key.CreateDateAt.ToString("dd/MM/yyyy"),
                                     CountOrderItem = g.Sum(x => x.uoi != null ? x.uoi.Quantity : 0)
@@ -177,7 +177,7 @@ namespace StudySystem.Data.EF.Repositories
                 PhoneNumber = result.FirstOrDefault()?.PhoneNumber,
                 Gender = result.FirstOrDefault()?.Gender,
                 JoinDateAt = result.FirstOrDefault()?.JoinDateAt,
-                PriceBought = result.FirstOrDefault().PriceBought,
+                PriceBought = result.Sum(x => x.PriceBought),
                 CountOrderItem = result.Sum(x => x.CountOrderItem),
                 AddressUserDes = address.au.Descriptions,
                 AddressUserWard = address.wa.Name,
@@ -186,7 +186,7 @@ namespace StudySystem.Data.EF.Repositories
                 ProvinceCode = address.pr.Code,
                 AddressUserDistrict = address.dt.Name,
                 AddressUserProvince = address.pr.Name,
-                RankUser = result.FirstOrDefault().RankUser,
+                RankUser = StringUtils.RankUser(result.Sum(x => x.PriceBought)),
             };
 
 

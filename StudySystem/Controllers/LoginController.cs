@@ -68,11 +68,11 @@ namespace StudySystem.Controllers
             var user = await _userRegisterService.DoLogin(request);
             if (user != null)
             {
-                if (await _userTokenService.IsUserOnl(user.UserID).ConfigureAwait(false))
-                {
-                    _logger.LogInformation("User Onl");
-                    throw new BadHttpRequestException(Message.UserLogined);
-                }
+                //if (await _userTokenService.IsUserOnl(user.UserID).ConfigureAwait(false))
+                //{
+                //    _logger.LogInformation("User Onl");
+                //    throw new BadHttpRequestException(Message.UserLogined);
+                //}
                 var expireTime = DateTime.UtcNow.AddHours(AppSetting.JwtExpireTime);
                 var expireTimeOnl = DateTime.UtcNow.AddMinutes(DateTimeConstant.ExpireOnl);
                 var claimUser = CeateClaim(user.UserID, user.UserFullName, user.Role.ToString());

@@ -15,5 +15,16 @@ namespace StudySystem.Application.Service.Interfaces
         Task<OrdersAllResponseModel> AllOrders();
         Task<bool> DeleteOrder(string orderId);
         Task<bool> UpdateStatus(string orderId, string status, int statusReceive);
+        /// <summary>
+        /// GetOrderCustomser
+        /// </summary>
+        /// <returns></returns>
+        Task<OrderInformationByUserResponseModel> GetOrderCustomser();
+        /// <summary>
+        /// GetOrderDetailByOderId
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task<OrderDetailByOderIdResponseModel> GetOrderDetailByOderId(string orderId);
     }
 }

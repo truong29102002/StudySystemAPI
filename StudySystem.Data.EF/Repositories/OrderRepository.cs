@@ -18,14 +18,23 @@ namespace StudySystem.Data.EF.Repositories
         {
             _context = context;
         }
-
+        /// <summary>
+        /// CreatedOrder
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
         public async Task<bool> CreatedOrder(Order order)
         {
             await _context.AddAsync(order).ConfigureAwait(false);
             await _context.SaveChangesAsync().ConfigureAwait(false);
             return true;
         }
-
+        /// <summary>
+        /// admin 
+        /// DeleteOrder
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteOrder(string orderId)
         {
             var rs = await _context.Set<Order>().SingleOrDefaultAsync(x => x.OrderId.Equals(orderId)).ConfigureAwait(false);
@@ -45,6 +54,66 @@ namespace StudySystem.Data.EF.Repositories
             return false;
         }
 
+        /// <summary>
+        /// GetOrderCustomser
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<OrderInformationByUserResponseModel> GetOrderCustomser(string userId)
+        {
+            var query = await (from i in _context.Orders
+                               join j in _context.OrderItems on i.OrderId equals j.OrderId
+                               where i.UserId.Equals(userId)
+                               group new { i, j } by new { i.UserId } into grOrder
+                               select new OrderInformationByUserResponseModel
+                               {
+                                   QuantityOrder = grOrder.Count(),
+                                   TotalAmount = grOrder.Where(x => x.i.StatusReceive == OrderStatusReceive.IsShipped).Distinct().Sum(x => Convert.ToDouble(x.i.TotalAmount)),
+                                   GroupOrderItems = grOrder.Select(x => new GroupOrderItems
+                                   {
+                                       OrderId = x.i.OrderId,
+                                       ProductId = x.j.ProductId,
+                                       ImageOrder = _context.Images.First(i => i.ProductId.Equals(x.j.ProductId)).ImageDes,
+                                       NameOrder = _context.Products.First(i => i.ProductId.Equals(x.j.ProductId)).ProductName,
+                                       QuantityOtherItems = grOrder.Count(y => y.i.OrderId == x.i.OrderId),
+                                       StatusReceiveOrder = x.i.StatusReceive,
+                                       TotalAmountOrder = Convert.ToDouble(x.i.TotalAmount),
+                                       OrderAt = x.i.CreateDateAt.ToString("dd/MM/yyyy HH:mm")
+                                   }).ToList(),
+                               }).FirstOrDefaultAsync().ConfigureAwait(false);
+
+            if (query != null)
+            {
+                query.GroupOrderItems = query.GroupOrderItems.DistinctBy(x => x.OrderId).ToList();
+                return query;
+            }
+            return null;
+        }
+
+        public async Task<OrderDetailByOderIdResponseModel> GetOrderDetails(string orderId)
+        {
+            var query = await (from i in _context.OrderItems
+                               join p in _context.Products
+                               on i.ProductId equals p.ProductId
+                               where i.OrderId == orderId
+                               select new ProductOrderDetails
+                               {
+                                   ProductId = i.ProductId,
+                                   Image = _context.Images.Where(x => x.ProductId.Equals(i.ProductId)).Select(x => x.ImageDes).First(),
+                                   NameProduct = p.ProductName,
+                                   TotalPriceByProduct = i.Price.ToString(),
+                                   TotalQuantityByProduct = i.Quantity.ToString(),
+                               }).ToListAsync();
+            OrderDetailByOderIdResponseModel rs = new OrderDetailByOderIdResponseModel();
+            rs.Data = query;
+            return rs;
+        }
+
+        /// <summary>
+        /// admin GetOrders
+        /// </summary>
+        /// <returns></returns>
         public async Task<OrdersAllResponseModel> GetOrders()
         {
             var rs = (from o in _context.Orders.AsNoTracking()
@@ -94,7 +163,14 @@ namespace StudySystem.Data.EF.Repositories
             orders.Orders = rs;
             return orders;
         }
-
+        /// <summary>
+        /// admin
+        /// UpdateStatusOrder
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <param name="orderStatus"></param>
+        /// <param name="statusReceive"></param>
+        /// <returns></returns>
         public async Task<bool> UpdateStatusOrder(string orderId, string orderStatus, int statusReceive)
         {
             var rs = await _context.Set<Order>().SingleOrDefaultAsync(x => x.OrderId.Equals(orderId)).ConfigureAwait(false);
@@ -102,7 +178,7 @@ namespace StudySystem.Data.EF.Repositories
             {
                 rs.Status = orderStatus;
                 rs.StatusReceive = statusReceive;
-                if(orderStatus == "2")
+                if (orderStatus == "2")
                 {
                     rs.StatusReceive = 2;
                 }
@@ -111,5 +187,7 @@ namespace StudySystem.Data.EF.Repositories
             }
             return false;
         }
+
+
     }
 }

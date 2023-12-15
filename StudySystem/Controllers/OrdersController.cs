@@ -22,6 +22,7 @@ namespace StudySystem.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly ILogger<OrdersController> _logger;
+        private readonly IWebHostEnvironment _environment;
         private readonly IOrderService _orderService;
         public OrdersController(ILogger<OrdersController> logger, IOrderService orderService)
         {
@@ -55,8 +56,8 @@ namespace StudySystem.Controllers
         }
 
         [HttpGet("~/api/order-list")]
-        //[Authorize]
-        //[AuthPermission]
+        [Authorize]
+        [AuthPermission]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> GetOrder()
         {
             var rs = await _orderService.AllOrders();
@@ -68,8 +69,8 @@ namespace StudySystem.Controllers
         }
 
         [HttpDelete("~/api/detele-order")]
-        //[Authorize]
-        //[AuthPermission]
+        [Authorize]
+        [AuthPermission]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> DeleteOrder(string orderId)
         {
             var rs = await _orderService.DeleteOrder(orderId);
@@ -81,8 +82,8 @@ namespace StudySystem.Controllers
         }
 
         [HttpPost("~/api/update-status-order")]
-        //[Authorize]
-        //[AuthPermission]
+        [Authorize]
+        [AuthPermission]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateStatusOrder(string orderId, string statusNew, int statusReceive)
         {
             var rs = await _orderService.UpdateStatus(orderId, statusNew, statusReceive);
@@ -93,5 +94,45 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
         }
 
+        [HttpGet("~/api/customer-get-order")]
+        //[Authorize]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> CustomerGetOrder()
+        {
+            var rs = await _orderService.GetOrderCustomser();
+            if (rs != null)
+            {
+                string hosturl = $"{this.Request.Scheme}:/{this.Request.Host}{this.Request.PathBase}/Product/";
+                foreach (var image in rs.GroupOrderItems)
+                {
+                    image.ImageOrder = hosturl + $"{image.ProductId}/" + image.ImageOrder;
+                }
+            }
+            
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
+        }
+
+
+        [HttpGet("~/api/get-order-details")]
+        //[Authorize]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> GetOrderDetails(string orderId)
+        {
+            var rs = await _orderService.GetOrderDetailByOderId(orderId);
+            if(rs != null)
+            {
+                string hosturl = $"{this.Request.Scheme}:/{this.Request.Host}{this.Request.PathBase}/Product/";
+                foreach (var image in rs.Data)
+                {
+                    image.Image = hosturl + $"{image.ProductId}/" + image.Image;
+                }
+            }
+            
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
+        }
+
+        [NonAction]
+        private string GetFilepath(string productId)
+        {
+            return _environment.WebRootPath + "\\product\\" + productId;
+        }
     }
 }

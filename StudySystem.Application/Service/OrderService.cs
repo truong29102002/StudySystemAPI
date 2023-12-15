@@ -45,7 +45,12 @@ namespace StudySystem.Application.Service
             _productRepository = unitOfWork.ProductRepository;
             _orderItemRepository = unitOfWork.OrderItemRepository;
         }
-
+       
+        /// <summary>
+        /// CreatedOrder
+        /// </summary>
+        /// <param name="orderRequest"></param>
+        /// <returns></returns>
         public async Task<string> CreatedOrder(OrderRequestModel orderRequest)
         {
             string orderId = StringUtils.NewGuid();
@@ -280,7 +285,7 @@ namespace StudySystem.Application.Service
         {
             try
             {
-                var orderChange = await _orderRepository.UpdateStatusOrder(orderId, status,statusReceive);
+                var orderChange = await _orderRepository.UpdateStatusOrder(orderId, status, statusReceive);
                 if (orderChange && status == CommonConstant.OrderStatusPaymented)
                 {
                     var paymentedProduct = await _orderItemRepository.ReturnProductChanged(orderId);
@@ -293,6 +298,41 @@ namespace StudySystem.Application.Service
             {
                 _logger.LogError($"{ex.Message}", ex);
                 return false;
+            }
+        }
+        /// <summary>
+        /// GetOrderCustomser
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<OrderInformationByUserResponseModel> GetOrderCustomser()
+        {
+            try
+            {
+                return await _orderRepository.GetOrderCustomser(_currentUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return null;
+            }
+        }
+        /// <summary>
+        /// GetOrderDetailByOderId
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<OrderDetailByOderIdResponseModel> GetOrderDetailByOderId(string orderId)
+        {
+            try
+            {
+                return await _orderRepository.GetOrderDetails(orderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
     }

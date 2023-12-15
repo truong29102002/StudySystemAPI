@@ -72,4 +72,13 @@ namespace StudySystem.Infrastructure.CommonConstant
         public const string RolesUser = "0";
 
     }
+
+    public static class OrderStatusReceive
+    {
+        // 0: đang vận chuyển, 1 đã giao hàng, 2 đã hủy, 3 chờ xác nhận
+        public const int IsShipping = 0;
+        public const int IsShipped = 1;
+        public const int IsCanceled = 2;
+        public const int IsWatting = 3;
+    }
 }
