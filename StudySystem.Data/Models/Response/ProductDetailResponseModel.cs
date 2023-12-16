@@ -23,6 +23,7 @@ namespace StudySystem.Data.Models.Response
         public string ProductionDate { get; set; }
         public int ProductStatus { get; set; }
         public string CategoryId { get; set; }
+        public bool IsLike { get; set; }
         public List<ImageProductData> Images { get; set; }
         public ProductConfigData ProductConfig { get; set; }
     }

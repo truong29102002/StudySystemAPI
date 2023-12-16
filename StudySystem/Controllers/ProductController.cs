@@ -191,13 +191,17 @@ namespace StudySystem.Controllers
         {
             var rs = await _productService.ViewedProduct(request);
             string hosturl = $"{this.Request.Scheme}:/{this.Request.Host}{this.Request.PathBase}/Product/";
-            foreach (var productDetail in rs.listProductDeatails)
+            if (rs != null)
             {
-                foreach (var image in productDetail.Images)
+                foreach (var productDetail in rs.listProductDeatails)
                 {
-                    image.ImagePath = hosturl + $"{productDetail.ProductId}/" + image.ImagePath;
+                    foreach (var image in productDetail.Images)
+                    {
+                        image.ImagePath = hosturl + $"{productDetail.ProductId}/" + image.ImagePath;
+                    }
                 }
             }
+
             return new StudySystemAPIResponse<ListProductDetailResponseModel>(StatusCodes.Status200OK, new Response<ListProductDetailResponseModel>(true, rs));
         }
 
@@ -216,6 +220,33 @@ namespace StudySystem.Controllers
                 foreach (var image in productDetail.Images)
                 {
                     image.ImagePath = hosturl + $"{productDetail.ProductId}/" + image.ImagePath;
+                }
+            }
+            return new StudySystemAPIResponse<ListProductDetailResponseModel>(StatusCodes.Status200OK, new Response<ListProductDetailResponseModel>(true, rs));
+        }
+
+
+        [HttpPost("~/api/wish-product")]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> WishChangeProduct(string productId)
+        {
+            var rs = await _productService.AddWishList(productId);
+
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
+        }
+
+        [HttpGet("~/api/get-wish-list")]
+        public async Task<ActionResult<StudySystemAPIResponse<ListProductDetailResponseModel>>> GetWishList()
+        {
+            var rs = await _productService.GetWishList();
+            string hosturl = $"{this.Request.Scheme}:/{this.Request.Host}{this.Request.PathBase}/Product/";
+            if (rs != null)
+            {
+                foreach (var productDetail in rs.listProductDeatails)
+                {
+                    foreach (var image in productDetail.Images)
+                    {
+                        image.ImagePath = hosturl + $"{productDetail.ProductId}/" + image.ImagePath;
+                    }
                 }
             }
             return new StudySystemAPIResponse<ListProductDetailResponseModel>(StatusCodes.Status200OK, new Response<ListProductDetailResponseModel>(true, rs));
@@ -293,6 +324,8 @@ namespace StudySystem.Controllers
                 return false;
             }
         }
+
+
 
     }
 }

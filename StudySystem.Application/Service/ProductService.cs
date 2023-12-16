@@ -153,7 +153,7 @@ namespace StudySystem.Application.Service
             ListProductDetailResponseModel rs = new ListProductDetailResponseModel();
             try
             {
-                rs = await _productRepository.GetAllProduct();
+                rs = await _productRepository.GetAllProduct(_currentUser);
             }
             catch (Exception ex)
             {
@@ -259,7 +259,7 @@ namespace StudySystem.Application.Service
         /// <exception cref="NotImplementedException"></exception>
         public async Task<ProductDetailResponseModel> GetProdcutDetail(string productId)
         {
-            var rs = _productRepository.GetProductDetail(productId).First();
+            var rs = _productRepository.GetProductDetail(productId, _currentUser).First();
             return rs;
         }
 
@@ -269,7 +269,7 @@ namespace StudySystem.Application.Service
             try
             {
 
-                rs = await _productRepository.ViewedProduct(request).ConfigureAwait(false);
+                rs = await _productRepository.ViewedProduct(request, _currentUser).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -285,7 +285,7 @@ namespace StudySystem.Application.Service
             ListProductDetailResponseModel rs = new ListProductDetailResponseModel();
             try
             {
-                rs = await _productRepository.ProductByCategoryId(categoryID).ConfigureAwait(false);
+                rs = await _productRepository.ProductByCategoryId(categoryID, _currentUser).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -293,6 +293,40 @@ namespace StudySystem.Application.Service
                 throw;
             }
             return rs;
+        }
+
+        public async Task<string> AddWishList(string productId)
+        {
+            try
+            {
+                var rs = await _productRepository.AddWishList(_currentUser, productId).ConfigureAwait(false);
+                if (rs)
+                {
+                    return "Thêm";
+                }
+                else
+                {
+                    return "Xoá";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex.Message);
+                return "";
+            }
+        }
+
+        public async Task<ListProductDetailResponseModel> GetWishList()
+        {
+            try
+            {
+                return await _productRepository.GetWishList(_currentUser).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
         }
     }
 }

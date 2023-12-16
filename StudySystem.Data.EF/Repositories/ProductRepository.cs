@@ -25,6 +25,28 @@ namespace StudySystem.Data.EF.Repositories
             _context = context;
 
         }
+
+        public async Task<bool> AddWishList(string userId, string productId)
+        {
+            var qeury = await _context.WishLists.SingleOrDefaultAsync(x => x.UserId.Equals(userId) && x.ProductId.Equals(productId)).ConfigureAwait(false);
+            if (qeury != null)
+            {
+                _context.WishLists.Remove(qeury);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return false;
+            }
+            else
+            {
+                WishList addNew = new WishList();
+                addNew.UserId = userId;
+                addNew.ProductId = productId;
+                await _context.AddAsync(addNew).ConfigureAwait(false);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+
+        }
+
         /// <summary>
         /// CreateProduct
         /// </summary>
@@ -55,7 +77,7 @@ namespace StudySystem.Data.EF.Repositories
         /// GetAllProduct
         /// </summary>
         /// <returns></returns>
-        public async Task<ListProductDetailResponseModel> GetAllProduct()
+        public async Task<ListProductDetailResponseModel> GetAllProduct(string userId)
         {
             ListProductDetailResponseModel model = new ListProductDetailResponseModel();
             var resul1t = (from p in _context.Products
@@ -79,13 +101,14 @@ namespace StudySystem.Data.EF.Repositories
                                ProductCategory = pGroup.Key.CategoryName,
                                Images = pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).ToList(),
                                ProductConfig = new ProductConfigData { Chip = pGroup.Key.Chip, Ram = pGroup.Key.Ram, Rom = pGroup.Key.Rom, Screen = pGroup.Key.Screen },
+                               IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
                            }).ToListAsync();
             model.listProductDeatails = await resul1t;
             return model;
 
         }
 
-        public IQueryable<ProductDetailResponseModel> GetProductDetail(string productId)
+        public IQueryable<ProductDetailResponseModel> GetProductDetail(string productId, string userId)
         {
             var resul1t = (from p in _context.Products
                            join pc in _context.ProductCategories on p.ProductId equals pc.ProductId
@@ -109,11 +132,42 @@ namespace StudySystem.Data.EF.Repositories
                                ProductCategory = pGroup.Key.CategoryName,
                                Images = pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).ToList(),
                                ProductConfig = new ProductConfigData { Chip = pGroup.Key.Chip, Ram = pGroup.Key.Ram, Rom = pGroup.Key.Rom, Screen = pGroup.Key.Screen },
+                               IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
                            });
             return resul1t;
         }
+        /// <summary>
+        /// GetWishList
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<ListProductDetailResponseModel> GetWishList(string userId)
+        {
+            var result = (from wl in _context.WishLists
+                          join p in _context.Products on wl.ProductId equals p.ProductId
+                          join pc in _context.ProductCategories on p.ProductId equals pc.ProductId
+                          join i in _context.Images on p.ProductId equals i.ProductId
+                          where wl.UserId.Equals(userId)
+                          group new { p, i } by new { p.ProductId, p.ProductName, p.ProductDescription, p.ProductPrice, p.BrandName, p.ProductQuantity, p.ProductionDate, p.ProductStatus, p.PriceSell } into pGroup
+                          select new ProductDetailResponseModel
+                          {
+                              ProductId = pGroup.Key.ProductId,
+                              ProductName = pGroup.Key.ProductName,
+                              ProductPrice = pGroup.Key.ProductPrice,
+                              ProductSell = pGroup.Key.PriceSell,
+                              ProductStatus = pGroup.Key.ProductStatus,
+                              Images = new List<ImageProductData> { pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).FirstOrDefault() },
+                              ProductBrand = pGroup.Key.BrandName,
+                              IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
+                          }).ToListAsync().ConfigureAwait(false);
+            ListProductDetailResponseModel listProductDetailResponseModel = new ListProductDetailResponseModel();
+            listProductDetailResponseModel.listProductDeatails = await result;
+            return listProductDetailResponseModel;
 
-        public async Task<ListProductDetailResponseModel> ProductByCategoryId(string categoryId)
+        }
+
+        public async Task<ListProductDetailResponseModel> ProductByCategoryId(string categoryId, string userId)
         {
             var result = (from p in _context.Products
                           join pc in _context.ProductCategories on p.ProductId equals pc.ProductId
@@ -128,7 +182,8 @@ namespace StudySystem.Data.EF.Repositories
                               ProductSell = pGroup.Key.PriceSell,
                               ProductStatus = pGroup.Key.ProductStatus,
                               Images = new List<ImageProductData> { pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).FirstOrDefault() },
-                              ProductBrand = pGroup.Key.BrandName
+                              ProductBrand = pGroup.Key.BrandName,
+                              IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
                           }).ToListAsync().ConfigureAwait(false);
             ListProductDetailResponseModel listProductDetailResponseModel = new ListProductDetailResponseModel();
             listProductDetailResponseModel.listProductDeatails = await result;
@@ -180,7 +235,7 @@ namespace StudySystem.Data.EF.Repositories
 
         }
 
-        public async Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request)
+        public async Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request, string userId)
         {
             var result = (from p in _context.Products
                           join pc in _context.ProductCategories on p.ProductId equals pc.ProductId
@@ -194,7 +249,8 @@ namespace StudySystem.Data.EF.Repositories
                               ProductPrice = pGroup.Key.ProductPrice,
                               ProductSell = pGroup.Key.PriceSell,
                               ProductStatus = pGroup.Key.ProductStatus,
-                              Images = pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).ToList()
+                              Images = pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).ToList(),
+                              IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
                           }).ToListAsync().ConfigureAwait(false);
             ListProductDetailResponseModel listProductDetailResponseModel = new ListProductDetailResponseModel();
             listProductDetailResponseModel.listProductDeatails = await result;

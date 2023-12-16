@@ -13,13 +13,20 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
     public interface IProductRepository : IRepository<Product>
     {
         Task CreateProduct(List<Product> products);
-        Task<ListProductDetailResponseModel> GetAllProduct();
+        Task<ListProductDetailResponseModel> GetAllProduct(string userId);
         Task<bool> UpdateProduct(UpdateProductRequestModel updateProduct);
         Task<bool> DeleteProduct(string productId);
-        IQueryable<ProductDetailResponseModel> GetProductDetail(string productId);
-        Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request);
-        Task<ListProductDetailResponseModel> ProductByCategoryId(string categoryId);
+        IQueryable<ProductDetailResponseModel> GetProductDetail(string productId, string userId);
+        Task<ListProductDetailResponseModel> ViewedProduct(ViewedProductRequestModel request, string userId);
+        Task<ListProductDetailResponseModel> ProductByCategoryId(string categoryId, string userId);
         Task<bool> UpdateProductQuantity(UpdateProductQuantityDataModel data);
 
+        Task<bool> AddWishList(string userId, string productId);
+        /// <summary>
+        /// GetWishList
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ListProductDetailResponseModel> GetWishList(string userId);
     }
 }
