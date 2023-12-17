@@ -30,6 +30,7 @@ namespace StudySystem.Data.EF
         private CartItemRepository _cartItemRepository;
         private OrderRepository _orderRepository;
         private OrderItemRepository _orderItemRepository;
+        private RatingRepository _ratingRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -119,6 +120,15 @@ namespace StudySystem.Data.EF
                 return _orderItemRepository ?? (_orderItemRepository = new Repositories.OrderItemRepository(_context));
             }
         }
+
+        public IRatingProductRepository RatingProductRepository
+        {
+            get
+            {
+                return _ratingRepository ?? (_ratingRepository = new RatingRepository(_context));
+            }
+        }
+
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return await _context.Database.BeginTransactionAsync();

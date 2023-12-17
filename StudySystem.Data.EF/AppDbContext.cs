@@ -48,6 +48,7 @@ namespace StudySystem.Data.EF
         public DbSet<Image> Images => Set<Image>();
         public DbSet<ProductConfiguration> ProductConfigurations => Set<ProductConfiguration>();
         public DbSet<AddressBook> AddressBooks => Set<AddressBook>();
+        public DbSet<RatingProduct> RatingProduct => Set<RatingProduct>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -280,8 +281,14 @@ namespace StudySystem.Data.EF
             modelBuilder.Entity<ProductConfiguration>().HasKey(e => e.ProductId);
             #endregion
 
+
+
             #region address book
             modelBuilder.Entity<AddressBook>().HasKey(x => x.OrderId);
+            #endregion
+
+            #region rating
+            modelBuilder.Entity<RatingProduct>().HasKey(x => new { x.UserId, x.ProductId });
             #endregion
 
             base.OnModelCreating(modelBuilder);

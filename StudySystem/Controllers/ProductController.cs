@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
+using StudySystem.Application.Service;
 using StudySystem.Application.Service.Interfaces;
 using StudySystem.Data.Models.Data;
 using StudySystem.Data.Models.Request;
@@ -30,11 +31,13 @@ namespace StudySystem.Controllers
         private readonly ILogger<ProductController> _logger;
         private readonly IWebHostEnvironment _environment;
         private readonly IProductService _productService;
-        public ProductController(ILogger<ProductController> logger, IWebHostEnvironment environment, IProductService productService)
+        private readonly IRatingService _ratingService;
+        public ProductController(ILogger<ProductController> logger, IWebHostEnvironment environment, IProductService productService, IRatingService ratingService)
         {
             _logger = logger;
             _environment = environment;
             _productService = productService;
+            _ratingService = ratingService;
         }
 
         /// <summary>
@@ -234,6 +237,10 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, rs));
         }
 
+        /// <summary>
+        /// GetWishList
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("~/api/get-wish-list")]
         public async Task<ActionResult<StudySystemAPIResponse<ListProductDetailResponseModel>>> GetWishList()
         {
@@ -250,6 +257,36 @@ namespace StudySystem.Controllers
                 }
             }
             return new StudySystemAPIResponse<ListProductDetailResponseModel>(StatusCodes.Status200OK, new Response<ListProductDetailResponseModel>(true, rs));
+        }
+
+        /// <summary>
+        /// AddCommnetRating
+        /// </summary>
+        /// <param name="requestModel"></param>
+        /// <returns></returns>
+        /// <exception cref="BadHttpRequestException"></exception>
+        [HttpPost("~/api/add-comment-rating")]
+        [Authorize]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> AddCommnetRating(RatingRequestModel requestModel)
+        {
+            var rs = await _ratingService.AddCommentRating(requestModel);
+            if (!rs)
+            {
+                throw new BadHttpRequestException(Message.ErrorCreateProduct);
+            }
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
+        }
+
+        /// <summary>
+        /// GetCommnetRating
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
+        [HttpGet("~/api/get-comment-rating")]
+        public async Task<ActionResult<StudySystemAPIResponse<RatingResponseModel>>> GetCommnetRating(string productId)
+        {
+            var rs = await _ratingService.GetRatingProductById(productId);
+            return new StudySystemAPIResponse<RatingResponseModel>(StatusCodes.Status200OK, new Response<RatingResponseModel>(true, rs));
         }
 
         [NonAction]
