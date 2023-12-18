@@ -118,6 +118,7 @@ builder.Services.AddTransient<IExtensionsService, ExtensionsService>();
 builder.Services.AddTransient<IPaymentService, PaymentService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IRatingService, RatingService>();
+builder.Services.AddTransient<INewService, NewService>();
 #endregion
 
 #region configure connect to db
