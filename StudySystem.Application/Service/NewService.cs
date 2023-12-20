@@ -61,6 +61,24 @@ namespace StudySystem.Application.Service
                 return false;
             }
         }
+        /// <summary>
+        /// GetNewsById
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<NewsDataModel> GetNewsById(int id)
+        {
+            try
+            {
+                return await _newsRepository.GetNewsById(id).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
 
         /// <summary>
         /// GetNewsDataList
@@ -77,6 +95,25 @@ namespace StudySystem.Application.Service
             {
                 _logger.LogError(ex.Message, ex);
                 return null;
+            }
+        }
+        /// <summary>
+        /// UpdateNew
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<bool> UpdateNew(NewsRequestModel request, int id)
+        {
+            try
+            {
+                return await _newsRepository.UpdateNews(request, id).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex.Message, ex);
+                return false;
             }
         }
     }

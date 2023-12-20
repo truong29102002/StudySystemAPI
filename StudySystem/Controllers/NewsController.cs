@@ -35,7 +35,8 @@ namespace StudySystem.Controllers
         /// <returns></returns>
         /// <exception cref="BadHttpRequestException"></exception>
         [HttpPost("~/api/create-news")]
-        //[Authorize]
+        [Authorize]
+        [AuthPermission]
         public async Task<ActionResult<StudySystemAPIResponse<object>>> CreateNews([FromForm] NewsRequestModel model)
         {
             var rs = await _newsService.CreateNews(model).ConfigureAwait(false);
@@ -64,5 +65,33 @@ namespace StudySystem.Controllers
             var rs = await _newsService.DeteleNews(id).ConfigureAwait(false);
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
         }
+
+        /// <summary>
+        /// GetDetail
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("~/api/get-news-detail")]
+        public async Task<ActionResult<StudySystemAPIResponse<NewsDataModel>>> GetDetail(int id)
+        {
+            NewsDataModel rs = await _newsService.GetNewsById(id).ConfigureAwait(false);
+            if (rs == null)
+            {
+                return NotFound();
+            }
+            return new StudySystemAPIResponse<NewsDataModel>(StatusCodes.Status200OK,
+                new Response<NewsDataModel>(true, rs));
+        }
+
+        [HttpPut("~/api/update-news")]
+        [Authorize]
+        [AuthPermission]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> UpdateNews([FromForm] NewsRequestModel request, int id)
+        {
+            var rs = await _newsService.UpdateNew(request, id).ConfigureAwait(false);
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(rs, new object()));
+        }
+
+
     }
 }

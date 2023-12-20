@@ -27,5 +27,18 @@ namespace StudySystem.Application.Service.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<bool> DeteleNews(int id);
+        /// <summary>
+        /// GetNewsById
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<NewsDataModel> GetNewsById(int id);
+        /// <summary>
+        /// UpdateNew
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> UpdateNew(NewsRequestModel request, int id);
     }
 }

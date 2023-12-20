@@ -30,5 +30,18 @@ namespace StudySystem.Data.EF.Repositories.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<bool> DeteletNews(int id);
+        /// <summary>
+        /// GetNewsById
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<NewsDataModel> GetNewsById(int id);
+        /// <summary>
+        /// UpdateNews
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<bool> UpdateNews(NewsRequestModel request, int id);
     }
 }

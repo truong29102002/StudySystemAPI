@@ -1,4 +1,5 @@
 ﻿using LinqToDB;
+using NetTopologySuite.Triangulate.QuadEdge;
 using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using StudySystem.Data.Models.Request;
@@ -60,6 +61,29 @@ namespace StudySystem.Data.EF.Repositories
             }
             return false;
         }
+        /// <summary>
+        /// GetNewsById
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<NewsDataModel> GetNewsById(int id)
+        {
+            var query = await _context.News.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            if (query != null)
+            {
+                return new NewsDataModel
+                {
+                    IdNews = query.Id,
+                    Content = query.Content,
+                    Title = query.TitleHeader,
+                    CreateAt = StringUtils.TimeZoneUTC(query.CreateDateAt),
+                    CreateUser = _context.UserDetails.FirstOrDefault(u => u.UserID.Equals(query.CreateUser)).UserFullName,
+                    Image = query.ImageNew
+                };
+            }
+            return null;
+        }
 
         /// <summary>
         /// GetNewsDataList
@@ -82,6 +106,21 @@ namespace StudySystem.Data.EF.Repositories
                 NewsData = query
             };
             return rs;
+        }
+
+        public async Task<bool> UpdateNews(NewsRequestModel request, int id)
+        {
+            var query = await _context.News.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            if (query != null)
+            {
+                query.TitleHeader = request.Title;
+                query.Content = request.Content;
+                query.ImageNew = ImageConverter.ConvertToBase64(request.Image);
+                query.CreateDateAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            return false;
         }
     }
 }
