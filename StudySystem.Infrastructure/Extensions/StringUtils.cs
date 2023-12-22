@@ -82,5 +82,6 @@ namespace StudySystem.Infrastructure.Extensions
         {
             return TimeZoneInfo.ConvertTimeFromUtc(dateTime, TimeZoneInfo.CreateCustomTimeZone("CustomTimeZone", TimeSpan.FromHours(7), "Custom Time Zone", "Custom Time Zone")).ToString("dd/MM/yyyy HH:mm");
         }
+
     }
 }

@@ -178,9 +178,11 @@ namespace StudySystem.Data.EF.Repositories
             {
                 rs.Status = orderStatus;
                 rs.StatusReceive = statusReceive;
-                if (orderStatus == "2")
+                rs.UpdateDateAt = DateTime.UtcNow;
+                if (orderStatus == "2" || statusReceive == OrderStatusReceive.IsCanceled)
                 {
                     rs.StatusReceive = 2;
+                    rs.Status = CommonConstant.OrderStatusCancelPayment;
                 }
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 return true;
