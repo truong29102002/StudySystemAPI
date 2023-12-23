@@ -30,6 +30,7 @@ namespace StudySystem.Data.EF
         IOrderItemRepository OrderItemRepository { get; }
         IRatingProductRepository RatingProductRepository { get; }
         INewsRepository NewsRepository { get; }
+        IBannerRepository BannerRepository { get; }
         Task<bool> CommitAsync();
         Task BulkInserAsync<T>(IList<T> entities) where T : class;
         Task BulkUpdateAsync<T>(IList<T> entities) where T : class;

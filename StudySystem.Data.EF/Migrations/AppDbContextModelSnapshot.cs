@@ -38,7 +38,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("AddressBooks");
+                    b.ToTable("AddressBooks", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.AddressUser", b =>
@@ -91,7 +91,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("UserID", "WardCode", "DistrictCode", "ProvinceCode");
 
-                    b.ToTable("AddressUsers");
+                    b.ToTable("AddressUsers", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeRegion", b =>
@@ -120,7 +120,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("administrative_regions");
+                    b.ToTable("administrative_regions", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.AdministrativeUnit", b =>
@@ -157,7 +157,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("administrative_units");
+                    b.ToTable("administrative_units", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Banner", b =>
@@ -190,7 +190,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Banners");
+                    b.ToTable("Banners", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Cart", b =>
@@ -219,7 +219,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.CartItem", b =>
@@ -254,7 +254,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Category", b =>
@@ -283,7 +283,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.District", b =>
@@ -320,7 +320,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("ProvinceCode", "AdministrativeUnitId");
 
-                    b.ToTable("districts");
+                    b.ToTable("districts", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Image", b =>
@@ -352,7 +352,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Images");
+                    b.ToTable("Images", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.News", b =>
@@ -388,7 +388,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Order", b =>
@@ -436,7 +436,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.OrderItem", b =>
@@ -471,7 +471,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Product", b =>
@@ -521,7 +521,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.ProductCategory", b =>
@@ -536,7 +536,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.ProductConfiguration", b =>
@@ -558,7 +558,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("ProductConfigurations");
+                    b.ToTable("ProductConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Province", b =>
@@ -593,7 +593,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("AdministrativeRegionId", "AdministrativeUnitId");
 
-                    b.ToTable("provinces");
+                    b.ToTable("provinces", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.RatingProduct", b =>
@@ -639,7 +639,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("UserId", "ProductId");
 
-                    b.ToTable("RatingProduct");
+                    b.ToTable("RatingProduct", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Supplier", b =>
@@ -658,7 +658,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.UserDetail", b =>
@@ -710,7 +710,7 @@ namespace StudySystem.Data.EF.Migrations
                     b.HasIndex("UserID")
                         .HasDatabaseName("IX_UserDetail_UserID");
 
-                    b.ToTable("UserDetails");
+                    b.ToTable("UserDetails", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.UserToken", b =>
@@ -733,7 +733,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.VerificationOTP", b =>
@@ -750,7 +750,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasKey("UserID");
 
-                    b.ToTable("VerificationOTPs");
+                    b.ToTable("VerificationOTPs", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.Ward", b =>
@@ -787,7 +787,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("DistrictCode", "AdministrativeUnitId");
 
-                    b.ToTable("wards");
+                    b.ToTable("wards", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.WishList", b =>
@@ -824,7 +824,7 @@ namespace StudySystem.Data.EF.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WishLists");
+                    b.ToTable("WishLists", (string)null);
                 });
 
             modelBuilder.Entity("StudySystem.Data.Entites.AddressUser", b =>

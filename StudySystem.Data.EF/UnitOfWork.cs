@@ -32,6 +32,7 @@ namespace StudySystem.Data.EF
         private OrderItemRepository _orderItemRepository;
         private RatingRepository _ratingRepository;
         private NewsRepository _newsRepository;
+        private BannerRepository _bannerRepository;
         public UnitOfWork(AppDbContext context) => _context = context;
 
         public IUserRepository UserRepository
@@ -133,6 +134,14 @@ namespace StudySystem.Data.EF
         public INewsRepository NewsRepository
         {
             get { return _newsRepository ?? (_newsRepository = new Repositories.NewsRepository(_context)); }
+        }
+
+        public IBannerRepository BannerRepository
+        {
+            get
+            {
+                return _bannerRepository ?? (_bannerRepository = new Repositories.BannerRepository(_context));
+            }
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
