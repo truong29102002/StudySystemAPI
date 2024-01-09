@@ -3,6 +3,7 @@ using StudySystem.Data.EF.Repositories.Interfaces;
 using StudySystem.Data.Entites;
 using StudySystem.Data.Models.Response;
 using StudySystem.Infrastructure.CommonConstant;
+using StudySystem.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -153,7 +154,7 @@ namespace StudySystem.Data.EF.Repositories
                                   Price = oi.OrderItem.Price
                               })
                               .ToList(),
-                          OrderDateAt = group.First().Order.CreateDateAt.ToString("MM/dd/yyyy H:mm:ss"),
+                          OrderDateAt = DatetimeUtils.TimeZoneUTC(group.First().Order.CreateDateAt).ToString("dd/MM/yyyy HH:mm"),
                           StatusReceive = group.First().Order.StatusReceive ?? 3,
                       })
                       .ToList();

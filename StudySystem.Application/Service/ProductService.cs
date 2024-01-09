@@ -148,12 +148,12 @@ namespace StudySystem.Application.Service
         /// GetAllProductDetails
         /// </summary>
         /// <returns></returns>
-        public async Task<ListProductDetailResponseModel> GetAllProductDetails()
+        public async Task<ListProductDetailResponseModel> GetAllProductDetails(string hostUrl)
         {
             ListProductDetailResponseModel rs = new ListProductDetailResponseModel();
             try
             {
-                rs = await _productRepository.GetAllProduct(_currentUser);
+                rs = await _productRepository.GetAllProduct(_currentUser, hostUrl);
             }
             catch (Exception ex)
             {

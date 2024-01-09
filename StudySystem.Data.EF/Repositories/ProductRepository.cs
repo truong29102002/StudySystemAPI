@@ -77,7 +77,7 @@ namespace StudySystem.Data.EF.Repositories
         /// GetAllProduct
         /// </summary>
         /// <returns></returns>
-        public async Task<ListProductDetailResponseModel> GetAllProduct(string userId)
+        public async Task<ListProductDetailResponseModel> GetAllProduct(string userId, string hostUrl)
         {
             ListProductDetailResponseModel model = new ListProductDetailResponseModel();
             var resul1t = (from p in _context.Products
@@ -99,7 +99,7 @@ namespace StudySystem.Data.EF.Repositories
                                ProductStatus = pGroup.Key.ProductStatus,
                                CategoryId = pGroup.Key.CategoryId,
                                ProductCategory = pGroup.Key.CategoryName,
-                               Images = pGroup.Select(x => new ImageProductData { ImagePath = x.i.ImageDes }).ToList(),
+                               Images = pGroup.Select(x => new ImageProductData { ImagePath = hostUrl + pGroup.Key.ProductId + "/" + x.i.ImageDes }).ToList(),
                                ProductConfig = new ProductConfigData { Chip = pGroup.Key.Chip, Ram = pGroup.Key.Ram, Rom = pGroup.Key.Rom, Screen = pGroup.Key.Screen },
                                IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
                            }).ToListAsync();

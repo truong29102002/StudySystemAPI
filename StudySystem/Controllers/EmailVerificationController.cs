@@ -60,5 +60,11 @@ namespace StudySystem.Controllers
             return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(result, new object()));
         }
 
+        [HttpPost("~/api/reset-pwd")]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> ResetPwdMail(string userId)
+        {
+            return new StudySystemAPIResponse<object>(StatusCodes.Status200OK, new Response<object>(true, new object()));
+        }
+
     }
 }

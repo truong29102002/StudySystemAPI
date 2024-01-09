@@ -31,11 +31,11 @@ namespace StudySystem.Data.EF.Seed_Data
                 {
                     try
                     {
-                        if (!_context.UserDetails.Any())
-                        {
-                            List<UserDetail> userDetails = generatorFile.CsvDataGenerator<UserDetail, UserDetailMap>(CommonConstant.CsvFileUserDetails);
-                            await _context.BulkInsertAsync(userDetails).ConfigureAwait(false);
-                        }
+                        //if (!_context.UserDetails.Any())
+                        //{
+                        //    List<UserDetail> userDetails = generatorFile.CsvDataGenerator<UserDetail, UserDetailMap>(CommonConstant.CsvFileUserDetails);
+                        //    await _context.BulkInsertAsync(userDetails).ConfigureAwait(false);
+                        //}
 
                         if (!_context.AdministrativeRegions.Any())
                         {
@@ -67,11 +67,11 @@ namespace StudySystem.Data.EF.Seed_Data
                             await _context.BulkInsertAsync(wards).ConfigureAwait(false);
                         }
 
-                        if (!_context.Categories.Any())
-                        {
-                            List<Category> categories = generatorFile.CsvDataGenerator<Category, CategoryMap>(CommonConstant.CsvCategories);
-                            await _context.BulkInsertAsync(categories).ConfigureAwait(false);
-                        }
+                        //if (!_context.Categories.Any())
+                        //{
+                        //    List<Category> categories = generatorFile.CsvDataGenerator<Category, CategoryMap>(CommonConstant.CsvCategories);
+                        //    await _context.BulkInsertAsync(categories).ConfigureAwait(false);
+                        //}
 
                         await db.CommitAsync();
                         _logger.LogInformation("Init Complement to db");

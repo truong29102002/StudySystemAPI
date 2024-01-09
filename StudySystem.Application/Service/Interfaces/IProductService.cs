@@ -21,7 +21,7 @@ namespace StudySystem.Application.Service.Interfaces
         /// GetAllProductDetails
         /// </summary>
         /// <returns></returns>
-        Task<ListProductDetailResponseModel> GetAllProductDetails();
+        Task<ListProductDetailResponseModel> GetAllProductDetails(string hostUrl);
         /// <summary>
         /// UpdateProductDetail
         /// </summary>
