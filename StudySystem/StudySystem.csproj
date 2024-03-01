@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\CartsController.cs" />
+    <Compile Remove="Controllers\ChartsController.cs" />
+    <Compile Remove="Controllers\EmailVerificationController.cs" />
+    <Compile Remove="Controllers\ExtensionsController.cs" />
+    <Compile Remove="Controllers\LocationController.cs" />
+    <Compile Remove="Controllers\NewsController.cs" />
+    <Compile Remove="Controllers\OrdersController.cs" />
+    <Compile Remove="Controllers\ProductController.cs" />
+    <Compile Remove="Controllers\SupplierController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="MailKit" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />

@@ -103,9 +103,10 @@ namespace StudySystem.Data.EF.Repositories
                                ProductConfig = new ProductConfigData { Chip = pGroup.Key.Chip, Ram = pGroup.Key.Ram, Rom = pGroup.Key.Rom, Screen = pGroup.Key.Screen },
                                IsLike = _context.WishLists.Any(x => x.UserId.Equals(userId) && x.ProductId.Equals(pGroup.Key.ProductId))
                            }).ToListAsync();
+
+
             model.listProductDeatails = await resul1t;
             return model;
-
         }
 
         public IQueryable<ProductDetailResponseModel> GetProductDetail(string productId, string userId)

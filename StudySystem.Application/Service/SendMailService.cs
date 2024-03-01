@@ -126,7 +126,7 @@ namespace StudySystem.Application.Service
             email.From.Add(new MailboxAddress(AppSetting.MailName, AppSetting.Mail));
 
             email.To.Add(new MailboxAddress(emailRegister, emailRegister));
-            email.Subject = "TDT Shop";
+            email.Subject = "HoangHaMoBile";
 
             var builder = new BodyBuilder();
             builder.HtmlBody = StringUtils.NewUserRegisterAds();
