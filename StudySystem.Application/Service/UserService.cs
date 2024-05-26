@@ -30,9 +30,10 @@ namespace StudySystem.Application.Service
         private readonly IUnitOfWork _unitOfWorks;
         private readonly ILogger<UserService> _logger;
         private readonly IAddressUserRepository _addressUserRepository;
+        private readonly ISendMailService _SendMailService;
         private readonly IMapper _mapper;
         private readonly string _currentUser;
-        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IMapper mapper, UserResolverSerive currentUser) : base(unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, ILogger<UserService> logger, IMapper mapper, UserResolverSerive currentUser, ISendMailService sendMailService) : base(unitOfWork)
         {
             _unitOfWorks = unitOfWork;
             _userRepository = unitOfWork.UserRepository;
@@ -40,6 +41,7 @@ namespace StudySystem.Application.Service
             _mapper = mapper;
             _addressUserRepository = unitOfWork.AddressUserRepository;
             _currentUser = currentUser.GetUser();
+            _SendMailService = sendMailService;
         }
         /// <summary>
         /// RegisterUserDetail
@@ -257,6 +259,63 @@ namespace StudySystem.Application.Service
             {
                 _logger.LogError($"{ex.Message}");
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// FindAccountUser
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<bool> FindAccountUser(FindAccountRequestModel request)
+        {
+            try
+            {
+                if (request == null)
+                {
+                    throw new ArgumentNullException(nameof(request));
+                }
+                if (IsValidRequest(request))
+                {
+                    var rs = await _userRepository.FindAsync(x => x.UserID.ToLower().Equals(request.UserID.ToLower()) || x.Email.ToLower().Equals(request.UserID.ToLower())).ConfigureAwait(false);
+
+                    if (rs != null && await _SendMailService.SendCodeEmail(rs.UserID, rs.Email))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+        }
+        private bool IsValidRequest(FindAccountRequestModel request)
+        {
+            // Logic để kiểm tra xem request có hợp lệ không
+            return !string.IsNullOrEmpty(request.UserID);
+        }
+
+        public async Task<bool> ForgotPassword(ForgotPasswordRequestModel request)
+        {
+            try
+            {
+                var rs = await _SendMailService.VerificationCodeByEmail(request.VerificationCode).ConfigureAwait(false);
+                if (rs != "")
+                {
+                    var query = await _userRepository.FindAsync(x => x.UserID.Equals(rs.ToLower())).ConfigureAwait(false);
+                    query.Password = PasswordHasher.HashPassword(request.NewPassword);
+                    return await _unitOfWorks.CommitAsync();
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
             }
         }
     }

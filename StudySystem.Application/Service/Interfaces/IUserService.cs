@@ -76,5 +76,12 @@ namespace StudySystem.Application.Service.Interfaces
         /// <param name="request"></param>
         /// <returns></returns>
         Task<bool> ChangeAddress(ChangeAddressRequestModel request);
+        /// <summary>
+        /// FindAccountUser this func find account by username or email of user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<bool> FindAccountUser(FindAccountRequestModel request);
+        Task<bool> ForgotPassword(ForgotPasswordRequestModel request);
     }
 }

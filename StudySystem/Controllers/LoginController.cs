@@ -116,6 +116,20 @@ namespace StudySystem.Controllers
             throw new BadHttpRequestException(Message.Unauthorize);
         }
 
+        [HttpPost("~/api/find-account")]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> FindAccount(FindAccountRequestModel request)
+        {
+            var rs = await _userRegisterService.FindAccountUser(request);
+            return new StudySystemAPIResponse<object>(200, new Response<object>(rs, new object()));
+        }
+
+        [HttpPost("~/api/forgot-password")]
+        public async Task<ActionResult<StudySystemAPIResponse<object>>> ForgotPassword(ForgotPasswordRequestModel request)
+        {
+            var rs = await _userRegisterService.ForgotPassword(request);
+            return new StudySystemAPIResponse<object>(200, new Response<object>(rs, new object()));
+        }
+
         private string CreateUserInformation(UserDetail user)
         {
             var userInfor = new UserLoginDataModel(user.UserID, user.UserFullName);
