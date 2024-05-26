@@ -19,7 +19,6 @@ using StudySystem.Middlewares;
 using System.IO.Compression;
 using System.Net;
 using System.Text;
-
 #region log info
 System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -123,6 +122,8 @@ builder.Services.AddTransient<IChartService, ChartService>();
 builder.Services.AddTransient<IBannerService, BannerService>();
 #endregion
 
+
+
 #region configure connect to db
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -137,7 +138,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 
@@ -178,15 +179,15 @@ app.Use(async (context, next) =>
 {
    await next();
     dynamic responseError = new System.Dynamic.ExpandoObject();
-    //if (context.Response.StatusCode == (int)HttpStatusCode.BadRequest) // 400
-    //{
-    //    logger.Error(responseError);
-    //    await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
-    //    {
-    //        Code = (int)HttpStatusCode.BadRequest,
-    //        Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status400BadRequest, Message._400))
-    //    });
-    //}
+    if (context.Response.StatusCode == (int)HttpStatusCode.BadRequest) // 400
+    {
+        logger.Error(responseError);
+        await context.Response.WriteAsJsonAsync(new StudySystemAPIResponse<StudySystemErrorResponseModel>
+        {
+            Code = (int)HttpStatusCode.BadRequest,
+            Response = new Response<StudySystemErrorResponseModel>(false, new StudySystemErrorResponseModel(StatusCodes.Status400BadRequest, Message._400))
+        });
+    }
 
     if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized) // 401
     {
@@ -242,5 +243,8 @@ app.UseResponseCompression();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller}/{action}"
+    );
 app.Run();
